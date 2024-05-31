@@ -1,0 +1,38 @@
+{
+  "short_name": "resume-repo",
+  "name": "ResumeRepo",
+  "description": "Streamline your job application process with a customized resume for every role.",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "matches": [ "https://www.linkdedin.com/*", "https://www.linkdedin.de/*", "https://www.linkdedin.co.jp/*", "https://www.linkdedin.co.uk/*", "https://www.linkdedin.fr/*", "https://www.linkdedin.it/*", "https://www.linkdedin.es/*", "https://www.linkdedin.sg/*", "https://www.linkdedin.com.mx/*", "https://www.linkdedin.com.au/*", "https://www.linkdedin.in/*", "https://www.linkdedin.com.tr/*", "https://www.linkdedin.com.br/*", "https://www.linkdedin.ca/*", "https://www.linkdedin.nl/*", "https://www.linkdedin.se/*", "https://www.linkdedin.pl/*", "https://www.linkdedin.ae/*", "https://www.linkdedin.sa/*", "https://www.linkdedin.eg/*", "https://www.linkdedin.com.be/*" ],
+      "css": [
+        "dist/index.735b2751.css",
+        "dist/index.b284f5af.css",
+        "dist/index.fd2011b2.css"
+      ],
+      "js": ["dist/index.b48ba010.js"]
+    }
+  ],
+  "permissions": [
+    "storage",
+    "gcm",
+    "tabs"
+  ],
+  "action": {},
+  "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  }
+}
