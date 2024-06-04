@@ -17,7 +17,9 @@ export default defineConfig({
       '@src': root,
       '@assets': assetsDir,
       '@pages': pagesDir,
+
     },
+    // alias: [{ find: "@", replacement: "/src" }],
   },
   plugins: [react(), makeManifest(), buildContentScript()],
   publicDir,
@@ -37,6 +39,9 @@ export default defineConfig({
       output: {
         entryFileNames: (chunk) => `src/pages/${chunk.name}/index.js`,
       },
+      // external: [
+      //   'src:*' // i.e. this syntax does not work, is there something similar that would work?
+      // ],
     },
   },
 });

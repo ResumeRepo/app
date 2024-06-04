@@ -1,12 +1,15 @@
 import { createRoot } from 'react-dom/client';
+import React from "react";
+import HeaderNav from "/src/components/Header";
+
 const div = document.createElement('div');
 document.body.appendChild(div);
-
 const root = createRoot(div);
 root.render(
-    <div>
-      {/*Content from content/index.tsx*/}
-    </div>
+    <>
+      {/*<h1>Hello, world!</h1>*/}
+      {/*<HeaderNav/>*/}
+    </>
 );
 
 try {

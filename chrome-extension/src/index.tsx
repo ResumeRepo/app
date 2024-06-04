@@ -9,7 +9,6 @@ console.log("React injected from index.tsx");
 root.render(
   <React.StrictMode>
     <>
-      {/*<h1>Content from index.tsx</h1>*/}
       <Panel/>
     </>
   </React.StrictMode>,
