@@ -5,30 +5,25 @@ import BottomNav from "@src/components/BottomNav";
 import Card from "@src/components/Card";
 
 // const port = chrome.runtime.connect();
+export interface JD {
+  title?: string
+  company?: string
+  salary?: string
+  location?: string
+}
+
+const demoJd: JD = {
+  title: "Product Configuration Software Developer",
+  company: "ASI Group",
+  salary: "$95,000 - $115,000",
+  location: "Yonkers, NY, Eastanollee, GA, Burr Ridge, IL"
+}
 
 export default function Panel(): JSX.Element {
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
   const [body, setBody] = useState("")
   const [listenersInitialized, setListenersInitialized] = useState(false)
-
-  // chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-  //   setTitle(tabs[0].title)
-  //   setUrl(tabs[0].url)
-  // });
-
-  // useEffect(() => {
-  //   window.addEventListener('load', () => {
-  //     (async () => {
-  //       // @ts-ignore
-  //       await chrome?.runtime?.sendMessage({
-  //         type: "test",
-  //         title: document.title,
-  //         href: document.location.href
-  //       });
-  //     })();
-  //   });
-  // }, []);
 
 
   useEffect(() => {
@@ -62,40 +57,26 @@ export default function Panel(): JSX.Element {
     }
   }, [listenersInitialized])
 
-  // useEffect(() => {
-  //   window.addEventListener("message", (event) => {
-  //     // We only accept messages from ourselves
-  //     if (event.source !== window) {
-  //       return;
-  //     }
-  //
-  //     if (event.data.type && (event.data.type === "FROM_PAGE")) {
-  //       console.log("Content script received: " + event.data.text);
-  //       port.postMessage(event.data.text);
-  //     }
-  //   }, false);
-  // }, []);
-  // (async () => {
-  //   // @ts-ignore
-  //   await chrome?.runtime?.sendMessage({
-  //     type: MESSAGE_TYPE.CHAT,
-  //     query: rawMessage,
-  //     productSku: productSku
-  //   });
-  // })()
-
-
   return (
     <div className="container mx-auto px-4 py-4">
       {/*<HeaderNav/>*/}
       <Card>
         <>
-          <h1 className="text-2xl">Title</h1>
-          <h5>{title}</h5>
-          <h1>URL</h1>
-          <h5>{url}</h5>
-          <h1>body</h1>
-          <p>{body}</p>
+          <h1 className="mb-2 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white">{demoJd.title} <span
+              className="text-blue-600 dark:text-blue-500">at {demoJd.company}</span></h1>
+          <h2 className="text-xl text-orange-400 font-extrabold dark:text-white">{demoJd.salary}</h2>
+          <h3 className="text-sm text-gray-400 flex flex-row align-middle mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" color="grey" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="size-5 align-middle">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+            </svg>
+            <span className="align-middle pl-1">{demoJd.location}</span>
+          </h3>
+          {/*<h5>{title}</h5>*/}
+          {/*<h1>URL</h1>*/}
+          {/*<h5>{url}</h5>*/}
+          {/*<h1>body</h1>*/}
+          {/*<p>{body}</p>*/}
         </>
       </Card>
       <Card>
