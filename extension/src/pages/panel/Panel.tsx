@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import '@pages/panel/Panel.css';
 import BottomNav from "@src/components/BottomNav";
 import Assistant from "@src/components/Assistant";
+import Resumes from "@src/components/Resumes";
 
 
 // const port = chrome.runtime.connect();
@@ -49,6 +50,7 @@ export default function Panel(): JSX.Element {
   return (
     <div className="container mx-auto px-4 py-4">
       { activeTab === "Assistant" && <Assistant/> }
+      { activeTab === "Resumes" && <Resumes/> }
       <BottomNav
           activeTab={activeTab}
           showResumeUpload={showResumeUpload}
