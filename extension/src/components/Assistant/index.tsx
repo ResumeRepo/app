@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import '@pages/panel/Panel.css';
 import Card from "@src/components/Card";
 import SectionHeader from "@src/components/SectionHeader";
 import sparkle from "@assets/img/sparkle.png";

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import '@pages/panel/Panel.css';
 import BottomNav from "@src/components/BottomNav";
 import Assistant from "@src/components/Assistant";
-import Resumes from "@src/components/Resumes";
+import ResumeListView from "@src/components/ResumeListView";
 
 
 // const port = chrome.runtime.connect();
@@ -11,7 +11,7 @@ export type TabType = "Assistant" | "Resumes" | "Profile"
 
 export default function Panel(): JSX.Element {
   const [listenersInitialized, setListenersInitialized] = useState(false)
-  const [activeTab, setActiveTab] = useState<TabType>("Assistant")
+  const [activeTab, setActiveTab] = useState<TabType>("Resumes")
   const [showResumeUpload, setShowResumeUpload] = useState(false)
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function Panel(): JSX.Element {
   return (
     <div className="container mx-auto px-4 py-4">
       { activeTab === "Assistant" && <Assistant/> }
-      { activeTab === "Resumes" && <Resumes/> }
+      { activeTab === "Resumes" && <ResumeListView/> }
       <BottomNav
           activeTab={activeTab}
           showResumeUpload={showResumeUpload}
