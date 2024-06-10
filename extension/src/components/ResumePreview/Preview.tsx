@@ -106,7 +106,7 @@ export default function Preview() {
   };
 
   return (
-      <div className=" mx-auto md:max-w-[60%] sticky top-0 preview rm-padding-print p-6 md:overflow-y-scroll md:h-screen">
+      <div className=" mx-auto md:max-w-[60%] sticky top-0 preview rm-padding-print p-2 md:overflow-y-scroll md:h-screen">
         <A4PageWrapper>
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="f-col items-center mb-1">

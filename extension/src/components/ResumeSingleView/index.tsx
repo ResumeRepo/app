@@ -5,8 +5,8 @@ import {getFormattedDate} from "@src/components/utils/utils";
 import {ResumeSingleViewProps} from "@src/components/utils/types";
 import 'react-multi-carousel/lib/styles.css';
 import TemplateCarousel from "@src/components/Carousel";
-import ResumePreview from "@src/components/ResumePreview";
 import Preview from "@src/components/ResumePreview/Preview";
+import WinPrint from "@src/components/ResumePreview/WinPrint";
 
 const responsive = {
   superLargeDesktop: {
@@ -43,7 +43,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
       {
         props.mode === "View" ? (
             <div>
-              <div className="w-full justify-end text-right flex mb-2">
+              <div className="exclude-print w-full justify-end text-right flex mb-2">
                 <button onClick={() => props.onResumeSelect("List", undefined)}>
                   <span className="inline-flex items-center justify-center w-10 h-10 me-2 text-sm font-semibold text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
                 <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -77,9 +77,11 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
               <Card>
                 <TemplateCarousel/>
               </Card>
-              <Card>
+
+              <div className="exclude-print w-full flex justify-end">
+                <WinPrint/>
+              </div>
                 <Preview/>
-              </Card>
             </div>
         ) : <></>
           

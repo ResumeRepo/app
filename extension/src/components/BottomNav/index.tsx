@@ -49,7 +49,7 @@ const BottomNav = (props: NavProps) => {
 
   return (
       <>
-        <div className="fixed bottom-0 left-0 z-50 w-full h-auto pt-4 pb-2 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+        <div className="exclude-print fixed bottom-0 left-0 z-50 w-full h-auto pt-4 pb-2 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
 
           {props.showResumeUpload && <div className="text-center w-full mb-2 mt-2 ">
             <button type="button" className="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 me-2 mb-2">
