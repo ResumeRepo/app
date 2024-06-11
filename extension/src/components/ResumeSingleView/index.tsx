@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import '@pages/panel/Panel.css';
 import Card from "@src/components/Card";
 import {getFormattedDate} from "@src/components/utils/utils";
@@ -7,6 +7,8 @@ import 'react-multi-carousel/lib/styles.css';
 import TemplateCarousel from "@src/components/Carousel";
 import Preview from "@src/components/ResumePreview/Preview";
 import WinPrint from "@src/components/ResumePreview/WinPrint";
+import { useReactToPrint } from 'react-to-print';
+import html2pdf from 'html2pdf.js'
 
 const responsive = {
   superLargeDesktop: {
@@ -33,7 +35,66 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   // const [props.resumeId, setprops.resumeId] = useState<string | undefined>(undefined)
   const [templateId, setTemplateId] = useState("")
 
-  
+  const componentRef = useRef(null);
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  // });
+
+
+  const handlePrint = useReactToPrint({
+    documentTitle: "Print This Document",
+    onBeforePrint: () => console.log("before printing..."),
+    onAfterPrint: () => console.log("after printing..."),
+    removeAfterPrint: true,
+  });
+
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  //   print: async (printIframe) => {
+  //     const document = printIframe.contentDocument;
+  //     if (document) {
+  //       const html = document.getElementById("resume-preview-0");
+  //       const options = {
+  //         margin: 0,
+  //         filename: "the-joys-of-buying-over-building.pdf",
+  //       };
+  //       const exporter = new html2pdf.Html2Pdf(html, options);
+  //       await exporter.getPdf(options);
+  //     }
+  //   },
+  // });
+
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  //   print: async (printIframe) => {
+  //     const document = printIframe.contentDocument;
+  //     if (document) {
+  //       const html =  document.getElementById("resume-preview-0");
+  //       const options = {
+  //         margin: 0,
+  //         filename: "the-joys-of-buying-over-building.pdf",
+  //         jdPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  //       };
+  //       const exporter = html2pdf.set new Html2Pdf(html, options);
+  //       await exporter.getPdf(options);
+  //     }
+  //   },
+  // });
+
+  // const handlePrint = () => {
+  //   const element = componentRef.current;
+  //   const opt = {
+  //     margin:       1,
+  //     filename:     'myDocument.pdf',
+  //     image:        { type: 'jpeg', quality: 0.98 },
+  //     html2canvas:  { scale: 2 },
+  //     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  //   };
+  //
+  //   html2pdf().from(element).set(opt).save();
+  // };
+
+
   const onTemplateSelect = (templateId: string) => {
     setTemplateId(templateId)
   }
@@ -78,11 +139,13 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                 <TemplateCarousel/>
               </Card>
               <div className="exclude-print w-full flex justify-end">
-                <WinPrint/>
+                {/*<WinPrint/>*/}
+                {/*<button onClick={handlePrint}>Print</button>*/}
+                <button onClick={() => handlePrint(null, () => componentRef.current)}>Print</button>
               </div>
 
-              <div className="resume-preview-outer">
-                  <Preview/>
+              <div className="resume-preview-outer" id="resume-preview-0">
+                  <Preview ref={componentRef}/>
               </div>
             </div>
         ) : <></>

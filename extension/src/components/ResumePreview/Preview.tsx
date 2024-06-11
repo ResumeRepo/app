@@ -16,7 +16,13 @@ import Certification from "./Certification";
 import defaultResumeData from "@src/components/ResumePreview/DefaultResumeData";
 import DateRange from "@src/components/ResumePreview/DateRange";
 
-export default function Preview() {
+// export const ComponentToPrint = React.forwardRef((props, ref) => {
+//   return (
+//       <div ref={ref}>My cool content here!</div>
+//   );
+// });
+
+const Preview = React.forwardRef((props, ref) => {
   const resumeData = defaultResumeData
   const icons = [
     { name: "github", icon: <FaGithub /> },
@@ -27,9 +33,73 @@ export default function Preview() {
     { name: "youtube", icon: <FaYoutube /> },
     { name: "website", icon: <CgWebsite /> },
   ];
+  const marginTop = "0.25in"
+  const marginRight = "0.25in"
+  const marginLeft = "0.25in"
+  const marginBottom = "0.25in"
 
+  const getPageMargins = () => {
+    return `
+    .preview {
+        max-width: 8.5in;
+        max-height: 11in;
+        padding: 0.5in;
+        overflow-y: scroll;
+      }
+      .gap-preview {
+        gap: 2rem;
+      }
+      
+      .name{
+        font-size: 20px;
+        font-weight: 700;
+      }
+      
+      .profession{
+        font-size: 16px;
+        font-weight: 500;
+      }
+      
+      .contact{
+        font-size: 14px;
+        font-weight: 400;
+      }
+      
+      .social-media{
+        font-size: 12px;
+        font-weight: 400;
+      }
+      
+      .section-title{
+        font-size: 16px;
+        font-weight: 700;
+      }
+      
+      .content{
+        font-size: 14px;
+        font-weight: 400;
+      }
+      
+      .sub-content{
+        font-size: 12px;
+        font-weight: 400;
+      }
+      
+      .i-bold{
+        font-weight: 700 !important;
+      }
+      
+      @page { margin: ${marginTop} ${marginRight} ${marginBottom} ${marginLeft} !important;
+    `;
+  };
   return (
-      <div className="mx-auto preview md:overflow-y-scroll">
+      <>
+        <style
+            dangerouslySetInnerHTML={{
+              __html: getPageMargins(),
+            }}
+        />
+      <div className="preview md:overflow-y-scroll" ref={ref}>
             <div className="f-col items-center mb-1">
               {resumeData.profilePicture.length > 0 && (
                   <div className="w-24 h-24 rounded-full overflow-hidden">
@@ -203,5 +273,7 @@ export default function Preview() {
               </div>
             </div>
       </div>
+        </>
   );
-};
+})
+export default Preview
