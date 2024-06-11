@@ -14,3 +14,7 @@ export type ResumeSingleViewProps = {
   mode: ResumeMode,
   onResumeSelect: (mode: ResumeMode, id: string | undefined) => void
 }
+
+export type PrintProps = {
+  onClick: () => void
+}

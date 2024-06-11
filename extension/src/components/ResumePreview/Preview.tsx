@@ -16,11 +16,6 @@ import Certification from "./Certification";
 import defaultResumeData from "@src/components/ResumePreview/DefaultResumeData";
 import DateRange from "@src/components/ResumePreview/DateRange";
 
-// export const ComponentToPrint = React.forwardRef((props, ref) => {
-//   return (
-//       <div ref={ref}>My cool content here!</div>
-//   );
-// });
 
 const Preview = React.forwardRef((props, ref) => {
   const resumeData = defaultResumeData
