@@ -49,7 +49,8 @@ const DefaultResumeData = {
       "company": "HellX",
       "position": "Python Developer",
       "description": "Heller is a Software Editor specialized in logistics management.",
-      "keyAchievements": "Developed several automation systems - saved over $50,000 annually.\nJoined the team as #10 employee as a developer working directly with the biggest customers.\nInvolved in coding as per the requirement, delivered well ahead of time which saved project cost by 20%.\nReduced database size by nearly 50% and improved its performance by 20%.\nDelivery time of good reduced by 50%.",
+      "keyAchievements": "Developed several automation systems - saved over $50,000 annually.\nJoined the team as #10 employee as a developer working directly with the biggest customers." +
+          "\nInvolved in coding as per the requirement, delivered well ahead of time which saved project cost by 20%.\nReduced database size by nearly 50% and improved its performance by 20%.\nDelivery time of good reduced by 50%.",
       "startYear": "2023-02-22",
       "endYear": "2023-03-09"
     }

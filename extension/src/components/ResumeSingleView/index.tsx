@@ -77,11 +77,13 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
               <Card>
                 <TemplateCarousel/>
               </Card>
-
               <div className="exclude-print w-full flex justify-end">
                 <WinPrint/>
               </div>
-                <Preview/>
+
+              <div className="resume-preview-outer">
+                  <Preview/>
+              </div>
             </div>
         ) : <></>
           
