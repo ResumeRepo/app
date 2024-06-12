@@ -38,7 +38,7 @@ const Preview = React.forwardRef((props, ref) => {
     .preview {
         max-width: 8.5in;
         max-height: 11in;
-        padding: 0.5in;
+        padding: 0;
         overflow-y: scroll;
       }
       .gap-preview {
@@ -84,7 +84,7 @@ const Preview = React.forwardRef((props, ref) => {
         font-weight: 700 !important;
       }
       
-      @page { margin: ${marginTop} ${marginRight} ${marginBottom} ${marginLeft} !important;
+      @page { margin: ${marginTop} ${marginRight} ${marginBottom} ${marginLeft} !important; }
     `;
   };
   return (
