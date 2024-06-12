@@ -28,17 +28,20 @@ const Preview = React.forwardRef((props, ref) => {
     { name: "youtube", icon: <FaYoutube /> },
     { name: "website", icon: <CgWebsite /> },
   ];
-  const marginTop = "0.25in"
-  const marginRight = "0.25in"
-  const marginLeft = "0.25in"
-  const marginBottom = "0.25in"
+  const paddingTop = "0.25in"
+  const paddingRight = "0.25in"
+  const paddingLeft = "0.25in"
+  const paddingBottom = "0.25in"
 
   const getPageMargins = () => {
     return `
     .preview {
         max-width: 8.5in;
         max-height: 11in;
-        padding: 0;
+        padding-top: ${paddingTop};
+        padding-bottom: ${paddingRight};
+        padding-left: ${paddingLeft};
+        padding-right: ${paddingBottom};
         overflow-y: scroll;
       }
       .gap-preview {
@@ -84,7 +87,7 @@ const Preview = React.forwardRef((props, ref) => {
         font-weight: 700 !important;
       }
       
-      @page { margin: ${marginTop} ${marginRight} ${marginBottom} ${marginLeft} !important; }
+      @page {  }
     `;
   };
   return (

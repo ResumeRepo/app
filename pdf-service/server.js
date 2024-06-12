@@ -25,12 +25,6 @@ async function generatePDF(htmlString, format) {
   await browser.close();
 
   return pdfBuffer;
-
-  // const browser = await puppeteer.launch();
-  // const page = await browser.newPage();
-  // await page.setContent(content);
-  // const buffer = await page.pdf({});
-  // await browser.close();
 }
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -55,8 +49,6 @@ app.use(cors({
 
 app.post('/convert-to-pdf', async (req, res) => {
   try {
-    // console.log(req)
-    // console.log(req.json)
     const { html, format } = req.body;
     if (!html) {
       throw new Error('Missing HTML payload');
