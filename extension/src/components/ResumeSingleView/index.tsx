@@ -43,6 +43,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
       const blob = new Blob([response.data], { type: 'application/pdf' }); // Create Blob
       const downloadUrl = URL.createObjectURL(blob); // Create temporary URL
       setDownloadUrl(downloadUrl);
+      console.log("download url: ", downloadUrl)
       setPdfFound(true)
       const iframe = document.querySelector("iframe");
       if (iframe?.src) iframe.src = downloadUrl;

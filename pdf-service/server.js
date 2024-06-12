@@ -14,7 +14,7 @@ let browser;
 async function generatePDF(htmlString, format) {
   const buffer = Buffer.from(htmlString, 'base64');
   const decodedHTML = buffer.toString('utf-8');
-  // fs.writeFileSync("test.html", decodedHTML);
+  fs.writeFileSync("test.html", decodedHTML);
   // console.log(decodedHTML)
 
 
@@ -34,25 +34,33 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Alternatively, configure allowed origins
-const allowedOrigins = ['https://your-client-domain.com', 'http://localhost:3000'];
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // Allow requests with no origin
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('Origin not allowed by CORS'));
-    }
-  },
-  credentials: true, // Allow cookies for CORS requests (if applicable)
-}));
+// const allowedOrigins = ['https://your-client-domain.com', 'http://localhost:3000', '*'];
+const allowedOrigins = ['*'];
+
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     console.log("origin: ", origin)
+//     if (!origin) return callback(null, true); // Allow requests with no origin
+//     if (allowedOrigins.indexOf(origin) !== -1) {
+//       return callback(null, true);
+//     } else {
+//       return callback(new Error('Origin not allowed by CORS'));
+//     }
+//   },
+//   credentials: true, // Allow cookies for CORS requests (if applicable)
+// }));
+
+app.use(cors());
 
 app.post('/convert-to-pdf', async (req, res) => {
   try {
+    // console.log("request.body: ", req)
     const { html, format } = req.body;
     if (!html) {
       throw new Error('Missing HTML payload');
     }
+
+    // console.log("about to generate....: ", format)
 
     const pdfBuffer = await generatePDF(html, format);
     res.setHeader('Content-Type', 'application/pdf');
