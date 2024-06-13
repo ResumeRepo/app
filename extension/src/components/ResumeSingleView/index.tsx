@@ -8,8 +8,41 @@ import TemplateCarousel from "@src/components/Carousel";
 import Preview from "@src/components/ResumePreview/Preview";
 import WinPrint from "@src/components/ResumePreview/WinPrint";
 import { useReactToPrint } from 'react-to-print';
-import { jsPDF } from 'jspdf';
+import { pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/TextLayer.css';
+// pdfjs.GlobalWorkerOptions.workerSrc= "/pdf.worker.mjs";
+// import * as pdfjs from 'pdfjs-dist';
+// import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
+
+// pdfjs.GlobalWorkerOptions.workerSrc = "/js/pdf.worker.js"
+import { Document, Page } from 'react-pdf';
+// pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.min.mjs"
+
+    // `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+// import * as PDFJS from "pdfjs-dist/build/pdf";
+// import * as pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+
+// window.PDFJS = PDFJS;
+// import { Viewer } from '@react-pdf-viewer/core';
+// import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import axios from "axios";
+// import { EmbedPDF } from "@simplepdf/react-embed-pdf";
+// import '@react-pdf-viewer/core/lib/styles/index.css';
+// import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+
+// Create new plugin instance
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//     // "/js/pdf.worker.min.js",
+//     "hello-world.js",
+//     import.meta.url
+// ).toString();
+
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.js',
+    import.meta.url,
+).toString();
 
 export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Element {
   // const [mode, setMode] = useState<ResumeMode>("List")
@@ -20,6 +53,34 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const componentRef = useRef(null);
   const [pdfFound, setPdfFound] = useState(false)
+  // const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
+  // pdfjs.GlobalWorkerOptions.workerSrc = "hello.js"
+  // console.log("pdfjs.GlobalWorkerOptions.workerSrc: ", pdfjs.GlobalWorkerOptions.workerSrc)
+
+  // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  //     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js",
+  //     // 'pdfjs-dist/build/pdf.worker.min.mjs',
+  //     import.meta.url,
+  // ).toString();
+
+  // React.useEffect(() => {
+  //   const configureWorker = async () => {
+  //     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  //         "/js/pdf.worker.min.js",
+  //         // "pdfjs-dist/build/pdf.worker.js",
+  //         import.meta.url
+  //     ).toString();
+  //
+  //     // Replace with your actual blob URL
+  //     // const blobUrl = 'your-blob-url-here';
+  //     // setPdfUrl(blobUrl);
+  //   };
+  //
+  //   (async () => {
+  //     await configureWorker();
+  //   })()
+  // }, []);
 
   const baseUrl = "http://localhost:4000"
   const endpoint = "/convert-to-pdf"
@@ -42,6 +103,8 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
     .then(response => {
       const blob = new Blob([response.data], { type: 'application/pdf' }); // Create Blob
       const downloadUrl = URL.createObjectURL(blob); // Create temporary URL
+
+      // const downloadUrl =  window.URL.createObjectURL(blob)
       setDownloadUrl(downloadUrl);
       console.log("download url: ", downloadUrl)
       setPdfFound(true)
@@ -113,7 +176,38 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                 {/*  Download PDF*/}
                 {/*</a>}*/}
               </div>
-              <iframe src="" width={816} height={1051}/>
+              {/*<iframe src="" width={816} height={1051}/>*/}
+
+
+
+
+
+              {/*{downloadUrl &&  <>*/}
+              {/*<embed src={downloadUrl} width="auto" height="auto"*/}
+              {/*       type="application/pdf"/>*/}
+              {/*  <EmbedPDF*/}
+              {/*      className="pdf-viewer"*/}
+              {/*      mode="inline"*/}
+              {/*      style={{ width: 900, height: 800 }}*/}
+              {/*      documentURL={downloadUrl}*/}
+              {/*  />*/}
+
+
+                {/*<object data={downloadUrl} type="application/pdf" width="100%" height="1051"/>*/}
+                {/*  <p>Alternative text - include a link <a href="http://africau.edu/images/default/sample.pdf">to the PDF!</a></p>*/}
+                {/*</object>*/}
+
+                {/*<Document file={downloadUrl}>*/}
+                {/*  <Page>1</Page>*/}
+                {/*</Document>*/}
+                <Document file={downloadUrl}>
+                  <Page pageNumber={1} />
+                </Document>
+
+              {/*</>*/}
+              {/*}*/}
+
+
               <div className="resume-preview-outer" id="resume-preview-0">
                 {!pdfFound &&  <Preview ref={componentRef}/> }
               </div>

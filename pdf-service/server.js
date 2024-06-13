@@ -22,16 +22,19 @@ async function generatePDF(htmlString, format) {
   const page = await browser.newPage();
   await page.setContent(decodedHTML);
   const pdfBuffer = await page.pdf({ });
-  await browser.close();
+  // await browser.close();
 
   return pdfBuffer;
 }
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
 
 // Alternatively, configure allowed origins
 // const allowedOrigins = ['https://your-client-domain.com', 'http://localhost:3000', '*'];

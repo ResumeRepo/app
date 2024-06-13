@@ -36,6 +36,10 @@
     padding-inline-start: 0;
   }
 }
+.pdf-viewer {
+  background: red;
+  /*display: none;*/
+}
 
 @layer components{
   .pi{
