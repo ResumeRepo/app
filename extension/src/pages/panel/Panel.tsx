@@ -48,7 +48,7 @@ export default function Panel(): JSX.Element {
   }
 
   return (
-    <div className="container mx-auto px-4 py-4">
+    <div className="container mx-auto px-4 py-4 max-w-[660px]">
       { activeTab === "Assistant" && <Assistant/> }
       { activeTab === "Resumes" && <ResumeListView/> }
       <BottomNav

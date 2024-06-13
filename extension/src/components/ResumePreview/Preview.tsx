@@ -36,12 +36,12 @@ const Preview = React.forwardRef((props, ref) => {
   const getPageMargins = () => {
     return `
     .preview {
-        max-width: 8.5in;
-        max-height: 11in;
-        padding-top: ${paddingTop};
-        padding-bottom: ${paddingRight};
-        padding-left: ${paddingLeft};
-        padding-right: ${paddingBottom};
+        // max-width: 8.5in;
+        // max-height: 11in;
+        // padding-top: ${paddingTop};
+        // padding-bottom: ${paddingRight};
+        // padding-left: ${paddingLeft};
+        // padding-right: ${paddingBottom};
         overflow-y: scroll;
       }
       .gap-preview {
@@ -87,7 +87,12 @@ const Preview = React.forwardRef((props, ref) => {
         font-weight: 700 !important;
       }
       
-      @page {  }
+      @page { size: letter; margin: 0.25in;  }
+      @media print {
+        .preview {
+          opacity: 1;
+        }
+      }
     `;
   };
   return (
@@ -97,7 +102,7 @@ const Preview = React.forwardRef((props, ref) => {
               __html: getPageMargins(),
             }}
         />
-      <div className="preview md:overflow-y-scroll" ref={ref}>
+      <div className="preview md:overflow-y-scroll opacity-0" ref={ref}>
             <div className="f-col items-center mb-1">
               {resumeData.profilePicture.length > 0 && (
                   <div className="w-24 h-24 rounded-full overflow-hidden">
