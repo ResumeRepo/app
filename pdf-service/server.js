@@ -15,7 +15,7 @@ async function generatePDF(htmlString, format) {
   const buffer = Buffer.from(htmlString, 'base64');
   const decodedHTML = buffer.toString('utf-8');
   fs.writeFileSync("test.html", decodedHTML);
-  // console.log(decodedHTML)
+  console.log(Date.now(), "Generating pdf")
 
 
   if (!browser) browser = await puppeteer.launch();

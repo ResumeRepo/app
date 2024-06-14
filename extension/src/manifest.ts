@@ -15,7 +15,7 @@ const manifest: Manifest.WebExtensionManifest = {
   },
   action: {
     default_popup: 'src/pages/popup/index.html',
-    default_icon: 'icon-34.png',
+    default_icon: 'icon32.png',
   },
   // rewrite newtab content to custom page
   // chrome_url_overrides: {

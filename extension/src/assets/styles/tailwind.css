@@ -64,10 +64,3 @@
   margin: 0 auto;
   overflow: auto;
 }
-.react-pdf__Page__textContent {
-  margin: 0 auto;
-  border: 1px solid #d1d1d1;
-}
-.react-pdf__Page__canvas {
-  margin: 0 auto;
-}

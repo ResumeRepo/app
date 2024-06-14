@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import '@pages/panel/Panel.css';
 import Card from "@src/components/Card";
-import {getFormattedDate} from "@src/components/utils/utils";
+import {exportCss, getFormattedDate} from "@src/components/utils/utils";
 import {ResumeSingleViewProps} from "@src/components/utils/types";
 import 'react-multi-carousel/lib/styles.css';
 import TemplateCarousel from "@src/components/Carousel";
@@ -21,25 +21,31 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Element {
-  const [templateId, setTemplateId] = useState("")
-  const [isLoading, setIsLoading] = useState(false); // Track request state
+  const [templateId, setTemplateId] = useState("1")
+  // const [isLoading, setIsLoading] = useState(false); // Track request state
   const [errorMessage, setErrorMessage] = useState(null); // Store error message
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const componentRef = useRef(null);
   const [pdfFound, setPdfFound] = useState(false)
+  const [generationInProgress, setGenerationInProgress] = useState(false)
 
   const baseUrl = "http://localhost:4000"
   const endpoint = "/convert-to-pdf"
   const fileName = "Resume.pdf"
+
+
+
   const generatePdf = (html: any) => {
-    setIsLoading(true);
+    if (generationInProgress) return;
+    console.log("generationInProgress...")
+    setGenerationInProgress(true);
     setErrorMessage(null);
     setDownloadUrl(null);
 
     const utf8EncodedHtml = new TextEncoder().encode(html);
     const base64EncodedHtml = btoa(String.fromCharCode(...utf8EncodedHtml));
     const data = {
-      format: 'Letter',
+      format: 'A4',
       html: base64EncodedHtml,
     };
 
@@ -68,6 +74,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
     copyStyles: true,
     print: async (printIframe: HTMLIFrameElement) => {
       const html = printIframe.contentDocument.getElementsByTagName("html")[0]
+      exportCss(1, html)
       generatePdf(`<!DOCTYPE html>
 <html lang="en">${html.innerHTML}</html>\n`)
     },
@@ -80,7 +87,10 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   }
 
   useEffect(() => {
-    renderPdf(null, () => componentRef.current)
+    if (!generationInProgress) {
+      console.log("Env: ", import.meta.env.MODE)
+      renderPdf(null, () => componentRef.current)
+    }
     // renderPdf()
   }, [componentRef.current]);
 
@@ -88,6 +98,20 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
     if (downloadUrl) {
       saveAs(downloadUrl, fileName)
     }
+  }
+
+  const getStyle = () => {
+    return `
+      .react-pdf__Document {
+      overflow: auto !important;
+    }
+    .react-pdf__Page__textContent {
+      margin: 0 auto;
+      border: 1px solid #d1d1d1 !important;
+    }
+    .react-pdf__Page__canvas {
+      margin: 0 auto;
+    }`
   }
 
   const loadingProgress = () => {
@@ -103,6 +127,12 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   }
 
   return (
+      <>
+        <style
+            dangerouslySetInnerHTML={{
+              __html: getStyle(),
+            }}
+        />
     <div className="mb-40">
       {
         props.mode === "View" ? (
@@ -143,7 +173,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
               </Card>
 
 
-              <div className="resume-preview-outer" id="resume-preview-0">
+              <div className="resume-preview-outer">
                 { downloadUrl ?
                     <>
                       <div className="flex justify-end w-full">
@@ -162,11 +192,12 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                     </>:
                     <>{loadingProgress()}</>
                 }
-                {!pdfFound &&  <Preview ref={componentRef}/> }
+                {!downloadUrl && <Preview ref={componentRef}/> }
               </div>
             </div>
         ) : <></>
       }
     </div>
+        </>
   );
 }
