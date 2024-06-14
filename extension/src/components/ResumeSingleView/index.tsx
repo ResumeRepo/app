@@ -26,14 +26,11 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   const [errorMessage, setErrorMessage] = useState(null); // Store error message
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const componentRef = useRef(null);
-  const [pdfFound, setPdfFound] = useState(false)
   const [generationInProgress, setGenerationInProgress] = useState(false)
 
   const baseUrl = "http://localhost:4000"
   const endpoint = "/convert-to-pdf"
   const fileName = "Resume.pdf"
-
-
 
   const generatePdf = (html: any) => {
     if (generationInProgress) return;
@@ -45,7 +42,9 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
     const utf8EncodedHtml = new TextEncoder().encode(html);
     const base64EncodedHtml = btoa(String.fromCharCode(...utf8EncodedHtml));
     const data = {
-      format: 'A4',
+      format: 'Letter',
+      env: import.meta.env.MODE,
+      templateId: templateId,
       html: base64EncodedHtml,
     };
 
