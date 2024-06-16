@@ -1,5 +1,9 @@
 @import-normalize;
 
 .template-carousel ul li {
-  width: 9rem !important;
+  width: 20rem !important;
+  /*padding: 2rem !important;*/
+}
+.carousel-item {
+  /*padding: 2rem;*/
 }

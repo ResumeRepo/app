@@ -3,7 +3,6 @@ import '@pages/panel/Panel.css';
 import Card from "@src/components/Card";
 import {exportCss, getFormattedDate} from "@src/components/utils/utils";
 import {ResumeSingleViewProps} from "@src/components/utils/types";
-import 'react-multi-carousel/lib/styles.css';
 import TemplateCarousel from "@src/components/Carousel";
 import Preview from "@src/components/ResumePreview/Preview";
 import WinPrint from "@src/components/ResumePreview/WinPrint";
@@ -21,7 +20,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Element {
-  const [templateId, setTemplateId] = useState("1")
+  const [templateId, setTemplateId] = useState("3")
   // const [isLoading, setIsLoading] = useState(false); // Track request state
   const [errorMessage, setErrorMessage] = useState(null); // Store error message
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -33,6 +32,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   const fileName = "Resume.pdf"
 
   const generatePdf = (html: any) => {
+    console.log("in gene")
     if (generationInProgress) return;
     console.log("generationInProgress...")
     setGenerationInProgress(true);
@@ -58,8 +58,8 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
 
       // const downloadUrl =  window.URL.createObjectURL(blob)
       setDownloadUrl(downloadUrl);
+      setGenerationInProgress(false)
       console.log("download url: ", downloadUrl)
-      setPdfFound(true)
       const iframe = document.querySelector("iframe");
       if (iframe?.src) iframe.src = downloadUrl;
     })
@@ -73,7 +73,8 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
     copyStyles: true,
     print: async (printIframe: HTMLIFrameElement) => {
       const html = printIframe.contentDocument.getElementsByTagName("html")[0]
-      exportCss(1, html)
+      console.log("in print...")
+      exportCss(templateId, html)
       generatePdf(`<!DOCTYPE html>
 <html lang="en">${html.innerHTML}</html>\n`)
     },
@@ -83,6 +84,8 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
 
   const onTemplateSelect = (templateId: string) => {
     setTemplateId(templateId)
+    console.log("on template selected...: ", componentRef.current)
+    renderPdf(null, () => componentRef.current)
   }
 
   useEffect(() => {
@@ -168,7 +171,10 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                 </div>
               </Card>
               <Card>
-                <TemplateCarousel/>
+                <TemplateCarousel
+                    selectedId={templateId}
+                    onTemplateSelect={onTemplateSelect}
+                />
               </Card>
 
 
@@ -181,9 +187,6 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                       <Document
                           loading={loadingProgress()}
                           file={downloadUrl}
-                          onLoadProgress={() => setPdfFound(false)}
-                          onLoadSuccess={() => setPdfFound(true)}
-                          onLoadError={() => setPdfFound(false)}
                       >
                         <Page pageNumber={1}/>
                       </Document>
@@ -191,7 +194,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                     </>:
                     <>{loadingProgress()}</>
                 }
-                {!downloadUrl && <Preview ref={componentRef}/> }
+                {<Preview ref={componentRef}/> }
               </div>
             </div>
         ) : <></>

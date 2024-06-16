@@ -93,6 +93,7 @@ app.post('/convert-to-pdf', async (req, res) => {
   try {
     // console.log("request.body: ", req)
     const { html, templateId, format, env } = req.body;
+    console.log("templateId: ", templateId, " env: ", env)
     if (!html) {
       throw new Error('Missing HTML payload');
     }

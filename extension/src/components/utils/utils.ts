@@ -13,7 +13,7 @@ export function getFormattedDate(timestamp: number) {
  * development and extension mode, we need to export all of them and then
  * import them in production on server-side.
  */
-export function exportCss(templateId: number, html: HTMLHtmlElement) {
+export function exportCss(templateId: string, html: HTMLHtmlElement) {
   const endpoint = "/save-styling"
   const baseUrl = "http://localhost:4000"
   if (import.meta.env.MODE === "development") {

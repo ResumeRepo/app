@@ -18,3 +18,8 @@ export type ResumeSingleViewProps = {
 export type PrintProps = {
   onClick: () => void
 }
+
+export type CarouselProps = {
+  onTemplateSelect: (templateId: string) => void
+  selectedId: string
+}
