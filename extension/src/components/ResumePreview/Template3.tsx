@@ -41,7 +41,7 @@ const Template3 = () => {
       padding-right: ${paddingBottom};
        border: 1px solid #d1d1d1;
       overflow-y: scroll;
-      opacity: 0;
+      opacity: 1;
     }
     @page { size: Letter; }
     @media print {

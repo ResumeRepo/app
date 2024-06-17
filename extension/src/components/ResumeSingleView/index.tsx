@@ -32,12 +32,11 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   const fileName = "Resume.pdf"
 
   const generatePdf = (html: any) => {
-    console.log("in gene")
     if (generationInProgress) return;
-    console.log("generationInProgress...")
     setGenerationInProgress(true);
     setErrorMessage(null);
     setDownloadUrl(null);
+    console.log("Start Generated template id =", templateId)
 
     const utf8EncodedHtml = new TextEncoder().encode(html);
     const base64EncodedHtml = btoa(String.fromCharCode(...utf8EncodedHtml));
@@ -59,8 +58,8 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
       // const downloadUrl =  window.URL.createObjectURL(blob)
       setDownloadUrl(downloadUrl);
       setGenerationInProgress(false)
-      setShowHtmlPreview(false)
-      console.log("download url: ", downloadUrl)
+      // setShowHtmlPreview(false)
+      console.log("End Generated template id =", templateId)
       const iframe = document.querySelector("iframe");
       if (iframe?.src) iframe.src = downloadUrl;
     })
@@ -74,7 +73,6 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
     copyStyles: true,
     print: async (printIframe: HTMLIFrameElement) => {
       const html = printIframe.contentDocument.getElementsByTagName("html")[0]
-      console.log("in print...")
       exportCss(templateId, html)
       generatePdf(`<!DOCTYPE html>
 <html lang="en">${html.innerHTML}</html>\n`)
@@ -84,15 +82,13 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
   });
 
   const onTemplateSelect = (templateId: string) => {
+    console.log("new template selected: ", templateId)
     setTemplateId(templateId)
     setShowHtmlPreview(true)
-    console.log("on template selected...: ", componentRef.current)
-    renderPdf(null, () => componentRef.current)
   }
 
   useEffect(() => {
     if (!generationInProgress) {
-      console.log("Env: ", import.meta.env.MODE)
       renderPdf(null, () => componentRef.current)
     }
     // renderPdf()
@@ -103,6 +99,10 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
       saveAs(downloadUrl, fileName)
     }
   }
+
+  useEffect(() => {
+    renderPdf(null, () => componentRef.current)
+  }, [templateId]);
 
   const getStyle = () => {
     return `
@@ -174,6 +174,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
               </Card>
               <Card>
                 <TemplateCarousel
+                    canSelect={!generationInProgress}
                     selectedId={templateId}
                     onTemplateSelect={onTemplateSelect}
                 />

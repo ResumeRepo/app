@@ -26,6 +26,7 @@ export type PrintProps = {
 export type CarouselProps = {
   onTemplateSelect: (templateId: string) => void
   selectedId: string
+  canSelect: boolean
 }
 
 export type CSSStyle = { [key: string]: string | number };

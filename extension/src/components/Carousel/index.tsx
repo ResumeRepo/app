@@ -3,7 +3,6 @@ import {CarouselProps} from "@src/components/utils/types";
 import template1Thumbnail from "@src/assets/img/template_1.png";
 import template2Thumbnail from "@src/assets/img/template_2.png";
 import template3Thumbnail from "@src/assets/img/template_3.png";
-import template4Thumbnail from "@src/assets/img/template_4.png";
 
 export type ResumeTemplate = {
   id: string,
@@ -13,7 +12,6 @@ const templates: ResumeTemplate[] = [
   { id: "1", thumbnail: template1Thumbnail},
   { id: "2", thumbnail: template2Thumbnail },
   { id: "3", thumbnail: template3Thumbnail },
-  { id: "4", thumbnail: template4Thumbnail }
 ]
 
 export default function TemplateCarousel(props: CarouselProps): JSX.Element {
@@ -35,11 +33,17 @@ export default function TemplateCarousel(props: CarouselProps): JSX.Element {
       <div className="flex flex-row space-x-4 overflow-x-auto" id="carousel">
           {templates.map(item => {
             return (
-                <div className="m-2 space-x-2 align-middle" onClick={() => props.onTemplateSelect(item.id)} id={`carousel-item-${item.id}`}>
-                  <img key={item.id} className={`${item.id === props.selectedId ? 
-                  "max-w-40 object-contain cursor-pointer filter border-4 border-blue-500 scale-125 spacing-x-4 m-6" :
-                  "max-w-40 object-contain cursor-pointer filter border border-black "}`} src={item.thumbnail} alt="image description"/>
+                <button
+                    disabled={!props.canSelect}
+                    onClick={() => props.onTemplateSelect(item.id)}
+                    key={item.id}
+                    id={`carousel-item-${item.id}`}>
+                <div className="m-2 space-x-2 align-middle">
+                  <img className={`${item.id === props.selectedId ? 
+                  "max-w-40 object-contain filter border-4 border-blue-500 scale-125 spacing-x-4 m-6" :
+                  "max-w-40 object-contain filter border border-black "}`} src={item.thumbnail} alt="image description"/>
                 </div>
+            </button>
             )
           })}
       </div>
