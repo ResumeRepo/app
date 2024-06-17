@@ -37,7 +37,9 @@ dependencyManagement {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-web") {
+		exclude(group = "com.fasterxml.jackson.core", module = "jackson-annotations")
+	}
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.cloud:spring-cloud-config-server:4.1.0")
 	implementation("org.springframework.cloud:spring-cloud-config-client:4.1.0")
@@ -47,7 +49,7 @@ dependencies {
 	implementation("com.google.firebase:firebase-admin:9.2.0")
 	implementation("org.apache.pdfbox:pdfbox:3.0.2")
 	implementation("org.springframework.boot:spring-boot-starter-graphql")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.flywaydb:flyway-core:9.22.3")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
