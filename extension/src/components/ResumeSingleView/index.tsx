@@ -20,8 +20,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Element {
-  const [templateId, setTemplateId] = useState("3")
-  // const [isLoading, setIsLoading] = useState(false); // Track request state
+  const [templateId, setTemplateId] = useState("1")
+  const [showHtmlPreview, setShowHtmlPreview] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null); // Store error message
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const componentRef = useRef(null);
@@ -59,6 +59,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
       // const downloadUrl =  window.URL.createObjectURL(blob)
       setDownloadUrl(downloadUrl);
       setGenerationInProgress(false)
+      setShowHtmlPreview(false)
       console.log("download url: ", downloadUrl)
       const iframe = document.querySelector("iframe");
       if (iframe?.src) iframe.src = downloadUrl;
@@ -84,6 +85,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
 
   const onTemplateSelect = (templateId: string) => {
     setTemplateId(templateId)
+    setShowHtmlPreview(true)
     console.log("on template selected...: ", componentRef.current)
     renderPdf(null, () => componentRef.current)
   }
@@ -194,7 +196,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                     </>:
                     <>{loadingProgress()}</>
                 }
-                {<Preview ref={componentRef}/> }
+                {showHtmlPreview && <Preview ref={componentRef} templateId={templateId}/> }
               </div>
             </div>
         ) : <></>

@@ -3,6 +3,7 @@ import {CarouselProps} from "@src/components/utils/types";
 import template1Thumbnail from "@src/assets/img/template_1.png";
 import template2Thumbnail from "@src/assets/img/template_2.png";
 import template3Thumbnail from "@src/assets/img/template_3.png";
+import template4Thumbnail from "@src/assets/img/template_4.png";
 
 export type ResumeTemplate = {
   id: string,
@@ -11,7 +12,8 @@ export type ResumeTemplate = {
 const templates: ResumeTemplate[] = [
   { id: "1", thumbnail: template1Thumbnail},
   { id: "2", thumbnail: template2Thumbnail },
-  { id: "3", thumbnail: template3Thumbnail }
+  { id: "3", thumbnail: template3Thumbnail },
+  { id: "4", thumbnail: template4Thumbnail }
 ]
 
 export default function TemplateCarousel(props: CarouselProps): JSX.Element {

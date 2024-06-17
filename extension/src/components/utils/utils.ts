@@ -1,5 +1,6 @@
 import moment from "moment";
 import axios from "axios";
+import {CSSStyle} from "@src/components/utils/types";
 
 export function getFormattedDate(timestamp: number) {
   return moment.unix(timestamp).format('MMMM Do YYYY')
@@ -45,4 +46,35 @@ export function exportCss(templateId: string, html: HTMLHtmlElement) {
       });
     }
   }
+}
+
+export function cssToReactStyle(css: string): CSSStyle {
+  const styles: CSSStyle = {};
+
+  // Split CSS rules by semicolons
+  const rules = css.split(';').filter(rule => rule.trim() !== '');
+
+  for (const rule of rules) {
+    const [property, value] = rule.trim().split(':').map(part => part.trim());
+    // Convert CSS property names to camelCase (e.g., font-size -> fontSize)
+    const camelCaseProperty = property.replace(/-([a-z])/g, (match, group1) => group1.toUpperCase());
+
+    // Check for valid property names and handle pixel values
+    if (camelCaseProperty in document.documentElement.style) {
+      const unit = value.match(/px$/); // Check if value ends with 'px'
+      if (unit) {
+        const pixelValue = parseInt(value.slice(0, -2), 10); // Extract value without 'px'
+        if (!isNaN(pixelValue)) {
+          styles[camelCaseProperty] = `${pixelValue}px`;
+        } else {
+          console.warn(`Invalid pixel value for ${property}: ${value}`);
+        }
+      } else {
+        styles[camelCaseProperty] = value.replace(".00px", "px")
+      }
+    } else {
+      console.warn(`Ignoring invalid CSS property: ${property}`);
+    }
+  }
+  return styles;
 }

@@ -15,6 +15,10 @@ export type ResumeSingleViewProps = {
   onResumeSelect: (mode: ResumeMode, id: string | undefined) => void
 }
 
+export type PreviewProps = {
+  templateId: string
+}
+
 export type PrintProps = {
   onClick: () => void
 }
@@ -23,3 +27,5 @@ export type CarouselProps = {
   onTemplateSelect: (templateId: string) => void
   selectedId: string
 }
+
+export type CSSStyle = { [key: string]: string | number };
