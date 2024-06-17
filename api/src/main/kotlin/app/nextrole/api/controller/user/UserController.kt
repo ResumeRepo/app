@@ -1,6 +1,6 @@
 package app.nextrole.api.controller.user
 
-import app.nextrole.api.codegen.types.UserInput
+import app.nextrole.api.UserProfile
 import app.nextrole.api.data.postgres.entity.UserEntity
 import app.nextrole.api.service.user.UserService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -22,7 +22,7 @@ class UserController(private val userService: UserService) {
     }
 
     @MutationMapping
-    fun createUser(@Argument user: UserInput): UserEntity {
+    fun createUser(@Argument user: UserProfile): UserEntity {
        return userService.createUser(user)
     }
 }

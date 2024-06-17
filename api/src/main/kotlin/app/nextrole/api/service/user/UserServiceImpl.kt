@@ -1,6 +1,6 @@
 package app.nextrole.api.service.user
 
-import app.nextrole.api.codegen.types.UserInput
+import app.nextrole.api.UserProfile
 import app.nextrole.api.data.postgres.entity.UserEntity
 import app.nextrole.api.data.postgres.repo.UserRepo
 import org.springframework.stereotype.Service
@@ -12,11 +12,11 @@ class UserServiceImpl(private val userRepo: UserRepo) : UserService {
         return userRepo.findById(id).orElse(null)
     }
 
-    override fun createUser(userInput: UserInput): UserEntity {
+    override fun createUser(profile: UserProfile): UserEntity {
         val user = UserEntity()
-        user.fullName = userInput.fullName
-        user.email = userInput.email
-        user.username = userInput.username
+        user.fullName = profile.name
+        user.email = profile.email
+        user.username = profile.username
         userRepo.save(user)
         return user
     }

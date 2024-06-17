@@ -2,7 +2,6 @@ package app.nextrole.api
 
 import app.nextrole.api.controller.ControllerConfiguration
 import app.nextrole.api.data.DataConfiguration
-import app.nextrole.api.dgs.GraphqlConfiguration
 import app.nextrole.api.props.PropsConfiguration
 import app.nextrole.api.service.ServiceConfiguration
 import app.nextrole.api.utils.migration.FlywayPostgresMigration
@@ -21,8 +20,7 @@ import org.springframework.context.annotation.Import
     DataConfiguration::class,
     PropsConfiguration::class,
     ServiceConfiguration::class,
-    ControllerConfiguration::class,
-    GraphqlConfiguration::class
+    ControllerConfiguration::class
 )
 class RootConfiguration(val flywayPostgresMigration: FlywayPostgresMigration) {
 

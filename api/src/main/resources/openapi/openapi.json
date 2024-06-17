@@ -1,0 +1,1785 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GPT Lambda API",
+    "description": "GPT Lambda AI API Service",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.functionhub.net",
+      "description": "Prod"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Dev"
+    }
+  ],
+  "paths": {
+    "/fh-users": {
+      "post": {
+        "tags": [
+          "internal"
+        ],
+        "operationId": "getAllUsers",
+        "description": "Get all FunctionHub users",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "All Users",
+            "content": {
+              "text/plain; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/log": {
+      "post": {
+        "tags": [
+          "internal"
+        ],
+        "operationId": "logHttpRequests",
+        "description": "Log user HTTP requests",
+        "requestBody": {
+          "required": true,
+          "description": "Request log",
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seed": {
+      "post": {
+        "tags": [
+          "internal"
+        ],
+        "operationId": "generateSeedData",
+        "description": "Generate seed data",
+        "responses": {
+          "200": {
+            "description": "Generic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feedback": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "operationId": "createUserFeedback",
+        "description": "Create user feedback",
+        "requestBody": {
+          "required": true,
+          "description": "Feedback",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserFeedback"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "post": {
+        "tags": [
+          "spec"
+        ],
+        "operationId": "getSpecStatus",
+        "description": "Get user spec generation status",
+        "requestBody": {
+          "required": true,
+          "description": "Status request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{function_slug}": {
+      "post": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Execute any user function",
+        "description": "Execute any user function with dynamically generated request and response payloads",
+        "operationId": "runProdFunction",
+        "parameters": [
+          {
+            "name": "function_slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Execution request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/d/{function_slug}": {
+      "post": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Execute any user function",
+        "description": "Execute any user function with dynamically generated request and response payloads",
+        "operationId": "runDevFunction",
+        "parameters": [
+          {
+            "name": "function_slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Execution request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spec/{function_slug}/{version}/{auth_token}/{env}": {
+      "get": {
+        "tags": [
+          "spec"
+        ],
+        "operationId": "getUserSpec",
+        "parameters": [
+          {
+            "name": "function_slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "auth_token",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/npm/{code_id}": {
+      "get": {
+        "tags": [
+          "runtime"
+        ],
+        "operationId": "getUserCode",
+        "parameters": [
+          {
+            "name": "code_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User code",
+            "content": {
+              "application/typescript": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/run": {
+      "post": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Execute user code",
+        "description": "Execute user code in a secure sandbox",
+        "operationId": "exec",
+        "requestBody": {
+          "required": true,
+          "description": "Execution request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Runtime Info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecResultAsync"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deploy": {
+      "post": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Deploy user code",
+        "description": "Allows user code execution if all validations pass",
+        "operationId": "deploy",
+        "requestBody": {
+          "required": true,
+          "description": "Deploy request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deploy response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/e-result": {
+      "get": {
+        "tags": [
+          "runtime"
+        ],
+        "operationId": "getExecResult",
+        "summary": "Get result of completed execution",
+        "description": "Execution results are short-lived",
+        "parameters": [
+          {
+            "name": "exec_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecResultAsync"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Execution result handler",
+        "description": "Handles user code execution result",
+        "operationId": "handleExecResult",
+        "requestBody": {
+          "required": true,
+          "description": "Execution result",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecResultAsync"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Runtime Info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/s-result": {
+      "post": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Spec result handler",
+        "description": "Handles spec generation result",
+        "operationId": "handleSpecResult",
+        "requestBody": {
+          "required": true,
+          "description": "Spec result",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecResult"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Runtime Info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/update-code": {
+      "post": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Update code",
+        "description": "Update code",
+        "operationId": "updateCode",
+        "requestBody": {
+          "required": true,
+          "description": "Update request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Code"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Code update response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeUpdateResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/completion": {
+      "post": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Call GPT completion endpoint",
+        "description": "Call GPT completion endpoint",
+        "operationId": "prodCompletionRequest",
+        "requestBody": {
+          "required": true,
+          "description": "GPT Completion request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCompletionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "GPT completion response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCompletionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/keys": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Generate an api key or insert a vendor key",
+        "operationId": "upsertApiKey",
+        "requestBody": {
+          "required": true,
+          "description": "Api key request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiKeyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Api key response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete an api key",
+        "operationId": "deleteKey",
+        "requestBody": {
+          "required": true,
+          "description": "Api key request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiKeyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Api key response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get all API keys",
+        "operationId": "getApiKeys",
+        "responses": {
+          "200": {
+            "description": "Api key response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/env-variables": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Upsert user env variables",
+        "operationId": "upsertEnvVariables",
+        "requestBody": {
+          "required": true,
+          "description": "Api key request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Env variable response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get all env variables",
+        "operationId": "getEnvVariables",
+        "responses": {
+          "200": {
+            "description": "Env variable response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/completion/{function_slug}": {
+      "post": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Call GPT completion endpoint",
+        "description": "Call GPT completion endpoint",
+        "operationId": "devGptCompletion",
+        "parameters": [
+          {
+            "name": "function_slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "GPT Completion request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCompletionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "GPT completion response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCompletionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/code/{code_id}": {
+      "get": {
+        "tags": [
+          "runtime"
+        ],
+        "summary": "Get user code detail",
+        "description": "Get user code detail",
+        "operationId": "getCodeDetail",
+        "parameters": [
+          {
+            "name": "code_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "by_slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Code update response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Code"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/explore": {
+      "post": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Get all public functions",
+        "operationId": "getAllPublicFunctions",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Paginated response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/code/fork": {
+      "post": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Fork user code",
+        "operationId": "forkCode",
+        "requestBody": {
+          "required": true,
+          "description": "Fork request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForkRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fork result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeUpdateResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user profile",
+        "description": "Get user profile or create one if it doesn't exist",
+        "operationId": "getUserprofile",
+        "responses": {
+          "200": {
+            "description": "Get user profile response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/username": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Check if username exists",
+        "operationId": "usernameExists",
+        "requestBody": {
+          "required": true,
+          "description": "Username check",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsernameRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Username response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Update username",
+        "operationId": "updateUsername",
+        "requestBody": {
+          "required": true,
+          "description": "Username request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsernameRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Username response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects": {
+      "post": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Create a project",
+        "description": "Creates a project directory",
+        "operationId": "createProject",
+        "requestBody": {
+          "required": true,
+          "description": "Project create request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projects"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Update a project",
+        "description": "Updates project name",
+        "operationId": "updateProject",
+        "requestBody": {
+          "required": true,
+          "description": "Project update request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projects"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Delete a project",
+        "description": "Deletes a project",
+        "operationId": "deleteProject",
+        "requestBody": {
+          "required": true,
+          "description": "Project delete request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "description": "Project Id"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projects"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Get all projects",
+        "description": "Get all projects",
+        "operationId": "getAllProjects",
+        "responses": {
+          "200": {
+            "description": "All projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projects"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_id}": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Get all functions in a project",
+        "description": "Get all functions in a project",
+        "operationId": "getAllFunctions",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Project ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All functions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FHFunctions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project": {
+      "post": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Create a function",
+        "description": "Creates a new function",
+        "operationId": "createFunction",
+        "requestBody": {
+          "required": true,
+          "description": "FHFunction create request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "description": "Project ID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Code response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeUpdateResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Update function metadata",
+        "operationId": "updateFunction",
+        "requestBody": {
+          "required": true,
+          "description": "FHFunction update request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FHFunction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Code response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FHFunctions"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Delete a function",
+        "description": "Deletes a function",
+        "operationId": "deleteFunction",
+        "requestBody": {
+          "required": true,
+          "description": "FHFunction delete request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "description": "Code Id"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FHFunctions"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserCompletionRequest": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GPTMessage"
+            }
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string",
+            "default": "gpt-3.5-turbo-16k-0613"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "format": "int32",
+            "default": 4096
+          },
+          "temperature": {
+            "type": "number",
+            "format": "double",
+            "default": 0.7
+          },
+          "function_call": {
+            "type": "string",
+            "default": "auto"
+          }
+        }
+      },
+      "GPTMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "default": "user"
+          },
+          "content": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "UserCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GPTMessage"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/TokenUsage"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "TokenUsage": {
+        "type": "object",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "function_call_aggregate": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApiKeyProvider": {
+        "type": "string",
+        "enum": [
+          "FUNCTION_HUB",
+          "OPEN_AI"
+        ]
+      },
+      "ApiKeyRequest": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/ApiKeyProvider"
+          }
+        }
+      },
+      "ApiKeyResponse": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiKey"
+            }
+          }
+        }
+      },
+      "ApiKey": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/ApiKeyProvider"
+          }
+        }
+      },
+      "ForkRequest": {
+        "type": "object",
+        "properties": {
+          "parent_code_id": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          }
+        }
+      },
+      "Code":  {
+        "type": "object",
+        "properties": {
+          "code_id": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "is_public": {
+            "type": "boolean"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "parent_id": {
+            "type": "string"
+          },
+          "owner_id": {
+            "type": "string"
+          },
+          "function_slug": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "fields_to_update": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StatusResponse": {
+        "type": "object",
+        "properties": {
+          "is_ready": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "StatusRequest": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "deployed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CodeUpdateResult": {
+        "type": "object",
+        "properties": {
+          "code_id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ExecResultAsync":  {
+        "type": "object",
+        "properties": {
+          "code_id": {
+            "type": "string"
+          },
+          "exec_id": {
+            "type": "string"
+          },
+          "validate": {
+            "type": "boolean",
+            "default": false
+          },
+          "result": {
+            "type": "string"
+          },
+          "std_out": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "std_out_str": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "Spec":  {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          }
+        }
+      },
+      "SpecResult":  {
+        "type": "object",
+        "properties": {
+          "code_id": {
+            "type": "string"
+          },
+          "spec": {
+            "$ref": "#/components/schemas/Spec"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "ExecRequest":  {
+        "type": "object",
+        "properties": {
+          "code_id": {
+            "type": "string"
+          },
+          "exec_id": {
+            "type": "string"
+          },
+          "validate": {
+            "type": "boolean",
+            "default": true
+          },
+          "deployed": {
+            "type": "boolean",
+            "default": false
+          },
+          "version": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          }
+        }
+      },
+      "UserProfileResponse":  {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
+          }
+        }
+      },
+      "ProjectCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ProjectUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          }
+        }
+      },
+      "Projects": {
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
+          }
+        }
+      },
+      "UsernameRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "UsernameResponse": {
+        "type": "object",
+        "properties": {
+          "is_available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "num_functions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "full": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FHFunctions": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "functions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FHFunction"
+            }
+          }
+        }
+      },
+      "FHFunction": {
+        "type": "object",
+        "properties": {
+
+          "slug": {
+            "type": "string"
+          },
+          "owner_id": {
+            "type": "string"
+          },
+          "is_owner": {
+            "type": "boolean"
+          },
+          "owner_username": {
+            "type": "string"
+          },
+          "owner_avatar": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "code_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "is_public": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "fork_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      },
+      "UserFeedback": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "GenericResponse":  {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "UserProfile":  {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "api_key": {
+            "type": "string"
+          },
+          "anonymous": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          },
+          "is_authorized": {
+            "type": "boolean"
+          },
+          "auth_mode": {
+            "type": "string"
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
+          }
+        }
+      },
+      "PageableRequest": {
+        "type": "object",
+        "required": [
+          "limit",
+          "page_num"
+        ],
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page_num": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sortDir": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PageableResponse": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FHFunction"
+            }
+          }
+        }
+      }
+    }
+  }
+}

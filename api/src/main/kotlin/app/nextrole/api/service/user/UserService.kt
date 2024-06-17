@@ -1,6 +1,6 @@
 package app.nextrole.api.service.user
 
-import app.nextrole.api.codegen.types.UserInput
+import app.nextrole.api.UserProfile
 import app.nextrole.api.data.postgres.entity.UserEntity
 
 /**
@@ -9,5 +9,5 @@ import app.nextrole.api.data.postgres.entity.UserEntity
  */
 interface UserService {
     fun findUserById(id: String): UserEntity?
-    fun createUser(userInput: UserInput): UserEntity
+    fun createUser(profile: UserProfile): UserEntity
 }
