@@ -1,5 +1,6 @@
 import React from "react";
 import template1Css from "@src/assets/styles/templates/1.css?inline"
+import defaultResumeData from "@src/components/ResumePreview/DefaultResumeData";
 
 const Template1 = () => {
   const paddingTop = "0.25in"

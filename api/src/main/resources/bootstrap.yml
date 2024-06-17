@@ -1,0 +1,42 @@
+logging:
+  level:
+    ROOT: INFO
+server:
+  port: 8888
+  servlet:
+    context-path: /config-api
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        git:
+          uri: https://github.com/ResumeRepo/remote-configs.git
+          default-label: main
+          clone-on-start: true
+          username: ${GH_USERNAME}
+          password: ${GH_TOKEN}
+        prefix: /config-api
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: never
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: health,refresh
+encrypt:
+  key: 'cdc43c7e9089a41897b101de70f878bcc575c839f4ad057605a3335f6a601133'
+dgs:
+  graphql:
+    extensions:
+      scalars:
+        objects:
+          enabled: true
+
