@@ -64,6 +64,7 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
       if (iframe?.src) iframe.src = downloadUrl;
     })
     .catch(error => {
+      setGenerationInProgress(false)
       console.error('Error converting HTML to PDF:', error);
     });
   }

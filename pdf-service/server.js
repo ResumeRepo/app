@@ -48,7 +48,7 @@ async function generatePDF(htmlString, templateId, format, env) {
   let decodedHTML = buffer.toString('utf-8');
   decodedHTML = maybeAddStyling(decodedHTML, templateId, env)
 
-  fs.writeFileSync(`${env}_payload.html`, decodedHTML);
+  fs.writeFileSync(`${env}_${templateId}_payload.html`, decodedHTML);
   console.log(Date.now(), "Generating pdf")
 
 

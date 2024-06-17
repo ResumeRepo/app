@@ -16,6 +16,7 @@ async function getBrowser() {
     console.log("Generating pdf...")
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+    page.setOfflineMode(true);
     await page.setContent(content);
     const buffer = await page.pdf({});
     await browser.close();
