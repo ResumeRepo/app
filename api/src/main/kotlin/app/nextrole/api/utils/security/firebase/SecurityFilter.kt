@@ -5,6 +5,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseToken
 import app.nextrole.api.utils.security.Credentials
 import app.nextrole.api.utils.security.UnsecurePaths
+import app.nextrole.api.utils.security.jwt.JwtService
+import app.nextrole.api.utils.security.jwt.JwtServiceImpl
+import com.google.firebase.auth.UserRecord
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
@@ -29,7 +32,8 @@ import java.util.stream.Stream
 
 @Component
 class SecurityFilter(
-    val unsecurePaths: UnsecurePaths
+    val unsecurePaths: UnsecurePaths,
+    val jwtService: JwtService
 ) : OncePerRequestFilter() {
 
     @Throws(IOException::class, ServletException::class)
@@ -69,12 +73,15 @@ class SecurityFilter(
         var user: SessionUser
         val credentials = Credentials()
         try {
-            val decodedToken = FirebaseAuth.getInstance().verifyIdToken(bearerToken)
-            user = firebaseTokenToUser(decodedToken)
+            if (bearerToken.startsWith(JwtServiceImpl.jwtPrefix)) {
+                user = userRecordToSessionUser(jwtService.getFirebaseUser(bearerToken))
+            } else {
+                val decodedToken = FirebaseAuth.getInstance().verifyIdToken(bearerToken)
+                user = firebaseTokenToSessionUser(decodedToken)
+            }
             user.anonymous = false
 
             credentials.authToken = bearerToken
-            credentials.decodedFirebaseToken = decodedToken
         } catch (e: Exception) {
             httpServletResponse.status = HttpStatus.UNAUTHORIZED.value()
             return
@@ -89,7 +96,7 @@ class SecurityFilter(
     }
 
 
-    private fun firebaseTokenToUser(decodedToken: FirebaseToken?): SessionUser {
+    private fun firebaseTokenToSessionUser(decodedToken: FirebaseToken?): SessionUser {
         val user = SessionUser()
         if (decodedToken != null) {
             user.userId = decodedToken.uid
@@ -105,6 +112,23 @@ class SecurityFilter(
             }
             user.roles = parsedClaims
         }
+        return user
+    }
+
+    private fun userRecordToSessionUser(userRecord: UserRecord): SessionUser {
+        val user = SessionUser()
+        user.userId = userRecord.uid
+        user.name = userRecord.displayName
+        user.email = userRecord.email
+        user.avatar = userRecord.photoUrl
+        val parsedClaims: MutableMap<String, Boolean> = HashMap()
+        val claimsToParse = userRecord.customClaims
+        for ((key, value) in claimsToParse) {
+            if (key.startsWith("ROLE_")) {
+                parsedClaims[key] = value as Boolean
+            }
+        }
+        user.roles = parsedClaims
         return user
     }
 

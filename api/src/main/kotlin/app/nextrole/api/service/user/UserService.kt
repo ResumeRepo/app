@@ -8,4 +8,5 @@ import app.nextrole.api.SessionUser
  */
 interface UserService {
     fun getOrCreateUser(): SessionUser
+    fun exchangeToken(): SessionUser
 }

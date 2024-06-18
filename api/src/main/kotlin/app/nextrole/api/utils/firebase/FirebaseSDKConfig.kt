@@ -5,6 +5,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import app.nextrole.api.props.FirebaseProps
+import app.nextrole.api.service.utils.decodeBase64
 import jakarta.annotation.PostConstruct
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
@@ -41,7 +42,7 @@ class FirebaseSDKConfig(val firebaseProps: FirebaseProps, val objectMapper: Obje
         jsonNode.put("type", firebaseProps.type)
         jsonNode.put("project_id", firebaseProps.projectId)
         jsonNode.put("private_key_id", firebaseProps.privateKeyId)
-        jsonNode.put("private_key", decodeKey(firebaseProps.privateKey))
+        jsonNode.put("private_key", decodeBase64(firebaseProps.privateKey))
         jsonNode.put("client_email", firebaseProps.clientEmail)
         jsonNode.put("client_id", firebaseProps.clientId)
         jsonNode.put("auth_uri", firebaseProps.authUri)
@@ -54,9 +55,5 @@ class FirebaseSDKConfig(val firebaseProps: FirebaseProps, val objectMapper: Obje
             )
         )
         return GoogleCredentials.fromStream(inputStream)
-    }
-
-    private fun decodeKey(encoded: String?): String {
-        return String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8)
     }
 }

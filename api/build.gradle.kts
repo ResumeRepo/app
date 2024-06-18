@@ -62,6 +62,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
     testImplementation("org.testng:testng:7.9.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

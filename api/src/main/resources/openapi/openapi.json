@@ -37,6 +37,28 @@
           }
         }
       }
+    },
+    "/user/token-exchange": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Exchange token",
+        "description": "Exchange a short-lived Firebase token for a long-lived, self-signed token",
+        "operationId": "exchangeToken",
+        "responses": {
+          "200": {
+            "description": "Get user profile response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionUser"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -68,6 +90,9 @@
           },
           "anonymous": {
             "type": "boolean"
+          },
+          "token": {
+            "type": "string"
           },
           "roles": {
             "type": "object",

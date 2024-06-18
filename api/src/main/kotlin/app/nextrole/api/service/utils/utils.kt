@@ -63,3 +63,7 @@ fun getSessionUser(): SessionUser {
         SessionUser()
     }
 }
+
+fun decodeBase64(encoded: String?): String {
+    return String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8)
+}
