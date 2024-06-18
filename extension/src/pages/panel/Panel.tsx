@@ -3,6 +3,8 @@ import '@pages/panel/Panel.css';
 import BottomNav from "@src/components/BottomNav";
 import Assistant from "@src/components/Assistant";
 import ResumeListView from "@src/components/ResumeListView";
+import {AuthContextProvider} from "@src/context/AuthContext";
+import RequireLogin from "@src/components/RequireLogin";
 
 
 // const port = chrome.runtime.connect();
@@ -49,13 +51,15 @@ export default function Panel(): JSX.Element {
 
   return (
     <div className="container mx-auto px-4 py-4 max-w-[660px]">
-      { activeTab === "Assistant" && <Assistant/> }
-      { activeTab === "Resumes" && <ResumeListView/> }
-      <BottomNav
-          activeTab={activeTab}
-          showResumeUpload={showResumeUpload}
-          onChangeTab={onChangeTab}
-      />
+      <AuthContextProvider>
+        { activeTab === "Assistant" && <Assistant/> }
+        { activeTab === "Resumes" && <RequireLogin><ResumeListView/></RequireLogin> }
+        <BottomNav
+            activeTab={activeTab}
+            showResumeUpload={showResumeUpload}
+            onChangeTab={onChangeTab}
+        />
+      </AuthContextProvider>
     </div>
   );
 }

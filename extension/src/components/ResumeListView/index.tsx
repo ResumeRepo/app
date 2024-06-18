@@ -3,6 +3,7 @@ import Card from "@src/components/Card";
 import {getFormattedDate} from "@src/components/utils/utils";
 import {ResumeInfo, ResumeMode} from "@src/components/utils/types";
 import ResumeSingleView from "@src/components/ResumeSingleView";
+import {useAuthContext} from "@src/context/AuthContext";
 
 const resumes: ResumeInfo[] = [
   {id: "id_1", title: "Product Configuration Software Developer", avatar: "https://placehold.co/128", company: "ASI Group", location: "New York, NY", createdAt: 1717974378},
@@ -15,11 +16,22 @@ const activeResume: ResumeInfo = {id: "id_1", title: "Product Configuration Soft
 export default function ResumeListView(): JSX.Element {
   const [mode, setMode] = useState<ResumeMode>("List")
   const [activeResumeId, setActiveResumeId] = useState<string | undefined>(undefined)
+  const {authUser} = useAuthContext()
 
   const onResumeSelect = (mode: ResumeMode, id: string | undefined) => {
     setMode(mode)
     if (id) setActiveResumeId(id)
     else setActiveResumeId(undefined)
+  }
+
+  useEffect(() => {
+    console.log("auth user: ", authUser)
+  }, []);
+
+  if (!authUser) {
+    return (
+        <>Hello, world!</>
+    )
   }
 
   return (
