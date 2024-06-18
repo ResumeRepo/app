@@ -1,7 +1,6 @@
 package app.nextrole.api.service
 
 import app.nextrole.api.data.DataConfiguration
-import app.nextrole.api.dgs.GraphqlConfiguration
 import app.nextrole.api.props.PropsConfiguration
 import app.nextrole.api.utils.TestUtilConfiguration
 import app.nextrole.api.utils.mapper.ObjectMapperConfiguration
@@ -24,7 +23,6 @@ import org.springframework.context.annotation.Import
     DataConfiguration::class,
     FlywayMigrationConfiguration::class,
     TestUtilConfiguration::class,
-    GraphqlConfiguration::class,
     ServiceConfiguration::class
 )
 class ServiceTestConfiguration {

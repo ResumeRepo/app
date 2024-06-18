@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
@@ -5,7 +6,7 @@ plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.openapi.generator") version "7.6.0"
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.0.0"
     kotlin("plugin.spring") version "1.9.22"
     kotlin("plugin.jpa") version "1.9.22"
 
@@ -23,6 +24,16 @@ configurations {
         extendsFrom(configurations.annotationProcessor.get())
     }
 }
+
+//kotlin {
+//    sourceSets {
+//        val jvmMain by getting {
+//            dependencies {
+//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC")
+//            }
+//        }
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -49,6 +60,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
     runtimeOnly("org.postgresql:postgresql")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     testImplementation("org.testng:testng:7.9.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -98,6 +110,7 @@ tasks.register<GenerateTask>("openApiGenerateSpringServer") {
         "useSpringfox" to "false",
         "useSpringBoot3" to "true",
         "documentationProvider" to "none",
+        "modelMutable" to "true"
     )
 }
 

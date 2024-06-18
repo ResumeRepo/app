@@ -1,11 +1,9 @@
 package app.nextrole.api.controller.user
 
-import app.nextrole.api.UserProfile
-import app.nextrole.api.data.postgres.entity.UserEntity
+import app.nextrole.api.SessionUser
+import app.nextrole.api.UserApi
 import app.nextrole.api.service.user.UserService
-import org.springframework.graphql.data.method.annotation.Argument
-import org.springframework.graphql.data.method.annotation.MutationMapping
-import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 
 
@@ -14,15 +12,9 @@ import org.springframework.stereotype.Controller
  * created on 3/17/24
  */
 @Controller
-class UserController(private val userService: UserService) {
+class UserController(private val userService: UserService): UserApi {
 
-    @QueryMapping
-    fun userById(@Argument id: String): UserEntity? {
-        return userService.findUserById(id)
-    }
-
-    @MutationMapping
-    fun createUser(@Argument user: UserProfile): UserEntity {
-       return userService.createUser(user)
+    override fun getUserprofile(): ResponseEntity<SessionUser> {
+        return ResponseEntity.ok(userService.getOrCreateUser())
     }
 }

@@ -1,6 +1,6 @@
 package app.nextrole.api.utils
 
-import app.nextrole.api.dto.SessionUser
+import app.nextrole.api.SessionUser
 import org.mockito.Mockito
 import org.springframework.core.io.ClassPathResource
 import org.springframework.security.core.Authentication

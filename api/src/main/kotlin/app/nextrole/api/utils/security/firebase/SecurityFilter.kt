@@ -1,8 +1,8 @@
 package app.nextrole.api.utils.security.firebase
 
+import app.nextrole.api.SessionUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseToken
-import app.nextrole.api.dto.SessionUser
 import app.nextrole.api.utils.security.Credentials
 import app.nextrole.api.utils.security.UnsecurePaths
 import jakarta.servlet.FilterChain
@@ -82,7 +82,7 @@ class SecurityFilter(
 
         val authentication = UsernamePasswordAuthenticationToken(
             user, credentials,
-            getAuthorities(user.roles)
+            user.roles?.let { getAuthorities(it) }
         )
         authentication.details = WebAuthenticationDetailsSource().buildDetails(httpServletRequest)
         SecurityContextHolder.getContext().authentication = authentication

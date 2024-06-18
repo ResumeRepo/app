@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 @Transactional
 interface UserRepo : JpaRepository<UserEntity, String> {
-//    fun findByEmail(email: String?): UserEntity?
+    fun findByUid(uid: String): UserEntity?
 //
 //    @Query(
 //        value = "SELECT "

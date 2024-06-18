@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS public.user (
     anonymous boolean NOT NULL DEFAULT false,
     is_premium_user boolean NOT NULL DEFAULT false,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(uid)
 );
 ALTER TABLE public.user OWNER TO root;
 

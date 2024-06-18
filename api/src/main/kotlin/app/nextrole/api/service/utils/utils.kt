@@ -1,6 +1,8 @@
 package app.nextrole.api.service.utils
 
+import app.nextrole.api.SessionUser
 import org.springframework.core.io.ClassPathResource
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.util.FileCopyUtils
 import java.io.IOException
 import java.nio.charset.StandardCharsets
@@ -51,5 +53,13 @@ fun loadFile(path: String?): String {
         String(binaryData, StandardCharsets.UTF_8)
     } catch (e: IOException) {
         throw RuntimeException(e)
+    }
+}
+
+fun getSessionUser(): SessionUser {
+    return try {
+        SecurityContextHolder.getContext().authentication.principal as SessionUser
+    } catch (e: Exception) {
+        SessionUser()
     }
 }
