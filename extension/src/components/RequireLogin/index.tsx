@@ -12,6 +12,11 @@ import {
   setPersistence,
   signInWithPopup, Auth
 } from "firebase/auth";
+// import {
+//   sendSignInLinkToEmail,
+//   isSignInWithEmailLink,
+//   signInWithEmailLink
+// } from "firebase/auth/web-extension"
 import {DEBUG, ERROR} from "@src/utils/utils";
 
 export default function RequireLogin({ children,}: {
@@ -39,6 +44,25 @@ export default function RequireLogin({ children,}: {
     }
   }
 
+  // const firebaseSignIn = (provider: AuthProvider) => {
+  //   if (auth) {
+  //     const email = "hello@example.com"
+  //     sendSignInLinkToEmail(auth, email, actionCodeSettings)
+  //     .then(() => {
+  //       // The link was successfully sent. Inform the user.
+  //       // Save the email locally so you don't need to ask the user for it again
+  //       // if they open the link on the same device.
+  //       window.localStorage.setItem('emailForSignIn', email);
+  //       // ...
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       // ...
+  //     });
+  //   }
+  // }
+
   if (!authUser) {
     return (
         <div>
@@ -55,8 +79,9 @@ export default function RequireLogin({ children,}: {
                 </div>
 
                 <div className="mt-10 w-full text-center flex flex-col">
+                  <a href="https://example.com" target="_blank">
                   <button
-                      onClick={() => firebaseSignIn(new GoogleAuthProvider())}
+                      // onClick={() => firebaseSignIn(new GoogleAuthProvider())}
                       type="button"
                       className="text-center inline-flex items-center w-60 text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-[#4285F4]/55 me-2 mb-4">
                     <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
@@ -64,6 +89,7 @@ export default function RequireLogin({ children,}: {
                     </svg>
                     Sign in with Google
                   </button>
+                  </a>
 
                   <button
                       onClick={() => firebaseSignIn(new GithubAuthProvider())}
@@ -75,15 +101,15 @@ export default function RequireLogin({ children,}: {
                     Sign in with Github
                   </button>
 
-                  <button
-                      onClick={() => firebaseSignIn(new GithubAuthProvider())}
-                      type="button"
-                      className="mb-4 text-center inline-flex items-center w-60 bg-white border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                    <svg className="w-4 h-4 me-2" viewBox="0 -2 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                         xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                      <g id="SVGRepo_iconCarrier"> <defs> </defs> <g id="Icons" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"> <g id="Color-" transform="translate(-702.000000, -265.000000)" fill="#007EBB"> <path d="M746,305 L736.2754,305 L736.2754,290.9384 C736.2754,287.257796 734.754233,284.74515 731.409219,284.74515 C728.850659,284.74515 727.427799,286.440738 726.765522,288.074854 C726.517168,288.661395 726.555974,289.478453 726.555974,290.295511 L726.555974,305 L716.921919,305 C716.921919,305 717.046096,280.091247 716.921919,277.827047 L726.555974,277.827047 L726.555974,282.091631 C727.125118,280.226996 730.203669,277.565794 735.116416,277.565794 C741.21143,277.565794 746,281.474355 746,289.890824 L746,305 L746,305 Z M707.17921,274.428187 L707.117121,274.428187 C704.0127,274.428187 702,272.350964 702,269.717936 C702,267.033681 704.072201,265 707.238711,265 C710.402634,265 712.348071,267.028559 712.41016,269.710252 C712.41016,272.34328 710.402634,274.428187 707.17921,274.428187 L707.17921,274.428187 L707.17921,274.428187 Z M703.109831,277.827047 L711.685795,277.827047 L711.685795,305 L703.109831,305 L703.109831,277.827047 L703.109831,277.827047 Z" id="LinkedIn"> </path> </g> </g> </g></svg>
-                    Sign in with LinkedIn
-                  </button>
+                  {/*<button*/}
+                  {/*    onClick={() => firebaseSignIn(new GithubAuthProvider())}*/}
+                  {/*    type="button"*/}
+                  {/*    className="mb-4 text-center inline-flex items-center w-60 bg-white border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">*/}
+                  {/*  <svg className="w-4 h-4 me-2" viewBox="0 -2 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg"*/}
+                  {/*       xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>*/}
+                  {/*    <g id="SVGRepo_iconCarrier"> <defs> </defs> <g id="Icons" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"> <g id="Color-" transform="translate(-702.000000, -265.000000)" fill="#007EBB"> <path d="M746,305 L736.2754,305 L736.2754,290.9384 C736.2754,287.257796 734.754233,284.74515 731.409219,284.74515 C728.850659,284.74515 727.427799,286.440738 726.765522,288.074854 C726.517168,288.661395 726.555974,289.478453 726.555974,290.295511 L726.555974,305 L716.921919,305 C716.921919,305 717.046096,280.091247 716.921919,277.827047 L726.555974,277.827047 L726.555974,282.091631 C727.125118,280.226996 730.203669,277.565794 735.116416,277.565794 C741.21143,277.565794 746,281.474355 746,289.890824 L746,305 L746,305 Z M707.17921,274.428187 L707.117121,274.428187 C704.0127,274.428187 702,272.350964 702,269.717936 C702,267.033681 704.072201,265 707.238711,265 C710.402634,265 712.348071,267.028559 712.41016,269.710252 C712.41016,272.34328 710.402634,274.428187 707.17921,274.428187 L707.17921,274.428187 L707.17921,274.428187 Z M703.109831,277.827047 L711.685795,277.827047 L711.685795,305 L703.109831,305 L703.109831,277.827047 L703.109831,277.827047 Z" id="LinkedIn"> </path> </g> </g> </g></svg>*/}
+                  {/*  Sign in with LinkedIn*/}
+                  {/*</button>*/}
 
                   {/*<button onClick={() => firebaseSignIn(new GithubAuthProvider())}*/}
                   {/*        className="mx-auto mt-2 flex h-[46px] w-full items-center justify-center space-x-2 rounded-md bg-zinc-900 p-2 text-zinc-500 transition-colors hover:border-gray-400 hover:bg-zinc-800 hover:text-zinc-300 focus:outline-none focus:ring-4 focus:ring-gray-400 focus:ring-opacity-25 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-gray-200 disabled:hover:bg-transparent disabled:hover:text-gray-500">*/}

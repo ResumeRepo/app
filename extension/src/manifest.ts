@@ -50,7 +50,7 @@ const manifest: Manifest.WebExtensionManifest = {
   host_permissions: [
     "https://en.wikipedia.org/*", "https://engadget.com/*"
   ],
-  "content_security_policy": {
+  content_security_policy: {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
   }
 };
