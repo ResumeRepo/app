@@ -146,6 +146,9 @@
       "SaveStyleRequest":  {
         "type": "object",
         "properties": {
+          "template_id": {
+            "type": "string"
+          },
           "payload": {
             "type": "array",
             "items": {

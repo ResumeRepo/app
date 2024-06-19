@@ -16,52 +16,27 @@ CREATE TABLE IF NOT EXISTS public.user (
 );
 ALTER TABLE public.user OWNER TO root;
 
-CREATE TABLE IF NOT EXISTS public.form (
-    id bigserial PRIMARY KEY NOT NULL,
-    expiration VARCHAR(255) NOT NULL,
-    edition VARCHAR(255) NOT NULL,
-    form_number VARCHAR(255) NOT NULL,
-    updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL
-);
-ALTER TABLE public.form OWNER TO root;
 
-CREATE TABLE IF NOT EXISTS public.part (
+CREATE TABLE IF NOT EXISTS public.application (
     id bigserial PRIMARY KEY NOT NULL,
-    part_number VARCHAR(255) NOT NULL,
-    sort_order bigint NOT NULL DEFAULT 0,
-    updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     user_id bigint NOT NULL,
-    form_id bigint NOT NULL
-);
-ALTER TABLE public.part OWNER TO root;
-
-CREATE TABLE IF NOT EXISTS public.field (
-    id bigserial PRIMARY KEY NOT NULL,
-    field_number VARCHAR(255) NOT NULL,
-    is_required boolean NOT NULL,
-
---     A selection may be Apt. Suite, or Floor
-    selection VARCHAR,
-
---     A field value may be the unit number
-    field_value VARCHAR,
-
-
---     What type of field is this? The selection above is of this data type
-    is_text boolean NOT NULL,
-    is_number boolean NOT NULL,
-    is_date boolean NOT NULL,
-    is_checkbox boolean NOT NULL,
-    is_radio boolean NOT NULL,
-    is_dropdown boolean NOT NULL,
-
+    job_title VARCHAR(1024),
+    company_name VARCHAR(1024),
+    location VARCHAR(1024),
+    salary VARCHAR(255),
+    logo_url VARCHAR(255),
+    template_id VARCHAR(255),
+    resume text,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL,
-    form_id bigint NOT NULL,
-    part_id bigint NOT NULL
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-ALTER TABLE public.field OWNER TO root;
+ALTER TABLE public.application OWNER TO root;
+
+CREATE TABLE IF NOT EXISTS public.template_style (
+    id bigserial PRIMARY KEY NOT NULL,
+    template_id VARCHAR(255) NOT NULL,
+    css text,
+    updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+ALTER TABLE public.template_style OWNER TO root;

@@ -2,7 +2,6 @@ package app.nextrole.api.controller.pdf
 
 import app.nextrole.api.*
 import app.nextrole.api.service.pdf.PdfService
-import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 

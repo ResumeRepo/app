@@ -4,14 +4,13 @@ import app.nextrole.api.PdfGenerateRequest
 import app.nextrole.api.service.ServiceTestConfiguration
 import app.nextrole.api.service.utils.loadFile
 import app.nextrole.api.utils.ServiceTestHelper
+import app.nextrole.api.utils.migration.FlywayPostgresMigration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import org.testng.annotations.*
 import java.lang.reflect.Method
-import java.nio.charset.StandardCharsets
-import java.util.*
 
 /**
  * @author Biz Melesse
@@ -20,6 +19,8 @@ import java.util.*
 
 @SpringBootTest(classes = [ServiceTestConfiguration::class])
 class PdfServiceIntegrationTest: AbstractTestNGSpringContextTests() {
+    @Autowired
+    private lateinit var flywayPostgresMigration: FlywayPostgresMigration
 
     @Autowired
     private lateinit var testHelper: ServiceTestHelper
@@ -38,6 +39,7 @@ class PdfServiceIntegrationTest: AbstractTestNGSpringContextTests() {
 
     @BeforeMethod
     fun beforeEachTest(method: Method) {
+        flywayPostgresMigration.migrate(true)
         logger.info("  Testcase: " + method.name + " has started")
 
     }

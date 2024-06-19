@@ -18,8 +18,6 @@ export function getFormattedDate(timestamp: number) {
  * import them in production on server-side.
  */
 export function exportCss(templateId: string, html: HTMLHtmlElement, token: string) {
-  // const endpoint = "/save-styling"
-  // const baseUrl = "http://localhost:4000"
   if (import.meta.env.MODE === "development") {
     const payload = []
     const styleAndLinkNodes = html.querySelectorAll("style");
@@ -34,29 +32,15 @@ export function exportCss(templateId: string, html: HTMLHtmlElement, token: stri
         })
       }
     }
-    const data = {
-      templateId: templateId,
-      payload: payload
-    }
     if (payload) {
-
-      new PdfApi(headerConfig(token)).saveStyle({payload})
+      new PdfApi(headerConfig(token)).saveStyle({
+        template_id: templateId,
+        payload
+      })
       .then(response => { DEBUG(`Style saved for templateId=${templateId}`)})
       .catch(e => {
         ERROR('Error saving style:', e);
       })
-
-      // axios.post(`${baseUrl}${endpoint}`, data, {
-      //   headers: { 'Content-Type': 'application/json' }
-      // })
-      // .then(response => {
-      // })
-      // .catch(error => {
-      //   console.error('Error converting HTML to PDF:', error);
-      // });
-
-
-
     }
   }
 }

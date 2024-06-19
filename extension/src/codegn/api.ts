@@ -81,6 +81,12 @@ export interface PdfGenerateRequest {
 export interface SaveStyleRequest {
     /**
      * 
+     * @type {string}
+     * @memberof SaveStyleRequest
+     */
+    'template_id'?: string;
+    /**
+     * 
      * @type {Array<{ [key: string]: any; }>}
      * @memberof SaveStyleRequest
      */
@@ -237,7 +243,7 @@ export const PdfApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async convertToPdf(pdfGenerateRequest: PdfGenerateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+        async convertToPdf(pdfGenerateRequest: PdfGenerateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.convertToPdf(pdfGenerateRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PdfApi.convertToPdf']?.[localVarOperationServerIndex]?.url;
@@ -273,7 +279,7 @@ export const PdfApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        convertToPdf(pdfGenerateRequest: PdfGenerateRequest, options?: any): AxiosPromise<File> {
+        convertToPdf(pdfGenerateRequest: PdfGenerateRequest, options?: any): AxiosPromise<string> {
             return localVarFp.convertToPdf(pdfGenerateRequest, options).then((request) => request(axios, basePath));
         },
         /**

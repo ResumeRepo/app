@@ -66,8 +66,6 @@ fun safeFile(path: String, data: String) {
     }
 }
 
-
-
 fun getSessionUser(): SessionUser {
     return try {
         SecurityContextHolder.getContext().authentication.principal as SessionUser
