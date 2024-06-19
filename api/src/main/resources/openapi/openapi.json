@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/user/": {
+    "/user": {
       "get": {
         "tags": [
           "user"
@@ -59,6 +59,71 @@
           }
         }
       }
+    },
+    "/pdf/convert": {
+      "post": {
+        "tags": [
+          "pdf"
+        ],
+        "summary": "Convert html to PDF",
+        "description": "Convert html to PDF",
+        "operationId": "convertToPdf",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PdfGenerateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated PDF",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pdf/style": {
+      "post": {
+        "tags": [
+          "pdf"
+        ],
+        "summary": "Save css styling for an html template",
+        "description": "Save css styling for an html template",
+        "operationId": "saveStyle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveStyleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated PDF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -70,6 +135,45 @@
       }
     },
     "schemas": {
+      "GenericResponse":  {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "SaveStyleRequest":  {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "array",
+            "items": {
+              "additionalProperties": {}
+            }
+          }
+        }
+      },
+      "PdfGenerateRequest":  {
+        "type": "object",
+        "properties": {
+          "template_id": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "env": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          },
+          "debug": {
+            "type": "boolean"
+          }
+        }
+      },
       "SessionUser":  {
         "type": "object",
         "properties": {

@@ -3,7 +3,6 @@ package app.nextrole.api.service.user
 import app.nextrole.api.data.postgres.entity.UserEntity
 import app.nextrole.api.data.postgres.repo.UserRepo
 import app.nextrole.api.service.ServiceTestConfiguration
-import app.nextrole.api.service.form.FormService
 import app.nextrole.api.service.utils.generateEntityId
 import app.nextrole.api.utils.ServiceTestHelper
 import app.nextrole.api.utils.migration.FlywayPostgresMigration
@@ -30,9 +29,6 @@ class UserServiceIntegrationTest: AbstractTestNGSpringContextTests() {
     @Autowired
     private lateinit var testHelper: ServiceTestHelper
 
-    @Autowired
-    private lateinit var formService: FormService
-
     @BeforeClass
     fun setup() {
         testHelper.prepareSecurity(null)
@@ -57,7 +53,6 @@ class UserServiceIntegrationTest: AbstractTestNGSpringContextTests() {
 
     @Test
     fun createUserTest() {
-        formService.practice()
         val user = UserEntity()
         user.uid = generateEntityId("u_")
         user.email = "hello@example.com"

@@ -7,7 +7,6 @@ import {AuthContextProvider} from "@src/context/AuthContext";
 import RequireLogin from "@src/components/RequireLogin";
 
 
-// const port = chrome.runtime.connect();
 export type TabType = "Assistant" | "Resumes" | "Profile"
 
 
