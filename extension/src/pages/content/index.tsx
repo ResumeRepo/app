@@ -1,20 +1,16 @@
-// import { createRoot } from 'react-dom/client';
-// const div = document.createElement('div');
-// document.body.appendChild(div);
-//
-// const root = createRoot(div);
-// root.render(
-//     <div>
-//       Content from content/index.tsx
-//     </div>
-// );
-//
-// try {
-//   console.log('content script loaded');
-// } catch (e) {
-//   console.error(e);
-// }
-console.log("document body: ", document.title, document.location.href, document.body)
+window.addEventListener("token", (event: Event) => {
+  const token = (event as CustomEvent).detail.token
+  if (token) {
+    chrome.runtime.sendMessage({
+      type: "Token",
+      token: token
+    });
+  }
+  console.log("token event encountered: ", event)
+})
+
+
+console.log("NextRole content script - document body: ", document.title, document.location.href, document.body)
 
 const body = document.body.innerHTML
 
@@ -25,7 +21,7 @@ chrome.runtime.sendMessage({
   url: document.location.href,
   body: body
 });
-// chrome.runtime.sendMessage({msg: "hello, World!"})
-// console.log("body sent...")
+
+
 
 

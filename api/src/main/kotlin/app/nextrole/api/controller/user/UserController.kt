@@ -12,14 +12,15 @@ import org.springframework.stereotype.Controller
  * created on 3/17/24
  */
 @Controller
-class UserController(private val userService: UserService): UserApi {
+class UserController(
+    val userService: UserService,
+): UserApi {
 
     override fun getUserprofile(): ResponseEntity<SessionUser> {
         return ResponseEntity.ok(userService.getOrCreateUser())
     }
 
     override fun exchangeToken(): ResponseEntity<SessionUser> {
-
-        return super.exchangeToken()
+        return ResponseEntity.ok(userService.exchangeToken())
     }
 }

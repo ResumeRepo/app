@@ -32,7 +32,13 @@ const manifest: Manifest.WebExtensionManifest = {
     '48': 'icon48.png',
     '128': 'icon128.png',
   },
-  permissions: ["activeTab", "sidePanel", "scripting", "tabs"],
+  permissions: [
+    "activeTab",
+    "sidePanel",
+    "scripting",
+    "tabs",
+    "storage"
+  ],
   content_scripts: [
     {
       run_at: "document_end",
@@ -52,6 +58,9 @@ const manifest: Manifest.WebExtensionManifest = {
   ],
   content_security_policy: {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  externally_connectable: {
+    "matches": ["https://*.nextrole.app/*", "https://*.nextrole.app/*", "*://localhost/*"]
   }
 };
 

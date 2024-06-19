@@ -33,3 +33,4 @@ export default function RootLayout({
 }
 
 import { Providers } from "./providers";
+import {AuthContextProvider} from "@/context/AuthContext";

@@ -1,6 +1,49 @@
+"use client";
+import React from 'react';
 import Link from "next/link";
+import firebase from "firebase/compat/app";
+import AuthProvider = firebase.auth.AuthProvider;
+import {
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  indexedDBLocalPersistence,
+  setPersistence,
+  signInWithPopup, Auth
+} from "firebase/auth";
+import {useAuthContext} from "@/context/AuthContext";
+import {DEBUG, ERROR} from "@/components/utils/utils";
+import {auth} from "@/components/utils/firebaseSetup";
+import {useRouter} from "next/navigation";
 
-const SigninPage = () => {
+const SignInPage = () => {
+  const {authUser} = useAuthContext()
+  const router = useRouter()
+
+  const firebaseSignIn = (provider: AuthProvider) => {
+    if (auth) {
+      setPersistence(auth, indexedDBLocalPersistence)
+      .then(async () => {
+        // In local persistence will be applied to the signed in Google user
+        try {
+          const result = await signInWithPopup(auth as Auth, provider);
+          if (result.user) {
+            DEBUG("Login Success: ", result.user);
+          }
+        } catch (e) {
+          ERROR(e.message);
+        }
+      })
+      .catch((e) => {
+        ERROR(e.message)
+      });
+    }
+  }
+
+  if (authUser) {
+    router.push("/")
+    return <></>
+  }
+
   return (
     <>
       <section className="relative z-10 overflow-hidden pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-28">
@@ -12,9 +55,11 @@ const SigninPage = () => {
                   Sign in to your account
                 </h3>
                 <p className="mb-11 text-center text-base font-medium text-body-color">
-                  Login to your account for a faster checkout.
+                  Login to your account to access your resumes.
                 </p>
-                <button className="mb-6 flex w-full items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white">
+                <button
+                    onClick={() => firebaseSignIn(new GoogleAuthProvider())}
+                    className="mb-6 flex w-full items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white">
                   <span className="mr-3">
                     <svg
                       width="20"
@@ -207,4 +252,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+export default SignInPage;

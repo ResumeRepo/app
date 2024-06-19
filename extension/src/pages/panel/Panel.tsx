@@ -21,6 +21,10 @@ export default function Panel(): JSX.Element {
       setListenersInitialized(true)
       // @ts-ignore
       chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
+        console.log("new message received: ", request)
+        // if  (request.type === "Token") {
+        //   console.log("Token received: ", )
+        // }
         // console.log("message received in panel: ", request)
         // const res = JSON.stringify(request.result)
         // setTitle(request.title)

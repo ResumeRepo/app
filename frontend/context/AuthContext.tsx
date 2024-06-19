@@ -3,10 +3,10 @@ import React, {useEffect} from 'react';
 import {
   onAuthStateChanged, User,
 } from 'firebase/auth';
-import {auth} from "@src/utils/firebaseSetup";
-import {getAuthToken, headerConfig} from "@src/utils/headerConfig";
-import {SessionUser, UserApi} from "@src/codegn";
-import {ERROR} from "@src/utils/utils";
+import {SessionUser, UserApi} from "@/codegn";
+import {auth} from "@/components/utils/firebaseSetup";
+import {getAuthToken, headerConfig} from "@/components/utils/headerConfig";
+import {ERROR} from "@/components/utils/utils";
 
 interface AuthContextProps {
   authUser?: User,
@@ -35,23 +35,14 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         setAuthUser(user);
         new UserApi(headerConfig(token)).getUserprofile().then(response => {
           const profileResponse: SessionUser = response.data
-          console.log("user profile: ", profileResponse)
           setNrUser(profileResponse)
         }).catch(e => ERROR(e))
 
         new UserApi(headerConfig(token)).exchangeToken().then(response => {
           const profileResponse: SessionUser = response.data
-          console.log("exchange token response: ", profileResponse)
-
-
-          new UserApi(headerConfig(profileResponse.token as string)).getUserprofile().then(response => {
-            const profileResponse: SessionUser = response.data
-            console.log("user profile with exchanged token: ", profileResponse)
-            setNrUser(profileResponse)
-          }).catch(e => ERROR(e))
-
+          const tokenEvent = new CustomEvent("token", { detail: { token: profileResponse.token } });
+          window.dispatchEvent(tokenEvent)
         }).catch(e => ERROR(e))
-
 
       } else {
         setAuthUser(undefined);

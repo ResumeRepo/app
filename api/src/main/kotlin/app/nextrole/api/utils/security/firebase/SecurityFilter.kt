@@ -80,6 +80,7 @@ class SecurityFilter(
                 user = firebaseTokenToSessionUser(decodedToken)
             }
             user.anonymous = false
+            user.token = bearerToken
 
             credentials.authToken = bearerToken
         } catch (e: Exception) {

@@ -1,6 +1,5 @@
 import React from 'react';
 import {useAuthContext} from "@src/context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import AuthProvider = firebase.auth.AuthProvider;
 import logo from '@assets/img/logo.png';
