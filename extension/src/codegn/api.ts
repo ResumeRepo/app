@@ -26,6 +26,69 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface GenericResponse
+ */
+export interface GenericResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GenericResponse
+     */
+    'status'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface PdfGenerateRequest
+ */
+export interface PdfGenerateRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PdfGenerateRequest
+     */
+    'template_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PdfGenerateRequest
+     */
+    'format'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PdfGenerateRequest
+     */
+    'env'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PdfGenerateRequest
+     */
+    'data'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PdfGenerateRequest
+     */
+    'debug'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface SaveStyleRequest
+ */
+export interface SaveStyleRequest {
+    /**
+     * 
+     * @type {Array<{ [key: string]: any; }>}
+     * @memberof SaveStyleRequest
+     */
+    'payload'?: Array<{ [key: string]: any; }>;
+}
+/**
+ * 
+ * @export
  * @interface SessionUser
  */
 export interface SessionUser {
@@ -80,6 +143,187 @@ export interface SessionUser {
 }
 
 /**
+ * PdfApi - axios parameter creator
+ * @export
+ */
+export const PdfApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Convert html to PDF
+         * @summary Convert html to PDF
+         * @param {PdfGenerateRequest} pdfGenerateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        convertToPdf: async (pdfGenerateRequest: PdfGenerateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'pdfGenerateRequest' is not null or undefined
+            assertParamExists('convertToPdf', 'pdfGenerateRequest', pdfGenerateRequest)
+            const localVarPath = `/pdf/convert`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(pdfGenerateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Save css styling for an html template
+         * @summary Save css styling for an html template
+         * @param {SaveStyleRequest} saveStyleRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveStyle: async (saveStyleRequest: SaveStyleRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'saveStyleRequest' is not null or undefined
+            assertParamExists('saveStyle', 'saveStyleRequest', saveStyleRequest)
+            const localVarPath = `/pdf/style`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(saveStyleRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * PdfApi - functional programming interface
+ * @export
+ */
+export const PdfApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = PdfApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Convert html to PDF
+         * @summary Convert html to PDF
+         * @param {PdfGenerateRequest} pdfGenerateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async convertToPdf(pdfGenerateRequest: PdfGenerateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.convertToPdf(pdfGenerateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PdfApi.convertToPdf']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Save css styling for an html template
+         * @summary Save css styling for an html template
+         * @param {SaveStyleRequest} saveStyleRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveStyle(saveStyleRequest: SaveStyleRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveStyle(saveStyleRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PdfApi.saveStyle']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * PdfApi - factory interface
+ * @export
+ */
+export const PdfApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = PdfApiFp(configuration)
+    return {
+        /**
+         * Convert html to PDF
+         * @summary Convert html to PDF
+         * @param {PdfGenerateRequest} pdfGenerateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        convertToPdf(pdfGenerateRequest: PdfGenerateRequest, options?: any): AxiosPromise<File> {
+            return localVarFp.convertToPdf(pdfGenerateRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Save css styling for an html template
+         * @summary Save css styling for an html template
+         * @param {SaveStyleRequest} saveStyleRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveStyle(saveStyleRequest: SaveStyleRequest, options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.saveStyle(saveStyleRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * PdfApi - object-oriented interface
+ * @export
+ * @class PdfApi
+ * @extends {BaseAPI}
+ */
+export class PdfApi extends BaseAPI {
+    /**
+     * Convert html to PDF
+     * @summary Convert html to PDF
+     * @param {PdfGenerateRequest} pdfGenerateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PdfApi
+     */
+    public convertToPdf(pdfGenerateRequest: PdfGenerateRequest, options?: RawAxiosRequestConfig) {
+        return PdfApiFp(this.configuration).convertToPdf(pdfGenerateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Save css styling for an html template
+     * @summary Save css styling for an html template
+     * @param {SaveStyleRequest} saveStyleRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PdfApi
+     */
+    public saveStyle(saveStyleRequest: SaveStyleRequest, options?: RawAxiosRequestConfig) {
+        return PdfApiFp(this.configuration).saveStyle(saveStyleRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * UserApi - axios parameter creator
  * @export
  */
@@ -122,7 +366,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @throws {RequiredError}
          */
         getUserprofile: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/user/`;
+            const localVarPath = `/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

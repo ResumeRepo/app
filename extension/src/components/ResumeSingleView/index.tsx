@@ -11,8 +11,11 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { Document, Page } from 'react-pdf';
-import axios from "axios";
 import { saveAs } from 'file-saver';
+import {useAuthContext} from "@src/context/AuthContext";
+import {PdfApi} from "@src/codegn";
+import {headerConfig} from "@src/utils/headerConfig";
+import {DEBUG, ERROR} from "@src/utils/utils";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.js',
@@ -22,68 +25,55 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Element {
   const [templateId, setTemplateId] = useState("1")
   const [showHtmlPreview, setShowHtmlPreview] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null); // Store error message
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const componentRef = useRef(null);
   const [generationInProgress, setGenerationInProgress] = useState(false)
+  const {authUser} = useAuthContext()
 
-  const baseUrl = "http://localhost:4000"
-  const endpoint = "/convert-to-pdf"
   const fileName = "Resume.pdf"
 
   const generatePdf = (html: any) => {
-    if (generationInProgress) return;
     setGenerationInProgress(true);
-    setErrorMessage(null);
     setDownloadUrl(null);
-    console.log("Start Generated template id =", templateId)
 
-    const utf8EncodedHtml = new TextEncoder().encode(html);
-    const base64EncodedHtml = btoa(String.fromCharCode(...utf8EncodedHtml));
-    const data = {
-      format: 'Letter',
+    const config = headerConfig(authUser?.token as string)
+    config.baseOptions["responseType"] = "blob"
+    new PdfApi(config).convertToPdf({
+      format: "Letter",
       env: import.meta.env.MODE,
-      templateId: templateId,
-      html: base64EncodedHtml,
-    };
-
-    axios.post(`${baseUrl}${endpoint}`, data, {
-      responseType: 'blob',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(response => {
-      const blob = new Blob([response.data], { type: 'application/pdf' }); // Create Blob
-      const downloadUrl = URL.createObjectURL(blob); // Create temporary URL
-
-      // const downloadUrl =  window.URL.createObjectURL(blob)
+      template_id: templateId,
+      data: html,
+      debug: true
+    }).then(response => {
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const downloadUrl = URL.createObjectURL(blob);
       setDownloadUrl(downloadUrl);
       setGenerationInProgress(false)
-      // setShowHtmlPreview(false)
-      console.log("End Generated template id =", templateId)
       const iframe = document.querySelector("iframe");
       if (iframe?.src) iframe.src = downloadUrl;
-    })
-    .catch(error => {
+    }).catch(e => {
       setGenerationInProgress(false)
-      console.error('Error converting HTML to PDF:', error);
-    });
+      ERROR('Error converting HTML to PDF:', e);
+    })
   }
 
   const renderPdf = useReactToPrint({
     documentTitle: "Resume",
     copyStyles: true,
     print: async (printIframe: HTMLIFrameElement) => {
-      const html = printIframe.contentDocument.getElementsByTagName("html")[0]
-      exportCss(templateId, html)
-      generatePdf(`<!DOCTYPE html>
+      const html = printIframe.contentDocument?.getElementsByTagName("html")[0]
+      if (html) {
+        exportCss(templateId, html, authUser?.token as string)
+        generatePdf(`<!DOCTYPE html>
 <html lang="en">${html.innerHTML}</html>\n`)
+      }
     },
     removeAfterPrint: true,
     suppressErrors: true,
   });
 
   const onTemplateSelect = (templateId: string) => {
-    console.log("new template selected: ", templateId)
+    DEBUG("New template selected: ", templateId)
     setTemplateId(templateId)
     setShowHtmlPreview(true)
   }
@@ -92,7 +82,6 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
     if (!generationInProgress) {
       renderPdf(null, () => componentRef.current)
     }
-    // renderPdf()
   }, [componentRef.current]);
 
   const savePdf = () => {
@@ -198,7 +187,9 @@ export default function ResumeSingleView(props: ResumeSingleViewProps): JSX.Elem
                     </>:
                     <>{loadingProgress()}</>
                 }
-                {showHtmlPreview && <Preview ref={componentRef} templateId={templateId}/> }
+                <div className="mt-10">
+                  {showHtmlPreview && <Preview ref={componentRef} templateId={templateId}/> }
+                </div>
               </div>
             </div>
         ) : <></>

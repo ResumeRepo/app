@@ -4,6 +4,7 @@ import app.nextrole.api.SessionUser
 import org.springframework.core.io.ClassPathResource
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.util.FileCopyUtils
+import java.io.File
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
@@ -55,6 +56,17 @@ fun loadFile(path: String?): String {
         throw RuntimeException(e)
     }
 }
+
+fun safeFile(path: String, data: String) {
+     try {
+         val file = File(path)
+         file.writeBytes(data.toByteArray())
+    } catch (e: IOException) {
+        throw RuntimeException(e)
+    }
+}
+
+
 
 fun getSessionUser(): SessionUser {
     return try {

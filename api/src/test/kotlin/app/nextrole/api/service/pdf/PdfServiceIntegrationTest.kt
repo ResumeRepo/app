@@ -61,19 +61,19 @@ class PdfServiceIntegrationTest: AbstractTestNGSpringContextTests() {
 //        assert(users[0].email.equals("hello@example.com"))
 //        assert(users[0].fullName.equals("Test User"))
 //    }
-    fun String.toBase64(): String {
-        val bytes = this.toByteArray(StandardCharsets.UTF_8)
-        return Base64.getEncoder().encodeToString(bytes)
-    }
+//    fun String.toBase64(): String {
+//        val bytes = this.toByteArray(StandardCharsets.UTF_8)
+//        return Base64.getEncoder().encodeToString(bytes)
+//    }
 
     @Test
     fun generatePdfTest() {
         val html = loadFile("resume/resumeDev.html")
         pdfService.convertToPdf(PdfGenerateRequest(
-            templateId = "1",
+            templateId = "testng",
             format = "letter",
             env = "development",
-            data = html.toBase64(),
+            data = html,
             debug = true))
     }
 }

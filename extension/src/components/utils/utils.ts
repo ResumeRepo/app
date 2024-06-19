@@ -1,6 +1,9 @@
 import moment from "moment";
 import axios from "axios";
 import {CSSStyle} from "@src/components/utils/types";
+import {PdfApi} from "@src/codegn";
+import {headerConfig} from "@src/utils/headerConfig";
+import {DEBUG, ERROR} from "@src/utils/utils";
 
 export function getFormattedDate(timestamp: number) {
   return moment.unix(timestamp).format('MMMM Do YYYY')
@@ -14,9 +17,9 @@ export function getFormattedDate(timestamp: number) {
  * development and extension mode, we need to export all of them and then
  * import them in production on server-side.
  */
-export function exportCss(templateId: string, html: HTMLHtmlElement) {
-  const endpoint = "/save-styling"
-  const baseUrl = "http://localhost:4000"
+export function exportCss(templateId: string, html: HTMLHtmlElement, token: string) {
+  // const endpoint = "/save-styling"
+  // const baseUrl = "http://localhost:4000"
   if (import.meta.env.MODE === "development") {
     const payload = []
     const styleAndLinkNodes = html.querySelectorAll("style");
@@ -36,14 +39,24 @@ export function exportCss(templateId: string, html: HTMLHtmlElement) {
       payload: payload
     }
     if (payload) {
-      axios.post(`${baseUrl}${endpoint}`, data, {
-        headers: { 'Content-Type': 'application/json' }
+
+      new PdfApi(headerConfig(token)).saveStyle({payload})
+      .then(response => { DEBUG(`Style saved for templateId=${templateId}`)})
+      .catch(e => {
+        ERROR('Error saving style:', e);
       })
-      .then(response => {
-      })
-      .catch(error => {
-        console.error('Error converting HTML to PDF:', error);
-      });
+
+      // axios.post(`${baseUrl}${endpoint}`, data, {
+      //   headers: { 'Content-Type': 'application/json' }
+      // })
+      // .then(response => {
+      // })
+      // .catch(error => {
+      //   console.error('Error converting HTML to PDF:', error);
+      // });
+
+
+
     }
   }
 }

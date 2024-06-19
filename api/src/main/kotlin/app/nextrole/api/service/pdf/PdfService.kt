@@ -10,6 +10,6 @@ import org.springframework.core.io.Resource
  * created on 6/19/24
  */
 interface PdfService {
-    fun convertToPdf(pdfGenerateRequest: PdfGenerateRequest): Resource
+    fun convertToPdf(pdfGenerateRequest: PdfGenerateRequest): ByteArray
     fun saveStyle(saveStyleRequest: SaveStyleRequest): GenericResponse
 }
