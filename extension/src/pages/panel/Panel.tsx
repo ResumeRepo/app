@@ -20,32 +20,34 @@ export default function Panel(): JSX.Element {
     if (!listenersInitialized) {
       setListenersInitialized(true)
       // @ts-ignore
-      chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
-        console.log("new message received: ", request)
-        // if  (request.type === "Token") {
-        //   console.log("Token received: ", )
-        // }
-        // console.log("message received in panel: ", request)
-        // const res = JSON.stringify(request.result)
-        // setTitle(request.title)
-        // setUrl(request.url)
-        // setBody(request.body)
-        // console.log("message received: ", request)
-        // setUrl(request.url)
-        // if (request.type === MESSAGE_TYPE.PRODUCT_INFO_REQUEST && !productMetadata?.name) {
-        //   setProductMetadata({
-        //     name: request.name,
-        //     imageUrl: request.imageUrl
-        //   })
-        //   sendResponse(true)
-        // } else if (request.type === MESSAGE_TYPE.CHAT) {
-        //   addToChatHistory(request.content, false, request.productSku)
-        //   .catch(err => console.log(err));
-        //   setShowBubbleAnimation(false)
-        // } else if (request.type === MESSAGE_TYPE.TOOLBAR_BUTTON_CLICK) {
-        //   handleOpen()
-        // }
-      });
+      if (import.meta.env.MODE === "production") {
+        chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
+          console.log("new message received: ", request)
+          // if  (request.type === "Token") {
+          //   console.log("Token received: ", )
+          // }
+          // console.log("message received in panel: ", request)
+          // const res = JSON.stringify(request.result)
+          // setTitle(request.title)
+          // setUrl(request.url)
+          // setBody(request.body)
+          // console.log("message received: ", request)
+          // setUrl(request.url)
+          // if (request.type === MESSAGE_TYPE.PRODUCT_INFO_REQUEST && !productMetadata?.name) {
+          //   setProductMetadata({
+          //     name: request.name,
+          //     imageUrl: request.imageUrl
+          //   })
+          //   sendResponse(true)
+          // } else if (request.type === MESSAGE_TYPE.CHAT) {
+          //   addToChatHistory(request.content, false, request.productSku)
+          //   .catch(err => console.log(err));
+          //   setShowBubbleAnimation(false)
+          // } else if (request.type === MESSAGE_TYPE.TOOLBAR_BUTTON_CLICK) {
+          //   handleOpen()
+          // }
+        });
+      }
     }
   }, [listenersInitialized])
 

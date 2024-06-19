@@ -1,6 +1,7 @@
 window.addEventListener("token", (event: Event) => {
   const token = (event as CustomEvent).detail.token
   if (token) {
+    chrome.storage.sync.set({nextRoleToken: token});
     chrome.runtime.sendMessage({
       type: "Token",
       token: token

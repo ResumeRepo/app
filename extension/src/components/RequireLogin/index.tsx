@@ -1,67 +1,13 @@
 import React from 'react';
 import {useAuthContext} from "@src/context/AuthContext";
-import firebase from "firebase/compat/app";
-import AuthProvider = firebase.auth.AuthProvider;
 import logo from '@assets/img/logo.png';
-import {auth} from "@src/utils/firebaseSetup";
-import {
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  indexedDBLocalPersistence,
-  setPersistence,
-  signInWithPopup, Auth
-} from "firebase/auth";
-// import {
-//   sendSignInLinkToEmail,
-//   isSignInWithEmailLink,
-//   signInWithEmailLink
-// } from "firebase/auth/web-extension"
-import {DEBUG, ERROR} from "@src/utils/utils";
 
 export default function RequireLogin({ children,}: {
   children: React.ReactNode;
 }) {
   const {authUser} = useAuthContext()
 
-  const firebaseSignIn = (provider: AuthProvider) => {
-    if (auth) {
-      setPersistence(auth, indexedDBLocalPersistence)
-      .then(async () => {
-        // In local persistence will be applied to the signed in Google user
-        try {
-          const result = await signInWithPopup(auth as Auth, provider);
-          if (result.user) {
-            DEBUG("Login Success: ", result.user);
-          }
-        } catch (e) {
-          ERROR(e.message);
-        }
-      })
-      .catch((e) => {
-        ERROR(e.message)
-      });
-    }
-  }
-
-  // const firebaseSignIn = (provider: AuthProvider) => {
-  //   if (auth) {
-  //     const email = "hello@example.com"
-  //     sendSignInLinkToEmail(auth, email, actionCodeSettings)
-  //     .then(() => {
-  //       // The link was successfully sent. Inform the user.
-  //       // Save the email locally so you don't need to ask the user for it again
-  //       // if they open the link on the same device.
-  //       window.localStorage.setItem('emailForSignIn', email);
-  //       // ...
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // ...
-  //     });
-  //   }
-  // }
-
+  console.log("authUser: ", authUser)
   if (!authUser) {
     return (
         <div>
@@ -78,9 +24,8 @@ export default function RequireLogin({ children,}: {
                 </div>
 
                 <div className="mt-10 w-full text-center flex flex-col">
-                  <a href="https://example.com" target="_blank">
+                  <a href="http://localhost:3300/signin?p=google" target="_blank">
                   <button
-                      // onClick={() => firebaseSignIn(new GoogleAuthProvider())}
                       type="button"
                       className="text-center inline-flex items-center w-60 text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-[#4285F4]/55 me-2 mb-4">
                     <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
@@ -90,8 +35,8 @@ export default function RequireLogin({ children,}: {
                   </button>
                   </a>
 
+                  <a href="http://localhost:3300/signin?p=github" target="_blank">
                   <button
-                      onClick={() => firebaseSignIn(new GithubAuthProvider())}
                       type="button"
                       className="text-center inline-flex items-center w-60 text-white bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4 focus:outline-none focus:ring-[#24292F]/50 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-gray-500 dark:hover:bg-[#050708]/30 me-2 mb-4">
                     <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -99,6 +44,7 @@ export default function RequireLogin({ children,}: {
                     </svg>
                     Sign in with Github
                   </button>
+                  </a>
 
                   {/*<button*/}
                   {/*    onClick={() => firebaseSignIn(new GithubAuthProvider())}*/}
