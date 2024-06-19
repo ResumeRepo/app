@@ -7,7 +7,6 @@ export default function RequireLogin({ children,}: {
 }) {
   const {authUser} = useAuthContext()
 
-  console.log("authUser: ", authUser)
   if (!authUser) {
     return (
         <div>

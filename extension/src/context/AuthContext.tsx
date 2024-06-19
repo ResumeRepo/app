@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { headerConfig} from "@src/utils/headerConfig";
 import {SessionUser, UserApi} from "@src/codegn";
-import {ERROR} from "@src/utils/utils";
+import {DEBUG, ERROR} from "@src/utils/utils";
 
 interface AuthContextProps {
   authUser?: SessionUser
@@ -16,13 +16,12 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   const [loading, setLoading] = React.useState(true);
 
   const setSessionUser = (token: String) => {
-    console.log("in setSessionUser: ", token)
+    DEBUG("Token", token)
     if (token) {
-      console.log("calling get profile:... ")
       new UserApi(headerConfig(token as string)).getUserprofile().then(response => {
         const profileResponse: SessionUser = response.data
         setAuthUser(profileResponse)
-        console.log("extension has obtained session user profile: ", profileResponse)
+        DEBUG("Setting session user", profileResponse)
       }).catch(e => ERROR(e))
     } else {
       setAuthUser(undefined)
@@ -34,50 +33,12 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     let token
     if (import.meta.env.MODE === "production") {
       chrome.storage.sync.get("nextRoleToken").then(cache => {
-        console.log("cache: ", cache)
-        console.log("cache.nextRoleToken: ", cache.nextRoleToken)
         setSessionUser(cache.nextRoleToken)
       })
     } else {
-      // console.log("import.meta.env: ", import.meta.env)
-      // token = import.meta.env.DEV_AUTH_TOKEN
-      token = "nreyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTg3NTg5OTgsInN1YiI6IkRvMU1xakdITjFXN2lacGJpVnVvMjd0RXlldDEiLCJleHAiOjkyMjMzNzIwMzY4NTQ3NzV9.eeSm3wBYfj-7AVJxyk3gYFigVe6eorXJiSRxsuRND-mzPoohGmuXW-38zBGksQsBDyP_SUiVzFzU9tX75Oya5Q"
+      token = import.meta.env.VITE_DEV_AUTH_TOKEN
       setSessionUser(token)
     }
-
-
-    // const unsubscribe = onAuthStateChanged(auth, async (user) => {
-    //   if (user) {
-    //     const token = await getAuthToken(user)
-    //     setAuthUser(user);
-    //     new UserApi(headerConfig(token)).getUserprofile().then(response => {
-    //       const profileResponse: SessionUser = response.data
-    //       console.log("user profile: ", profileResponse)
-    //       setNrUser(profileResponse)
-    //     }).catch(e => ERROR(e))
-    //
-    //     new UserApi(headerConfig(token)).exchangeToken().then(response => {
-    //       const profileResponse: SessionUser = response.data
-    //       console.log("exchange token response: ", profileResponse)
-    //
-    //
-    //       new UserApi(headerConfig(profileResponse.token as string)).getUserprofile().then(response => {
-    //         const profileResponse: SessionUser = response.data
-    //         console.log("user profile with exchanged token: ", profileResponse)
-    //         setNrUser(profileResponse)
-    //       }).catch(e => ERROR(e))
-    //
-    //     }).catch(e => ERROR(e))
-    //
-    //
-    //   } else {
-    //     setAuthUser(undefined);
-    //     setNrUser(undefined)
-    //   }
-    //   setLoading(false);
-    // });
-
-    // return () => unsubscribe();
   }, []);
 
   return (
