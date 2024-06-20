@@ -16,11 +16,23 @@ CREATE TABLE IF NOT EXISTS public.user (
 );
 ALTER TABLE public.user OWNER TO root;
 
+CREATE TABLE IF NOT EXISTS public.base_resume (
+    id bigserial PRIMARY KEY NOT NULL,
+    uid VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    pdf_s3_url VARCHAR(255),
+    resume text,
+    updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(uid)
+);
+ALTER TABLE public.base_resume OWNER TO root;
+
 
 CREATE TABLE IF NOT EXISTS public.resume (
     id bigserial PRIMARY KEY NOT NULL,
     uid VARCHAR(255) NOT NULL,
-    user_id bigint NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
     job_title VARCHAR(1024),
     company_name VARCHAR(1024),
     location VARCHAR(1024),

@@ -3,8 +3,11 @@ import '@pages/panel/Panel.css';
 import BottomNav from "@src/components/BottomNav";
 import Assistant from "@src/components/Assistant";
 import ResumeListView from "@src/components/ResumeListView";
-import {AuthContextProvider} from "@src/context/AuthContext";
 import RequireLogin from "@src/components/RequireLogin";
+import {PdfApi, ResumeApi} from "@src/codegn";
+import {headerConfig} from "@src/utils/headerConfig";
+import {DEBUG, ERROR} from "@src/utils/utils";
+import {useAuthContext} from "@src/context/AuthContext";
 
 
 export type TabType = "Assistant" | "Resumes" | "Profile"
@@ -12,8 +15,24 @@ export type TabType = "Assistant" | "Resumes" | "Profile"
 
 export default function Panel(): JSX.Element {
   const [listenersInitialized, setListenersInitialized] = useState(false)
-  const [activeTab, setActiveTab] = useState<TabType>("Resumes")
-  const [showResumeUpload, setShowResumeUpload] = useState(false)
+  const [activeTab, setActiveTab] = useState<TabType>("Assistant")
+  const [showResumeUpload, setShowResumeUpload] = useState(true)
+  const [hasBaseResume, setHasBaseResume] = useState(false)
+  const {authUser} = useAuthContext()
+
+  useEffect(() => {
+    if (authUser) {
+      new ResumeApi(headerConfig(authUser.token as string)).hasBaseResume()
+      .then(response => {
+        DEBUG("Has base resume", response.data.value)
+        setHasBaseResume(response.data.value === true)
+      })
+      .catch(e => {
+        ERROR('Error calling hasBaseResume :', e);
+      })
+    }
+
+  }, []);
 
   useEffect(() => {
     if (!listenersInitialized) {
@@ -54,17 +73,20 @@ export default function Panel(): JSX.Element {
     setActiveTab(to)
   }
 
+  const onResumeUploadSuccess = () => {
+    setHasBaseResume(true)
+  }
+
   return (
     <div className="container mx-auto px-4 py-4 max-w-[660px]">
-      <AuthContextProvider>
         { activeTab === "Assistant" && <Assistant/> }
         { activeTab === "Resumes" && <RequireLogin><ResumeListView/></RequireLogin> }
         <BottomNav
             activeTab={activeTab}
-            showResumeUpload={showResumeUpload}
+            showResumeUpload={!(authUser && hasBaseResume) || showResumeUpload}
             onChangeTab={onChangeTab}
+            onResumeUploadSuccess={onResumeUploadSuccess}
         />
-      </AuthContextProvider>
     </div>
   );
 }

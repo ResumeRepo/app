@@ -1,6 +1,7 @@
 package app.nextrole.api.service.resume
 
 import app.nextrole.api.*
+import org.springframework.core.io.Resource
 
 /**
  * @author Biz Melesse
@@ -11,5 +12,6 @@ interface ResumeService {
     fun updateResume(resumeUpdateRequest: ResumeUpdateRequest): GenericResponse
     fun updateTemplateId(resumeTemplateUpdateRequest: ResumeTemplateUpdateRequest): GenericResponse
     fun getResume(resumeId: String?): ResumeData
-    fun uploadResume(resumeUploadRequest: ResumeUploadRequest): GenericResponse
+    fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResumeUploadResponse
+    fun hasBaseResume(): GenericResponse
 }

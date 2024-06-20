@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import Card from "@src/components/Card";
 import SectionHeader from "@src/components/SectionHeader";
 import sparkle from "@assets/img/sparkle.png";
+import {AssistantProps} from "@src/components/utils/types";
+import {useAuthContext} from "@src/context/AuthContext";
 
 
 export interface JD {
@@ -49,10 +51,11 @@ const companyInfo: CompanyInfo = {
   description: "The ASI Group, founded over 50 years ago, operates in various countries, serving the financial sector, manufacturing, construction, and others. It provides technological solutions and underwater inspection, repair, and maintenance services. Employees highlight the company's good team and helpful HR department."
 }
 
-export default function Assistant(): JSX.Element {
+export default function Assistant(props: AssistantProps): JSX.Element {
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
   const [body, setBody] = useState("")
+  const {authUser} = useAuthContext()
 
 
   return (

@@ -2,18 +2,28 @@ package app.nextrole.api.service.pdf
 
 import app.nextrole.api.GenericResponse
 import app.nextrole.api.PdfGenerateRequest
+import app.nextrole.api.ResumeUploadRequest
 import app.nextrole.api.SaveStyleRequest
 import app.nextrole.api.data.postgres.entity.ResumeEntity
 import app.nextrole.api.data.postgres.entity.TemplateStyleEntity
 import app.nextrole.api.data.postgres.repo.TemplateStyleRepo
 import app.nextrole.api.dto.TemplateStyle
+import app.nextrole.api.service.utils.getSessionUser
 import app.nextrole.api.service.utils.safeFile
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.microsoft.playwright.Browser
+import org.apache.pdfbox.Loader
+import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox
+import org.apache.pdfbox.pdmodel.interactive.form.PDComboBox
+import org.apache.pdfbox.pdmodel.interactive.form.PDField
+import org.apache.pdfbox.text.PDFTextStripper
 import org.jsoup.Jsoup
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
 import java.io.File
 import java.time.LocalDateTime
+import java.util.*
 
 
 @Service
@@ -51,6 +61,15 @@ class PdfServiceImpl(
         templateStyleRepo.save(tse)
         return GenericResponse(status = "ok")
     }
+
+    override fun parsePdf(file: ByteArray): String {
+        val document = Loader.loadPDF(file)
+        val stripper = PDFTextStripper()
+        val text = stripper.getText(document)
+        document.close()
+        return text
+    }
+
 
     private fun buildHtml(request: PdfGenerateRequest): String? {
         if (request.env.equals("production")) {

@@ -1,3 +1,5 @@
+import {TabType} from "@pages/panel/Panel";
+
 export type ResumeInfo = {
   id: string,
   title: string,
@@ -27,6 +29,16 @@ export type CarouselProps = {
   onTemplateSelect: (templateId: string) => void
   selectedId: string
   canSelect: boolean
+}
+
+export type NavProps = {
+  activeTab: TabType,
+  showResumeUpload: boolean,
+  onChangeTab: (to: TabType) => void
+  onResumeUploadSuccess: () => void
+}
+
+export type AssistantProps = {
 }
 
 export type CSSStyle = { [key: string]: string | number };

@@ -35,6 +35,12 @@ export interface GenericResponse {
      * @memberof GenericResponse
      */
     'status'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GenericResponse
+     */
+    'value'?: boolean;
 }
 /**
  * 
@@ -72,6 +78,139 @@ export interface PdfGenerateRequest {
      * @memberof PdfGenerateRequest
      */
     'debug'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface ResumeData
+ */
+export interface ResumeData {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeData
+     */
+    'data'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ResumeList
+ */
+export interface ResumeList {
+    /**
+     * 
+     * @type {Array<ResumeMetaData>}
+     * @memberof ResumeList
+     */
+    'resumes'?: Array<ResumeMetaData>;
+}
+/**
+ * 
+ * @export
+ * @interface ResumeMetaData
+ */
+export interface ResumeMetaData {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeMetaData
+     */
+    'resume_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeMetaData
+     */
+    'company_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeMetaData
+     */
+    'job_title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeMetaData
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeMetaData
+     */
+    'company_logo'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ResumeMetaData
+     */
+    'updated_at'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ResumeMetaData
+     */
+    'created_at'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface ResumeTemplateUpdateRequest
+ */
+export interface ResumeTemplateUpdateRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeTemplateUpdateRequest
+     */
+    'resume_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeTemplateUpdateRequest
+     */
+    'new_template_id'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ResumeUpdateRequest
+ */
+export interface ResumeUpdateRequest {
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof ResumeUpdateRequest
+     */
+    'fields'?: { [key: string]: any; };
+}
+/**
+ * 
+ * @export
+ * @interface ResumeUploadRequest
+ */
+export interface ResumeUploadRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeUploadRequest
+     */
+    'file'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ResumeUploadResponse
+ */
+export interface ResumeUploadResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResumeUploadResponse
+     */
+    'resume_id'?: string;
 }
 /**
  * 
@@ -324,6 +463,452 @@ export class PdfApi extends BaseAPI {
      */
     public saveStyle(saveStyleRequest: SaveStyleRequest, options?: RawAxiosRequestConfig) {
         return PdfApiFp(this.configuration).saveStyle(saveStyleRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * ResumeApi - axios parameter creator
+ * @export
+ */
+export const ResumeApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get all resumes
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllResumes: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/resumes`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get resume by ID
+         * @param {string} [resumeId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getResume: async (resumeId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/resume`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (resumeId !== undefined) {
+                localVarQueryParameter['resume_id'] = resumeId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Whether the user has uploaded a base resume
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hasBaseResume: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/resume/base`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update user resume
+         * @summary Update user resume
+         * @param {ResumeUpdateRequest} resumeUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateResume: async (resumeUpdateRequest: ResumeUpdateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'resumeUpdateRequest' is not null or undefined
+            assertParamExists('updateResume', 'resumeUpdateRequest', resumeUpdateRequest)
+            const localVarPath = `/resume`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(resumeUpdateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update template ID
+         * @summary Update template ID
+         * @param {ResumeTemplateUpdateRequest} resumeTemplateUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTemplateId: async (resumeTemplateUpdateRequest: ResumeTemplateUpdateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'resumeTemplateUpdateRequest' is not null or undefined
+            assertParamExists('updateTemplateId', 'resumeTemplateUpdateRequest', resumeTemplateUpdateRequest)
+            const localVarPath = `/resume/template-id`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(resumeTemplateUpdateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Upload user resume
+         * @summary Upload user resume
+         * @param {ResumeUploadRequest} resumeUploadRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadResume: async (resumeUploadRequest: ResumeUploadRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'resumeUploadRequest' is not null or undefined
+            assertParamExists('uploadResume', 'resumeUploadRequest', resumeUploadRequest)
+            const localVarPath = `/resume`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(resumeUploadRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ResumeApi - functional programming interface
+ * @export
+ */
+export const ResumeApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ResumeApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Get all resumes
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllResumes(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResumeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllResumes(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.getAllResumes']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get resume by ID
+         * @param {string} [resumeId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getResume(resumeId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResumeData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getResume(resumeId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.getResume']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Whether the user has uploaded a base resume
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hasBaseResume(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hasBaseResume(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.hasBaseResume']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Update user resume
+         * @summary Update user resume
+         * @param {ResumeUpdateRequest} resumeUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateResume(resumeUpdateRequest: ResumeUpdateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateResume(resumeUpdateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.updateResume']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Update template ID
+         * @summary Update template ID
+         * @param {ResumeTemplateUpdateRequest} resumeTemplateUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateTemplateId(resumeTemplateUpdateRequest: ResumeTemplateUpdateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateTemplateId(resumeTemplateUpdateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.updateTemplateId']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Upload user resume
+         * @summary Upload user resume
+         * @param {ResumeUploadRequest} resumeUploadRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async uploadResume(resumeUploadRequest: ResumeUploadRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResumeUploadResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadResume(resumeUploadRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.uploadResume']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ResumeApi - factory interface
+ * @export
+ */
+export const ResumeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ResumeApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Get all resumes
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllResumes(options?: any): AxiosPromise<ResumeList> {
+            return localVarFp.getAllResumes(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get resume by ID
+         * @param {string} [resumeId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getResume(resumeId?: string, options?: any): AxiosPromise<ResumeData> {
+            return localVarFp.getResume(resumeId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Whether the user has uploaded a base resume
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hasBaseResume(options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.hasBaseResume(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update user resume
+         * @summary Update user resume
+         * @param {ResumeUpdateRequest} resumeUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateResume(resumeUpdateRequest: ResumeUpdateRequest, options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.updateResume(resumeUpdateRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update template ID
+         * @summary Update template ID
+         * @param {ResumeTemplateUpdateRequest} resumeTemplateUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTemplateId(resumeTemplateUpdateRequest: ResumeTemplateUpdateRequest, options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.updateTemplateId(resumeTemplateUpdateRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Upload user resume
+         * @summary Upload user resume
+         * @param {ResumeUploadRequest} resumeUploadRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadResume(resumeUploadRequest: ResumeUploadRequest, options?: any): AxiosPromise<ResumeUploadResponse> {
+            return localVarFp.uploadResume(resumeUploadRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ResumeApi - object-oriented interface
+ * @export
+ * @class ResumeApi
+ * @extends {BaseAPI}
+ */
+export class ResumeApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get all resumes
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public getAllResumes(options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).getAllResumes(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get resume by ID
+     * @param {string} [resumeId] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public getResume(resumeId?: string, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).getResume(resumeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Whether the user has uploaded a base resume
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public hasBaseResume(options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).hasBaseResume(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Update user resume
+     * @summary Update user resume
+     * @param {ResumeUpdateRequest} resumeUpdateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public updateResume(resumeUpdateRequest: ResumeUpdateRequest, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).updateResume(resumeUpdateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Update template ID
+     * @summary Update template ID
+     * @param {ResumeTemplateUpdateRequest} resumeTemplateUpdateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public updateTemplateId(resumeTemplateUpdateRequest: ResumeTemplateUpdateRequest, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).updateTemplateId(resumeTemplateUpdateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Upload user resume
+     * @summary Upload user resume
+     * @param {ResumeUploadRequest} resumeUploadRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public uploadResume(resumeUploadRequest: ResumeUploadRequest, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).uploadResume(resumeUploadRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

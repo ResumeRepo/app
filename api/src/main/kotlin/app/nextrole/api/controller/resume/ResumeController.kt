@@ -2,6 +2,7 @@ package app.nextrole.api.controller.resume
 
 import app.nextrole.api.*
 import app.nextrole.api.service.resume.ResumeService
+import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 
@@ -31,7 +32,27 @@ class ResumeController(
         return ResponseEntity.ok(resumeService.getResume(resumeId))
     }
 
-    override fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResponseEntity<GenericResponse> {
+//    override fun uploadResume(file: Resource?): ResponseEntity<ResumeUploadResponse> {
+//        return ResponseEntity.ok(resumeService.uploadResume(file))
+//    }
+
+//    override fun uploadResume(file: ByteArray?): ResponseEntity<ResumeUploadResponse> {
+////        return super.uploadResume(file)
+//        return ResponseEntity.ok(resumeService.uploadResume(file))
+//    }
+
+//    override fun uploadResume(file: String): ResponseEntity<ResumeUploadResponse> {
+//        return ResponseEntity.ok(resumeService.uploadResume(file))
+//    }
+
+//    override fun uploadResume(file: ByteArray?): ResponseEntity<ResumeUploadResponse> {
+//        return ResponseEntity.ok(resumeService.uploadResume(file))
+//    }
+
+    override fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResponseEntity<ResumeUploadResponse> {
         return ResponseEntity.ok(resumeService.uploadResume(resumeUploadRequest))
+    }
+    override fun hasBaseResume(): ResponseEntity<GenericResponse> {
+        return ResponseEntity.ok(resumeService.hasBaseResume())
     }
 }

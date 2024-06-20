@@ -12,8 +12,8 @@ import java.time.LocalDateTime
  */
 
 @Entity
-@Table(schema = "public", name = "resume")
-class ResumeEntity {
+@Table(schema = "public", name = "base_resume")
+class BaseResumeEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,31 +25,10 @@ class ResumeEntity {
     @Column(name = "user_id")
     var userId: String? = null
 
-    @Column(name = "job_title")
-    var jobTitle: String? = null
-
-    @JsonProperty("company_name")
-    @Column(name = "company_name")
-    var companyName: String? = null
-
-    @JsonProperty("location")
-    @Column(name = "location")
-    var location: String? = null
-
     @Basic
-    @JsonProperty("salary")
-    @Column(name = "salary")
-    var salary: String? = null
-
-    @Basic
-    @JsonProperty("logo_url")
-    @Column(name = "logo_url")
-    var logoUrl: String? = null
-
-    @Basic
-    @JsonProperty("template_id")
-    @Column(name = "template_id")
-    var templateId: String? = null
+    @JsonProperty("pdf_s3_url")
+    @Column(name = "pdf_s3_url")
+    var pdfS3Url: String? = null
 
     @Basic
     @Column(name = "resume")

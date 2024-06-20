@@ -177,7 +177,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GenericResponse"
+                  "$ref": "#/components/schemas/ResumeUploadResponse"
                 }
               }
             }
@@ -201,6 +201,27 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Generic Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resume/base": {
+      "get": {
+        "tags": [
+          "resume"
+        ],
+        "summary": "Whether the user has uploaded a base resume",
+        "operationId": "hasBaseResume",
         "responses": {
           "200": {
             "description": "Generic Response",
@@ -348,7 +369,16 @@
         "type": "object",
         "properties": {
           "file": {
-            "type": "object"
+            "type": "string",
+            "format": "base64"
+          }
+        }
+      },
+      "ResumeUploadResponse": {
+        "type": "object",
+        "properties": {
+          "resume_id": {
+            "type": "string"
           }
         }
       },
@@ -357,6 +387,9 @@
         "properties": {
           "status": {
             "type": "string"
+          },
+          "value": {
+            "type": "boolean"
           }
         }
       },
