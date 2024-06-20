@@ -19,7 +19,8 @@ import type { Configuration } from './configuration';
 import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 const env = import.meta.env.MODE
-const basePath = env === "production" ? "https://api.nextrole.app" : "http://localhost:9090"
+// const basePath = env === "production" ? "https://api.nextrole.app" : "http://localhost:9090"
+const basePath = "http://localhost:9090"
 export const BASE_PATH = basePath.replace(/\/+$/, "");
 /**
  *

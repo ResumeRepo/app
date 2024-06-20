@@ -1,8 +1,7 @@
 package app.nextrole.api.data.postgres.repo
 
-import app.nextrole.api.data.postgres.entity.ApplicationEntity
+import app.nextrole.api.data.postgres.entity.ResumeEntity
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,5 +12,5 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 @Transactional
-interface ApplicationRepo : JpaRepository<ApplicationEntity, Long> {
+interface ResumeRepo : JpaRepository<ResumeEntity, Long> {
 }

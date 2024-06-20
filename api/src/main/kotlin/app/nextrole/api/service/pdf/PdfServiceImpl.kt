@@ -3,6 +3,7 @@ package app.nextrole.api.service.pdf
 import app.nextrole.api.GenericResponse
 import app.nextrole.api.PdfGenerateRequest
 import app.nextrole.api.SaveStyleRequest
+import app.nextrole.api.data.postgres.entity.ResumeEntity
 import app.nextrole.api.data.postgres.entity.TemplateStyleEntity
 import app.nextrole.api.data.postgres.repo.TemplateStyleRepo
 import app.nextrole.api.dto.TemplateStyle

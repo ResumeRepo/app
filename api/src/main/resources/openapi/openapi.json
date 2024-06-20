@@ -124,6 +124,149 @@
           }
         }
       }
+    },
+    "/resume": {
+      "get": {
+        "tags": [
+          "resume"
+        ],
+        "summary": "Get resume by ID",
+        "operationId": "getResume",
+        "parameters": [
+          {
+            "name": "resume_id",
+            "schema": {
+              "type": "string"
+            },
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resume Data Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeData"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "resume"
+        ],
+        "summary": "Upload user resume",
+        "description": "Upload user resume",
+        "operationId": "uploadResume",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeUploadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "resume"
+        ],
+        "summary": "Update user resume",
+        "description": "Update user resume",
+        "operationId": "updateResume",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resumes": {
+      "get": {
+        "tags": [
+          "resume"
+        ],
+        "summary": "Get all resumes",
+        "operationId": "getAllResumes",
+        "responses": {
+          "200": {
+            "description": "Resume List Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resume/template-id": {
+      "put": {
+        "tags": [
+          "resume"
+        ],
+        "summary": "Update template ID",
+        "description": "Update template ID",
+        "operationId": "updateTemplateId",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeTemplateUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -135,6 +278,80 @@
       }
     },
     "schemas": {
+      "ResumeList": {
+        "type": "object",
+        "properties": {
+          "resumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResumeMetaData"
+            }
+          }
+        }
+      },
+      "ResumeMetaData": {
+        "type": "object",
+        "properties": {
+          "resume_id": {
+            "type": "string"
+          },
+          "company_name": {
+            "type": "string"
+          },
+          "job_title": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "company_logo": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ResumeData": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string"
+          }
+        }
+      },
+      "ResumeTemplateUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "resume_id": {
+            "type": "string"
+          },
+          "new_template_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ResumeUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "fields": {
+            "additionalProperties": true
+          }
+        }
+      },
+      "ResumeUploadRequest": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "object"
+          }
+        }
+      },
       "GenericResponse":  {
         "type": "object",
         "properties": {

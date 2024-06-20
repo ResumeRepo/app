@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS public.user (
 ALTER TABLE public.user OWNER TO root;
 
 
-CREATE TABLE IF NOT EXISTS public.application (
+CREATE TABLE IF NOT EXISTS public.resume (
     id bigserial PRIMARY KEY NOT NULL,
+    uid VARCHAR(255) NOT NULL,
     user_id bigint NOT NULL,
     job_title VARCHAR(1024),
     company_name VARCHAR(1024),
@@ -28,12 +29,14 @@ CREATE TABLE IF NOT EXISTS public.application (
     template_id VARCHAR(255),
     resume text,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(uid)
 );
-ALTER TABLE public.application OWNER TO root;
+ALTER TABLE public.resume OWNER TO root;
 
 CREATE TABLE IF NOT EXISTS public.template_style (
     id bigserial PRIMARY KEY NOT NULL,
+    uid VARCHAR(255) NOT NULL,
     template_id VARCHAR(255) NOT NULL,
     css text,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
