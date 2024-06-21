@@ -16,12 +16,12 @@ export type TabType = "Assistant" | "Resumes" | "Profile"
 export default function Panel(): JSX.Element {
   const [listenersInitialized, setListenersInitialized] = useState(false)
   const [activeTab, setActiveTab] = useState<TabType>("Assistant")
-  const [showResumeUpload, setShowResumeUpload] = useState(true)
   const [hasBaseResume, setHasBaseResume] = useState(false)
   const {authUser} = useAuthContext()
 
   useEffect(() => {
     if (authUser) {
+      console.log("calling base resume...: ")
       new ResumeApi(headerConfig(authUser.token as string)).hasBaseResume()
       .then(response => {
         DEBUG("Has base resume", response.data.value)
@@ -32,7 +32,7 @@ export default function Panel(): JSX.Element {
       })
     }
 
-  }, []);
+  }, [authUser, hasBaseResume]);
 
   useEffect(() => {
     if (!listenersInitialized) {
@@ -40,7 +40,7 @@ export default function Panel(): JSX.Element {
       // @ts-ignore
       if (import.meta.env.MODE === "production") {
         chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
-          console.log("new message received: ", request)
+          console.log("new message received in the panel: ", request)
           // if  (request.type === "Token") {
           //   console.log("Token received: ", )
           // }
@@ -83,7 +83,7 @@ export default function Panel(): JSX.Element {
         { activeTab === "Resumes" && <RequireLogin><ResumeListView/></RequireLogin> }
         <BottomNav
             activeTab={activeTab}
-            showResumeUpload={!(authUser && hasBaseResume) || showResumeUpload}
+            showResumeUpload={!hasBaseResume}
             onChangeTab={onChangeTab}
             onResumeUploadSuccess={onResumeUploadSuccess}
         />

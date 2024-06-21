@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.base_resume (
     id bigserial PRIMARY KEY NOT NULL,
     uid VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL,
-    pdf_s3_url VARCHAR(255),
+    s3_key VARCHAR(255),
     resume text,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -74,7 +74,7 @@ const BottomNav = (props: NavProps) => {
     setUploadInProgress(true)
     const selectedFile = event.target.files[0];
     const extension = selectedFile.name.split(".").pop()
-    if (!["pdf", "doc", "docx"].includes(extension)) {
+    if (!["pdf"].includes(extension)) {
       setUploadError("Unsupported file type")
       setUploadInProgress(false)
     } else {
@@ -117,7 +117,7 @@ const BottomNav = (props: NavProps) => {
                 </svg>
               }
               <span className="font-extrabold pt-1 pl-1">Upload Resume</span>
-              <span className="text-xs pt-1 pl-1">(.pdf, .doc, .docx)</span>
+              <span className="text-xs pt-1 pl-1">(.pdf)</span>
               <input type="file" id='uploadFile1' className="hidden" onChange={handleFileChange} />
             </label>
           </div>

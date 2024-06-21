@@ -26,9 +26,9 @@ class BaseResumeEntity {
     var userId: String? = null
 
     @Basic
-    @JsonProperty("pdf_s3_url")
-    @Column(name = "pdf_s3_url")
-    var pdfS3Url: String? = null
+    @JsonProperty("s3_key")
+    @Column(name = "s3_key")
+    var s3Key: String? = null
 
     @Basic
     @Column(name = "resume")
