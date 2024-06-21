@@ -48,6 +48,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core:9.22.3")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    implementation("com.amazonaws:aws-java-sdk:1.12.747")
+    implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")

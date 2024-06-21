@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 
 /**
  * @author Biz Melesse
- * created on 3/17/24
+ * created on 6/15/24
  */
 
 @Configuration
@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration
     FlywayPostgresProps::class,
     FirebaseProps::class,
     CorsProps::class,
+    AwsProps::class,
     PostgresDataSourceProps::class
 ])
 class PropsConfiguration
