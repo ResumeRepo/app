@@ -835,7 +835,18 @@
             "type": "string"
           },
           "description": {
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "is_match": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "company_info": {
             "type": "string"

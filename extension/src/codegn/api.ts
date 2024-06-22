@@ -670,16 +670,35 @@ export interface JobDescription {
     'logo_url'?: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<JobDescriptionDescriptionInner>}
      * @memberof JobDescription
      */
-    'description'?: string;
+    'description'?: Array<JobDescriptionDescriptionInner>;
     /**
      * 
      * @type {string}
      * @memberof JobDescription
      */
     'company_info'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface JobDescriptionDescriptionInner
+ */
+export interface JobDescriptionDescriptionInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescriptionDescriptionInner
+     */
+    'text'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof JobDescriptionDescriptionInner
+     */
+    'is_match'?: boolean;
 }
 /**
  * 
