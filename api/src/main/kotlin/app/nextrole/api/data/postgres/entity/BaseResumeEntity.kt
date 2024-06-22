@@ -25,6 +25,9 @@ class BaseResumeEntity {
     @Column(name = "user_id")
     var userId: String? = null
 
+    @Column(name = "version")
+    var version: Long? = 0
+
     @Basic
     @JsonProperty("s3_key")
     @Column(name = "s3_key")

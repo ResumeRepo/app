@@ -57,10 +57,13 @@ export default function Assistant(props: AssistantProps): JSX.Element {
   const [body, setBody] = useState("")
   const {authUser} = useAuthContext()
 
+  const onShowGenerateResume = () => {
+
+  }
 
   return (
     <div className="mb-40">
-      <Card>
+      <Card title={"Role"} alwaysOpen={true}>
         <>
           <h1 className="mb-2 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white">{demoJd.title} <span
               className="text-blue-600 dark:text-blue-500">at {demoJd.company}</span></h1>
@@ -74,17 +77,15 @@ export default function Assistant(props: AssistantProps): JSX.Element {
           </h3>
         </>
       </Card>
-      <Card>
+      <Card title={"Company"} alwaysOpen={false}>
         <>
-          <SectionHeader title={"Company"}/>
           <div className="px-1 py-2">
           <span className="align-middle text-gray-500">{companyInfo.description}</span>
           </div>
         </>
       </Card>
-      <Card>
+      <Card title={"Requirements"} alwaysOpen={false}>
         <>
-          <SectionHeader title={"About the Role"}/>
           <div className="px-1 py-2">
           <ul className="max-w-md space-y-1 text-gray-500 list-inside">
             {roles?.map((role, index) => {
@@ -115,9 +116,9 @@ export default function Assistant(props: AssistantProps): JSX.Element {
           </div>
         </>
       </Card>
-      <Card>
+
+      <Card title={"Customize your Resume"} alwaysOpen={true}>
         <>
-          <SectionHeader title={"Customize your Resume"}/>
           <div className="px-1 py-4">
             {/*<div className="flex-row inline-flex">*/}
             {/*  <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">*/}
@@ -187,20 +188,20 @@ export default function Assistant(props: AssistantProps): JSX.Element {
 
 
 
-      <Card>
-        <>
+      {/*<Card>*/}
+      {/*  <>*/}
 
 
-          <h1 className="text-2xl">Title</h1>
-          <h5>{title}</h5>
-          <h1>URL</h1>
-          <h5>{url}</h5>
-          <h1>body</h1>
-          <p>{body}</p>
+      {/*    <h1 className="text-2xl">Title</h1>*/}
+      {/*    <h5>{title}</h5>*/}
+      {/*    <h1>URL</h1>*/}
+      {/*    <h5>{url}</h5>*/}
+      {/*    <h1>body</h1>*/}
+      {/*    <p>{body}</p>*/}
 
 
-        </>
-      </Card>
+      {/*  </>*/}
+      {/*</Card>*/}
     </div>
   );
 }

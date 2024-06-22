@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.base_resume (
     uid VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     s3_key VARCHAR(255),
+    version integer NOT NULL,
     resume text,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -32,9 +33,12 @@ ALTER TABLE public.base_resume OWNER TO root;
 CREATE TABLE IF NOT EXISTS public.resume (
     id bigserial PRIMARY KEY NOT NULL,
     uid VARCHAR(255) NOT NULL,
+    base_resume_id VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL,
+    job_id VARCHAR(255),
     job_title VARCHAR(1024),
     company_name VARCHAR(1024),
+    company_info VARCHAR(1024),
     location VARCHAR(1024),
     salary VARCHAR(255),
     logo_url VARCHAR(255),
@@ -42,7 +46,7 @@ CREATE TABLE IF NOT EXISTS public.resume (
     resume text,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(uid)
+    UNIQUE(uid, base_resume_id)
 );
 ALTER TABLE public.resume OWNER TO root;
 

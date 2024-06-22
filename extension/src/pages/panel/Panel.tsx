@@ -17,6 +17,7 @@ export default function Panel(): JSX.Element {
   const [listenersInitialized, setListenersInitialized] = useState(false)
   const [activeTab, setActiveTab] = useState<TabType>("Assistant")
   const [showResumeUpload, setShowResumeUpload] = useState(false)
+  const [showGenerateResume, setShowGenerateResume] = useState(false)
   const {authUser} = useAuthContext()
 
   useEffect(() => {
@@ -79,11 +80,14 @@ export default function Panel(): JSX.Element {
 
   return (
     <div className="container mx-auto px-4 py-4 max-w-[660px]">
-        { activeTab === "Assistant" && <Assistant/> }
+        { activeTab === "Assistant" && <Assistant
+            onShowResumeGenerate={() => setShowGenerateResume(true)}/>
+        }
         { activeTab === "Resumes" && <RequireLogin><ResumeListView/></RequireLogin> }
         <BottomNav
             activeTab={activeTab}
             showResumeUpload={showResumeUpload}
+            showGenerateResume={showGenerateResume}
             onChangeTab={onChangeTab}
             onResumeUploadSuccess={onResumeUploadSuccess}
         />

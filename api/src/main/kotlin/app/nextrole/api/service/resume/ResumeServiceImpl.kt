@@ -2,6 +2,7 @@ package app.nextrole.api.service.resume
 
 import app.nextrole.api.*
 import app.nextrole.api.data.postgres.entity.BaseResumeEntity
+import app.nextrole.api.data.postgres.entity.ResumeEntity
 import app.nextrole.api.data.postgres.repo.BaseResumeRepo
 import app.nextrole.api.data.postgres.repo.ResumeRepo
 import app.nextrole.api.props.AwsProps
@@ -13,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
-import java.io.File
 import java.io.InputStream
 import java.util.*
 
@@ -53,15 +53,21 @@ class ResumeServiceImpl(
         val file = decoder.decode(base64Payload)
 
         val text = pdfService.parsePdf(file)
+        val prevBaseResume = getSessionUser().userId?.let { baseResumeRepo.findByUserId(it) }
+        var version = 0L
+        if (prevBaseResume?.version != null) {
+            version = prevBaseResume.version!! + 1L
+        }
         val baseResume = BaseResumeEntity()
         baseResume.resume = text
         baseResume.userId = sessionUser.userId
+        baseResume.version = version
         baseResumeRepo.save(baseResume)
 
-        kotlinx.coroutines.runBlocking {
-            sessionUser.userId?.let { uploadToS3(it, file, baseResume.uid) }
-        }
 
+        kotlinx.coroutines.runBlocking {
+            sessionUser.userId?.let { uploadToS3(it, file, baseResume.uid, version) }
+        }
         return ResumeUploadResponse(resumeId = baseResume.uid)
     }
 
@@ -70,9 +76,29 @@ class ResumeServiceImpl(
         return GenericResponse(status = "ok", value = baseResume != null)
     }
 
-    suspend fun uploadToS3(userId: String, file: ByteArray, resumeId: String?) {
+    override fun generateResume(jobDescription: JobDescription): GeneratedResume {
+        val sessionUser = getSessionUser()
+        val baseResume = sessionUser.userId?.let { baseResumeRepo.findByUserId(it) }
+        if (baseResume != null) {
+            val resume = ResumeEntity()
+            resume.baseResumeId = baseResume.uid
+            resume.userId = sessionUser.userId
+            resume.templateId = "1" // default the initial generated resume to template 1
+            resume.jobId = jobDescription.jobId
+            resume.jobTitle = jobDescription.jobTitle
+            resume.companyName = jobDescription.companyName
+            resume.companyInfo = jobDescription.companyInfo
+            resume.location = jobDescription.location
+            resume.salary = jobDescription.salary
+            resume.logoUrl = jobDescription.logoUrl
+            resumeRepo.save(resume)
+        }
+        return GeneratedResume()
+    }
+
+    suspend fun uploadToS3(userId: String, file: ByteArray, resumeId: String?, version: Long) {
         val inputStream: InputStream = ByteArrayInputStream(file)
-        val key = "${awsProps.s3UserContentFolder}/${userId}/${resumeId}.pdf"
+        val key = "${awsProps.s3UserContentFolder}/${userId}/v${version}${resumeId}.pdf"
         s3Service.putObject(awsProps.s3Bucket, key, inputStream, "application/pdf")
 
         if (resumeId != null) {

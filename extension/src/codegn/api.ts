@@ -26,6 +26,590 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface GeneratedResume
+ */
+export interface GeneratedResume {
+    /**
+     * 
+     * @type {GeneratedResumeBasics}
+     * @memberof GeneratedResume
+     */
+    'basics'?: GeneratedResumeBasics;
+    /**
+     * 
+     * @type {Array<GeneratedResumeWorkInner>}
+     * @memberof GeneratedResume
+     */
+    'work'?: Array<GeneratedResumeWorkInner>;
+    /**
+     * 
+     * @type {Array<GeneratedResumeVolunteerInner>}
+     * @memberof GeneratedResume
+     */
+    'volunteer'?: Array<GeneratedResumeVolunteerInner>;
+    /**
+     * 
+     * @type {Array<GeneratedResumeEducationInner>}
+     * @memberof GeneratedResume
+     */
+    'education'?: Array<GeneratedResumeEducationInner>;
+    /**
+     * Specify any awards you have received throughout your professional career
+     * @type {Array<GeneratedResumeAwardsInner>}
+     * @memberof GeneratedResume
+     */
+    'awards'?: Array<GeneratedResumeAwardsInner>;
+    /**
+     * Specify any certificates you have received throughout your professional career
+     * @type {Array<GeneratedResumeCertificatesInner>}
+     * @memberof GeneratedResume
+     */
+    'certificates'?: Array<GeneratedResumeCertificatesInner>;
+    /**
+     * Specify your publications through your career
+     * @type {Array<GeneratedResumePublicationsInner>}
+     * @memberof GeneratedResume
+     */
+    'publications'?: Array<GeneratedResumePublicationsInner>;
+    /**
+     * List out your professional skill-set
+     * @type {Array<GeneratedResumeSkillsInner>}
+     * @memberof GeneratedResume
+     */
+    'skills'?: Array<GeneratedResumeSkillsInner>;
+    /**
+     * List any other languages you speak
+     * @type {Array<GeneratedResumeLanguagesInner>}
+     * @memberof GeneratedResume
+     */
+    'languages'?: Array<GeneratedResumeLanguagesInner>;
+    /**
+     * 
+     * @type {Array<GeneratedResumeInterestsInner>}
+     * @memberof GeneratedResume
+     */
+    'interests'?: Array<GeneratedResumeInterestsInner>;
+    /**
+     * Specify career projects
+     * @type {Array<GeneratedResumeProjectsInner>}
+     * @memberof GeneratedResume
+     */
+    'projects'?: Array<GeneratedResumeProjectsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeAwardsInner
+ */
+export interface GeneratedResumeAwardsInner {
+    /**
+     * e.g. One of the 100 greatest minds of the century
+     * @type {string}
+     * @memberof GeneratedResumeAwardsInner
+     */
+    'title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeAwardsInner
+     */
+    'date'?: string;
+    /**
+     * e.g. Time Magazine
+     * @type {string}
+     * @memberof GeneratedResumeAwardsInner
+     */
+    'awarder'?: string;
+    /**
+     * e.g. Received for my work with Quantum Physics
+     * @type {string}
+     * @memberof GeneratedResumeAwardsInner
+     */
+    'summary'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeBasics
+ */
+export interface GeneratedResumeBasics {
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeBasics
+     */
+    'name'?: string;
+    /**
+     * e.g. Web Developer
+     * @type {string}
+     * @memberof GeneratedResumeBasics
+     */
+    'occupation'?: string;
+    /**
+     * e.g. thomas@gmail.com
+     * @type {string}
+     * @memberof GeneratedResumeBasics
+     */
+    'email'?: string;
+    /**
+     * Phone number
+     * @type {string}
+     * @memberof GeneratedResumeBasics
+     */
+    'phone'?: string;
+    /**
+     * URL to personal homepage
+     * @type {string}
+     * @memberof GeneratedResumeBasics
+     */
+    'url'?: string;
+    /**
+     * Write a short 2-3 sentence biography about yourself
+     * @type {string}
+     * @memberof GeneratedResumeBasics
+     */
+    'summary'?: string;
+    /**
+     * 
+     * @type {GeneratedResumeBasicsLocation}
+     * @memberof GeneratedResumeBasics
+     */
+    'location'?: GeneratedResumeBasicsLocation;
+    /**
+     * Specify any number of social networks that you participate in
+     * @type {Array<GeneratedResumeBasicsProfilesInner>}
+     * @memberof GeneratedResumeBasics
+     */
+    'profiles'?: Array<GeneratedResumeBasicsProfilesInner>;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeBasicsLocation
+ */
+export interface GeneratedResumeBasicsLocation {
+    /**
+     * To add multiple address lines, use  . For example, 1234 Glücklichkeit Straße Hinterhaus 5. Etage li.
+     * @type {string}
+     * @memberof GeneratedResumeBasicsLocation
+     */
+    'address'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeBasicsLocation
+     */
+    'postalCode'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeBasicsLocation
+     */
+    'city'?: string;
+    /**
+     * code as per ISO-3166-1 ALPHA-2, e.g. US, AU, IN
+     * @type {string}
+     * @memberof GeneratedResumeBasicsLocation
+     */
+    'countryCode'?: string;
+    /**
+     * The general region where you live. Can be a US state, or a province, for instance.
+     * @type {string}
+     * @memberof GeneratedResumeBasicsLocation
+     */
+    'region'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeBasicsProfilesInner
+ */
+export interface GeneratedResumeBasicsProfilesInner {
+    /**
+     * e.g. Facebook or Twitter
+     * @type {string}
+     * @memberof GeneratedResumeBasicsProfilesInner
+     */
+    'network'?: string;
+    /**
+     * e.g. neutralthoughts
+     * @type {string}
+     * @memberof GeneratedResumeBasicsProfilesInner
+     */
+    'username'?: string;
+    /**
+     * URL to the online profile
+     * @type {string}
+     * @memberof GeneratedResumeBasicsProfilesInner
+     */
+    'url'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeCertificatesInner
+ */
+export interface GeneratedResumeCertificatesInner {
+    /**
+     * e.g. Certified Kubernetes Administrator
+     * @type {string}
+     * @memberof GeneratedResumeCertificatesInner
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeCertificatesInner
+     */
+    'date'?: string;
+    /**
+     * URL, if relevant
+     * @type {string}
+     * @memberof GeneratedResumeCertificatesInner
+     */
+    'url'?: string;
+    /**
+     * e.g. CNCF
+     * @type {string}
+     * @memberof GeneratedResumeCertificatesInner
+     */
+    'issuer'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeEducationInner
+ */
+export interface GeneratedResumeEducationInner {
+    /**
+     * e.g. Massachusetts Institute of Technology
+     * @type {string}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'institution'?: string;
+    /**
+     * URL to the academic institution\'s home page
+     * @type {string}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'url'?: string;
+    /**
+     * e.g. Arts
+     * @type {string}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'area'?: string;
+    /**
+     * e.g. Bachelor
+     * @type {string}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'studyType'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'startDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'endDate'?: string;
+    /**
+     * grade point average, e.g. 3.67/4.0
+     * @type {string}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'score'?: string;
+    /**
+     * List notable courses/subjects
+     * @type {Array<string>}
+     * @memberof GeneratedResumeEducationInner
+     */
+    'courses'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeInterestsInner
+ */
+export interface GeneratedResumeInterestsInner {
+    /**
+     * e.g. Philosophy
+     * @type {string}
+     * @memberof GeneratedResumeInterestsInner
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GeneratedResumeInterestsInner
+     */
+    'keywords'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeLanguagesInner
+ */
+export interface GeneratedResumeLanguagesInner {
+    /**
+     * e.g. English, Spanish
+     * @type {string}
+     * @memberof GeneratedResumeLanguagesInner
+     */
+    'language'?: string;
+    /**
+     * e.g. Fluent, Beginner
+     * @type {string}
+     * @memberof GeneratedResumeLanguagesInner
+     */
+    'fluency'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeProjectsInner
+ */
+export interface GeneratedResumeProjectsInner {
+    /**
+     * e.g. The World Wide Web
+     * @type {string}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'name'?: string;
+    /**
+     * Short summary of project. e.g. Collated works of 2017.
+     * @type {string}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'description'?: string;
+    /**
+     * Specify multiple features
+     * @type {Array<string>}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'highlights'?: Array<string>;
+    /**
+     * Specify special elements involved
+     * @type {Array<string>}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'keywords'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'startDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'endDate'?: string;
+    /**
+     * Url to the project
+     * @type {string}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'url'?: string;
+    /**
+     * Specify your role on this project or in company
+     * @type {Array<string>}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'roles'?: Array<string>;
+    /**
+     * Specify the relevant company/entity affiliations e.g. \'greenpeace\', \'corporationXYZ\'
+     * @type {string}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'entity'?: string;
+    /**
+     *  e.g. \'volunteering\', \'presentation\', \'talk\', \'application\', \'conference\'
+     * @type {string}
+     * @memberof GeneratedResumeProjectsInner
+     */
+    'type'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumePublicationsInner
+ */
+export interface GeneratedResumePublicationsInner {
+    /**
+     * e.g. The World Wide Web
+     * @type {string}
+     * @memberof GeneratedResumePublicationsInner
+     */
+    'name'?: string;
+    /**
+     * e.g. IEEE, Computer Magazine
+     * @type {string}
+     * @memberof GeneratedResumePublicationsInner
+     */
+    'publisher'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumePublicationsInner
+     */
+    'releaseDate'?: string;
+    /**
+     * URL to the publication
+     * @type {string}
+     * @memberof GeneratedResumePublicationsInner
+     */
+    'url'?: string;
+    /**
+     * Short summary of publication. e.g. Discussion of the World Wide Web, HTTP, HTML.
+     * @type {string}
+     * @memberof GeneratedResumePublicationsInner
+     */
+    'summary'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeSkillsInner
+ */
+export interface GeneratedResumeSkillsInner {
+    /**
+     * e.g. Web Development
+     * @type {string}
+     * @memberof GeneratedResumeSkillsInner
+     */
+    'name'?: string;
+    /**
+     * e.g. Master
+     * @type {string}
+     * @memberof GeneratedResumeSkillsInner
+     */
+    'level'?: string;
+    /**
+     * List some keywords pertaining to this skill
+     * @type {Array<string>}
+     * @memberof GeneratedResumeSkillsInner
+     */
+    'keywords'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeVolunteerInner
+ */
+export interface GeneratedResumeVolunteerInner {
+    /**
+     * e.g. Facebook
+     * @type {string}
+     * @memberof GeneratedResumeVolunteerInner
+     */
+    'organization'?: string;
+    /**
+     * e.g. Software Engineer
+     * @type {string}
+     * @memberof GeneratedResumeVolunteerInner
+     */
+    'position'?: string;
+    /**
+     * URL to organization website
+     * @type {string}
+     * @memberof GeneratedResumeVolunteerInner
+     */
+    'url'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeVolunteerInner
+     */
+    'startDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeVolunteerInner
+     */
+    'endDate'?: string;
+    /**
+     * Give an overview of your responsibilities at the company
+     * @type {string}
+     * @memberof GeneratedResumeVolunteerInner
+     */
+    'summary'?: string;
+    /**
+     * Specify accomplishments and achievements
+     * @type {Array<string>}
+     * @memberof GeneratedResumeVolunteerInner
+     */
+    'highlights'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedResumeWorkInner
+ */
+export interface GeneratedResumeWorkInner {
+    /**
+     * e.g. Facebook
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'name'?: string;
+    /**
+     * e.g. Menlo Park, CA
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'location'?: string;
+    /**
+     * e.g. Social Media Company
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'description'?: string;
+    /**
+     * e.g. Software Engineer
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'position'?: string;
+    /**
+     * URL to company website
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'url'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'startDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'endDate'?: string;
+    /**
+     * Give an overview of your responsibilities at the company
+     * @type {string}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'summary'?: string;
+    /**
+     * Specify multiple accomplishments
+     * @type {Array<string>}
+     * @memberof GeneratedResumeWorkInner
+     */
+    'highlights'?: Array<string>;
+}
+/**
+ * 
+ * @export
  * @interface GenericResponse
  */
 export interface GenericResponse {
@@ -41,6 +625,61 @@ export interface GenericResponse {
      * @memberof GenericResponse
      */
     'value'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface JobDescription
+ */
+export interface JobDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'job_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'job_title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'company_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'salary'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'logo_url'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobDescription
+     */
+    'company_info'?: string;
 }
 /**
  * 
@@ -476,6 +1115,42 @@ export const ResumeApiAxiosParamCreator = function (configuration?: Configuratio
     return {
         /**
          * 
+         * @summary Generate a resume given a job description
+         * @param {JobDescription} jobDescription 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generateResume: async (jobDescription: JobDescription, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'jobDescription' is not null or undefined
+            assertParamExists('generateResume', 'jobDescription', jobDescription)
+            const localVarPath = `/resume/generate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(jobDescription, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all resumes
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -689,6 +1364,19 @@ export const ResumeApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Generate a resume given a job description
+         * @param {JobDescription} jobDescription 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async generateResume(jobDescription: JobDescription, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GeneratedResume>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generateResume(jobDescription, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.generateResume']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Get all resumes
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -775,6 +1463,16 @@ export const ResumeApiFactory = function (configuration?: Configuration, basePat
     return {
         /**
          * 
+         * @summary Generate a resume given a job description
+         * @param {JobDescription} jobDescription 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generateResume(jobDescription: JobDescription, options?: any): AxiosPromise<GeneratedResume> {
+            return localVarFp.generateResume(jobDescription, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all resumes
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -841,6 +1539,18 @@ export const ResumeApiFactory = function (configuration?: Configuration, basePat
  * @extends {BaseAPI}
  */
 export class ResumeApi extends BaseAPI {
+    /**
+     * 
+     * @summary Generate a resume given a job description
+     * @param {JobDescription} jobDescription 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public generateResume(jobDescription: JobDescription, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).generateResume(jobDescription, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Get all resumes

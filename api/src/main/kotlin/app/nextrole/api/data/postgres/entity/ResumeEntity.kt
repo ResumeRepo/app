@@ -19,11 +19,17 @@ class ResumeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
+    @Column(name = "base_resume_id")
+    var baseResumeId: String? = null
+
     @Column(name = "uid")
     var uid: String? = generateUid(SHORT_UID_LENGTH)
 
     @Column(name = "user_id")
     var userId: String? = null
+
+    @Column(name = "job_id")
+    var jobId: String? = null
 
     @Column(name = "job_title")
     var jobTitle: String? = null
@@ -31,6 +37,10 @@ class ResumeEntity {
     @JsonProperty("company_name")
     @Column(name = "company_name")
     var companyName: String? = null
+
+    @JsonProperty("company_info")
+    @Column(name = "company_info")
+    var companyInfo: String? = null
 
     @JsonProperty("location")
     @Column(name = "location")

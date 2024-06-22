@@ -1,7 +1,9 @@
 package app.nextrole.api.utils.exception
 
+import app.nextrole.api.props.SourceProps
 import app.nextrole.api.service.utils.getCurrentTime
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.coyote.BadRequestException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,13 +19,22 @@ import org.springframework.web.context.request.WebRequest
  */
 
 @ControllerAdvice
-class GlobalExceptionHandler(val objectMapper: ObjectMapper) {
+class GlobalExceptionHandler(
+    val objectMapper: ObjectMapper,
+    val sourceProps: SourceProps
+) {
+    private val logger = KotlinLogging.logger {}
 
     private fun getMessage(error: String, errorCode: Int): String {
         val errorObject: MutableMap<String, Any> = HashMap()
-        errorObject["error"] = error
+        var redactedError = error
+        if (sourceProps.profile.equals("prod")) {
+            redactedError = "Encountered an internal server error. We're looking into it!"
+        }
+        errorObject["error"] = redactedError
         errorObject["code"] = errorCode
         errorObject["timestamp"] = getCurrentTime()
+        logger.error { error }
         return objectMapper.writeValueAsString(errorObject)
     }
 
