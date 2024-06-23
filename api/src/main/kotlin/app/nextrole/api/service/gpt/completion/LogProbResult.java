@@ -1,4 +1,4 @@
-package app.nextrole.api.lib.openai.completion;
+package app.nextrole.api.service.gpt.completion;
 
 import java.util.List;
 import java.util.Map;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * Log probabilities of different token options
- * Returned if {@link CompletionRequest#logprobs} is greater than zero
+ * Returned if {@link CompletionRequestzz#logprobs} is greater than zero
  *
  * https://beta.openai.com/docs/api-reference/create-completion
  */
@@ -25,7 +25,7 @@ public class LogProbResult {
 
     /**
      * A map for each index in the completion result.
-     * The map contains the top {@link CompletionRequest#logprobs} tokens and their probabilities
+     * The map contains the top {@link CompletionRequestzz#logprobs} tokens and their probabilities
      */
     List<Map<String, Double>> topLogprobs;
 

@@ -1,7 +1,7 @@
 package app.nextrole.api.service.gpt
 
 import app.nextrole.api.UserCompletionResponse
-import app.nextrole.api.lib.openai.completion.CompletionRequest
+import app.nextrole.api.service.gpt.completion.CompletionRequest
 
 /**
  * @author Biz Melesse
