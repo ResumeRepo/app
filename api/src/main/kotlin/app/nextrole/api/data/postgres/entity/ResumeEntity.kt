@@ -28,33 +28,8 @@ class ResumeEntity {
     @Column(name = "user_id")
     var userId: String? = null
 
-    @Column(name = "job_id")
-    var jobId: String? = null
-
-    @Column(name = "job_title")
-    var jobTitle: String? = null
-
-    @JsonProperty("company_name")
-    @Column(name = "company_name")
-    var companyName: String? = null
-
-    @JsonProperty("company_info")
-    @Column(name = "company_info")
-    var companyInfo: String? = null
-
-    @JsonProperty("location")
-    @Column(name = "location")
-    var location: String? = null
-
-    @Basic
-    @JsonProperty("salary")
-    @Column(name = "salary")
-    var salary: String? = null
-
-    @Basic
-    @JsonProperty("logo_url")
-    @Column(name = "logo_url")
-    var logoUrl: String? = null
+    @Column(name = "job_post_id")
+    var jobPostId: Long? = null
 
     @Basic
     @JsonProperty("template_id")

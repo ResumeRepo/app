@@ -215,19 +215,52 @@
         }
       }
     },
+    "/job-post": {
+      "post": {
+        "tags": [
+          "resume"
+        ],
+        "summary": "Save a job post",
+        "operationId": "saveJobPost",
+        "requestBody": {
+          "required": true,
+          "description": "Job post html payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StringValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Parsed job post response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobPost"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/resume/generate": {
       "post": {
         "tags": [
           "resume"
         ],
-        "summary": "Generate a resume given a job description",
+        "summary": "Generate a resume given a job post",
         "operationId": "generateResume",
         "requestBody": {
           "required": true,
+          "description": "JobPost ID",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobDescription"
+                "$ref": "#/components/schemas/GenerateResumeRequest"
               }
             }
           }
@@ -409,6 +442,17 @@
         "type": "object",
         "properties": {
           "resume_id": {
+            "type": "string"
+          }
+        }
+      },
+      "GenerateResumeRequest": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string"
+          },
+          "instructions": {
             "type": "string"
           }
         }
@@ -813,7 +857,15 @@
           }
         }
       },
-      "JobDescription": {
+      "StringValue": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "JobPost": {
         "type": "object",
         "properties": {
           "job_id": {
@@ -825,6 +877,9 @@
           "company_name": {
             "type": "string"
           },
+          "company_info": {
+            "type": "string"
+          },
           "location": {
             "type": "string"
           },
@@ -834,7 +889,10 @@
           "logo_url": {
             "type": "string"
           },
-          "description": {
+          "job_board": {
+            "type": "string"
+          },
+          "job_description": {
             "type": "array",
             "items": {
               "type": "object",
@@ -847,9 +905,6 @@
                 }
               }
             }
-          },
-          "company_info": {
-            "type": "string"
           }
         }
       },

@@ -5,11 +5,11 @@ import {useAuthContext} from "@src/context/AuthContext";
 import {Accordion} from "flowbite-react";
 import CircularLoader from "@src/components/Loader";
 import { BsStars } from "react-icons/bs";
-import {JobDescription, ResumeApi} from "@src/codegn";
+import {JobPost, ResumeApi} from "@src/codegn";
 import {headerConfig} from "@src/utils/headerConfig";
 import {DEBUG, ERROR} from "@src/utils/utils";
 
-const jd: JobDescription = {
+const jd: JobPost = {
   job_id: "123alpha",
   job_title: "Product Configuration Software Developer",
   company_name: "ASI Group",
@@ -17,7 +17,7 @@ const jd: JobDescription = {
   location: "Yonkers, NY, Eastanollee, GA, Burr Ridge, IL",
   salary: "$95,000 - $115,000",
   logo_url: "",
-  description: [
+  job_description: [
   { text: "Assist with development of online CPQ system", is_match: true },
   { text: "Configure, quote, and place orders with ASI Group companies", is_match: true },
   { text: "Understand products and how they are configured", is_match: true },
@@ -37,7 +37,10 @@ export default function Assistant(props: AssistantProps): JSX.Element {
   const onGenerateResume = () => {
     setResumeGenerationInProgress(true)
     if (authUser) {
-      new ResumeApi(headerConfig(authUser.token as string)).generateResume(jd)
+      new ResumeApi(headerConfig(authUser.token as string)).generateResume({
+        job_id: "123",
+        instructions: "Please generate a nice resume for me"
+      })
       .then(response => {
         DEBUG("Resume has been generated", response.data)
         setResumeGenerationInProgress(false)
@@ -96,15 +99,15 @@ export default function Assistant(props: AssistantProps): JSX.Element {
             <>
               <div className="px-1 py-2">
                 <ul className="max-w-md space-y-1 text-gray-500 list-inside">
-                  {jd.description?.map((role, index) => {
-                    if (role.is_match) {
+                  {jd.job_description?.map((desc, index) => {
+                    if (desc.is_match) {
                       return (
                           <li className="flex items-center text-left"  key={`role-${index}`}>
                             <>
                               <svg className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                               </svg>
-                              <span className="text-lg">{role.text}</span>
+                              <span className="text-lg">{desc.text}</span>
                             </>
                           </li>
                       )

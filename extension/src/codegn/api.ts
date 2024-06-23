@@ -26,6 +26,56 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface GPTMessage
+ */
+export interface GPTMessage {
+    /**
+     * 
+     * @type {string}
+     * @memberof GPTMessage
+     */
+    'role'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GPTMessage
+     */
+    'content'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GPTMessage
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof GPTMessage
+     */
+    'error'?: { [key: string]: any; };
+}
+/**
+ * 
+ * @export
+ * @interface GenerateResumeRequest
+ */
+export interface GenerateResumeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof GenerateResumeRequest
+     */
+    'job_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GenerateResumeRequest
+     */
+    'instructions'?: string;
+}
+/**
+ * 
+ * @export
  * @interface GeneratedResume
  */
 export interface GeneratedResume {
@@ -629,74 +679,80 @@ export interface GenericResponse {
 /**
  * 
  * @export
- * @interface JobDescription
+ * @interface JobPost
  */
-export interface JobDescription {
+export interface JobPost {
     /**
      * 
      * @type {string}
-     * @memberof JobDescription
+     * @memberof JobPost
      */
     'job_id'?: string;
     /**
      * 
      * @type {string}
-     * @memberof JobDescription
+     * @memberof JobPost
      */
     'job_title'?: string;
     /**
      * 
      * @type {string}
-     * @memberof JobDescription
+     * @memberof JobPost
      */
     'company_name'?: string;
     /**
      * 
      * @type {string}
-     * @memberof JobDescription
+     * @memberof JobPost
+     */
+    'company_info'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobPost
      */
     'location'?: string;
     /**
      * 
      * @type {string}
-     * @memberof JobDescription
+     * @memberof JobPost
      */
     'salary'?: string;
     /**
      * 
      * @type {string}
-     * @memberof JobDescription
+     * @memberof JobPost
      */
     'logo_url'?: string;
     /**
      * 
-     * @type {Array<JobDescriptionDescriptionInner>}
-     * @memberof JobDescription
+     * @type {string}
+     * @memberof JobPost
      */
-    'description'?: Array<JobDescriptionDescriptionInner>;
+    'job_board'?: string;
     /**
      * 
-     * @type {string}
-     * @memberof JobDescription
+     * @type {Array<JobPostJobDescriptionInner>}
+     * @memberof JobPost
      */
-    'company_info'?: string;
+    'job_description'?: Array<JobPostJobDescriptionInner>;
 }
 /**
  * 
  * @export
- * @interface JobDescriptionDescriptionInner
+ * @interface JobPostJobDescriptionInner
  */
-export interface JobDescriptionDescriptionInner {
+export interface JobPostJobDescriptionInner {
     /**
      * 
      * @type {string}
-     * @memberof JobDescriptionDescriptionInner
+     * @memberof JobPostJobDescriptionInner
      */
     'text'?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof JobDescriptionDescriptionInner
+     * @memberof JobPostJobDescriptionInner
      */
     'is_match'?: boolean;
 }
@@ -944,6 +1000,130 @@ export interface SessionUser {
      */
     'roles'?: { [key: string]: boolean; };
 }
+/**
+ * 
+ * @export
+ * @interface StringValue
+ */
+export interface StringValue {
+    /**
+     * 
+     * @type {string}
+     * @memberof StringValue
+     */
+    'value'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface TokenUsage
+ */
+export interface TokenUsage {
+    /**
+     * 
+     * @type {number}
+     * @memberof TokenUsage
+     */
+    'prompt_tokens'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TokenUsage
+     */
+    'completion_tokens'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TokenUsage
+     */
+    'total_tokens'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TokenUsage
+     */
+    'function_call_aggregate'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface UserCompletionRequest
+ */
+export interface UserCompletionRequest {
+    /**
+     * 
+     * @type {Array<GPTMessage>}
+     * @memberof UserCompletionRequest
+     */
+    'messages': Array<GPTMessage>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserCompletionRequest
+     */
+    'project_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserCompletionRequest
+     */
+    'model'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserCompletionRequest
+     */
+    'max_tokens'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserCompletionRequest
+     */
+    'temperature'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserCompletionRequest
+     */
+    'function_call'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UserCompletionResponse
+ */
+export interface UserCompletionResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserCompletionResponse
+     */
+    'model'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserCompletionResponse
+     */
+    'object'?: string;
+    /**
+     * 
+     * @type {Array<GPTMessage>}
+     * @memberof UserCompletionResponse
+     */
+    'messages'?: Array<GPTMessage>;
+    /**
+     * 
+     * @type {TokenUsage}
+     * @memberof UserCompletionResponse
+     */
+    'usage'?: TokenUsage;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof UserCompletionResponse
+     */
+    'error'?: { [key: string]: any; };
+}
 
 /**
  * PdfApi - axios parameter creator
@@ -1134,14 +1314,14 @@ export const ResumeApiAxiosParamCreator = function (configuration?: Configuratio
     return {
         /**
          * 
-         * @summary Generate a resume given a job description
-         * @param {JobDescription} jobDescription 
+         * @summary Generate a resume given a job post
+         * @param {GenerateResumeRequest} generateResumeRequest JobPost ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        generateResume: async (jobDescription: JobDescription, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'jobDescription' is not null or undefined
-            assertParamExists('generateResume', 'jobDescription', jobDescription)
+        generateResume: async (generateResumeRequest: GenerateResumeRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'generateResumeRequest' is not null or undefined
+            assertParamExists('generateResume', 'generateResumeRequest', generateResumeRequest)
             const localVarPath = `/resume/generate`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1161,7 +1341,7 @@ export const ResumeApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(jobDescription, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(generateResumeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1257,6 +1437,42 @@ export const ResumeApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Save a job post
+         * @param {StringValue} stringValue Job post html payload
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveJobPost: async (stringValue: StringValue, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'stringValue' is not null or undefined
+            assertParamExists('saveJobPost', 'stringValue', stringValue)
+            const localVarPath = `/job-post`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(stringValue, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1383,13 +1599,13 @@ export const ResumeApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Generate a resume given a job description
-         * @param {JobDescription} jobDescription 
+         * @summary Generate a resume given a job post
+         * @param {GenerateResumeRequest} generateResumeRequest JobPost ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async generateResume(jobDescription: JobDescription, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GeneratedResume>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.generateResume(jobDescription, options);
+        async generateResume(generateResumeRequest: GenerateResumeRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GeneratedResume>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generateResume(generateResumeRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ResumeApi.generateResume']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1429,6 +1645,19 @@ export const ResumeApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.hasBaseResume(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ResumeApi.hasBaseResume']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Save a job post
+         * @param {StringValue} stringValue Job post html payload
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveJobPost(stringValue: StringValue, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<JobPost>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveJobPost(stringValue, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.saveJobPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1482,13 +1711,13 @@ export const ResumeApiFactory = function (configuration?: Configuration, basePat
     return {
         /**
          * 
-         * @summary Generate a resume given a job description
-         * @param {JobDescription} jobDescription 
+         * @summary Generate a resume given a job post
+         * @param {GenerateResumeRequest} generateResumeRequest JobPost ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        generateResume(jobDescription: JobDescription, options?: any): AxiosPromise<GeneratedResume> {
-            return localVarFp.generateResume(jobDescription, options).then((request) => request(axios, basePath));
+        generateResume(generateResumeRequest: GenerateResumeRequest, options?: any): AxiosPromise<GeneratedResume> {
+            return localVarFp.generateResume(generateResumeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1517,6 +1746,16 @@ export const ResumeApiFactory = function (configuration?: Configuration, basePat
          */
         hasBaseResume(options?: any): AxiosPromise<GenericResponse> {
             return localVarFp.hasBaseResume(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Save a job post
+         * @param {StringValue} stringValue Job post html payload
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveJobPost(stringValue: StringValue, options?: any): AxiosPromise<JobPost> {
+            return localVarFp.saveJobPost(stringValue, options).then((request) => request(axios, basePath));
         },
         /**
          * Update user resume
@@ -1560,14 +1799,14 @@ export const ResumeApiFactory = function (configuration?: Configuration, basePat
 export class ResumeApi extends BaseAPI {
     /**
      * 
-     * @summary Generate a resume given a job description
-     * @param {JobDescription} jobDescription 
+     * @summary Generate a resume given a job post
+     * @param {GenerateResumeRequest} generateResumeRequest JobPost ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ResumeApi
      */
-    public generateResume(jobDescription: JobDescription, options?: RawAxiosRequestConfig) {
-        return ResumeApiFp(this.configuration).generateResume(jobDescription, options).then((request) => request(this.axios, this.basePath));
+    public generateResume(generateResumeRequest: GenerateResumeRequest, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).generateResume(generateResumeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1602,6 +1841,18 @@ export class ResumeApi extends BaseAPI {
      */
     public hasBaseResume(options?: RawAxiosRequestConfig) {
         return ResumeApiFp(this.configuration).hasBaseResume(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Save a job post
+     * @param {StringValue} stringValue Job post html payload
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ResumeApi
+     */
+    public saveJobPost(stringValue: StringValue, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).saveJobPost(stringValue, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

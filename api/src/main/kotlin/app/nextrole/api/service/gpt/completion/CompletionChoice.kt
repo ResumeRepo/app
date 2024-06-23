@@ -11,7 +11,7 @@ data class CompletionChoice(
      * The generated text. Will include the prompt if {@link CompletionRequestzz#echo } is true
      */
     var text: String,
-    var message: CompletionMessage,
+    var message: CompletionResponseMessage,
     var index: Int,
     @JsonProperty("finish_reason") var finishReason: String
 )

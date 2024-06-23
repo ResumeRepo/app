@@ -13,5 +13,6 @@ interface ResumeService {
     fun getResume(resumeId: String?): ResumeData
     fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResumeUploadResponse
     fun hasBaseResume(): GenericResponse
-    fun generateResume(jobDescription: JobDescription): GeneratedResume
+    fun generateResume(generateResumeRequest: GenerateResumeRequest): GeneratedResume
+    fun saveJobPost(jpbPostHtml: StringValue): JobPost
 }

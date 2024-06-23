@@ -4,6 +4,7 @@ import app.nextrole.api.GPTMessage
 import app.nextrole.api.UserCompletionResponse
 import app.nextrole.api.props.OpenAiProps
 import app.nextrole.api.service.gpt.completion.*
+import app.nextrole.api.service.utils.getSessionUser
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -26,32 +27,35 @@ class GptServiceImpl(
 ) : GptService {
     private val logger = KotlinLogging.logger {}
 
-    override fun buildCompletionRequest(context: String): CompletionRequest {
-        val messages: MutableList<CompletionMessage> = ArrayList()
+    override fun buildCompletionRequest(context: String, function: GPTFunction): CompletionRequest {
+        val messages: MutableList<CompletionRequestMessage> = ArrayList()
 
-        val systemMessage =  CompletionMessage(
+        val systemMessage =  CompletionRequestMessage(
             role = "system",
             content = openAiProps.systemMessage!!
         )
         messages.add(systemMessage)
 
-        val userMessage =  CompletionMessage(
+        val userMessage =  CompletionRequestMessage(
             role = "user",
             content = context!!
         )
 
         messages.add(userMessage)
 
+        val sessionUser = getSessionUser()
         return CompletionRequest(
-            user = "nextrole",
+            user = sessionUser.userId!!,
             model = openAiProps.completionModel!!,
             maxTokens = openAiProps.maxTokens!!,
             temperature = openAiProps.temp,
+            functionCall = "auto",
+            functions = mutableListOf(function),
             messages = messages)
     }
 
-    override fun gptCompletionRequest(context: String): UserCompletionResponse {
-        return makeCompletionRequest(buildCompletionRequest(context))
+    override fun gptCompletionRequest(context: String, function: GPTFunction): UserCompletionResponse {
+        return makeCompletionRequest(buildCompletionRequest(context, function))
     }
 
     private fun makeCompletionRequest(completionRequest: CompletionRequest): UserCompletionResponse {
@@ -71,20 +75,21 @@ class GptServiceImpl(
                         return completionResponse
                     } else {
                         if (hasCompletionChoices(completionResult)) {
-                            val responseMessage: CompletionMessage =
+                            val responseMessage: CompletionResponseMessage =
                                 completionResult.choices[0].message
+                            val functionCall: GPTFunctionCallPayload = responseMessage.functionCall
                             val content: String = responseMessage.content
                             completionResponse.messages = mutableListOf(GPTMessage(content = content))
                         }
                     }
                 } catch (e: JsonProcessingException) {
-                    logger.error { e }
+                    e.printStackTrace()
                 }
             } catch (e: IOException) {
-                logger.error { e }
+                e.printStackTrace()
             }
         } catch (e: JsonProcessingException) {
-            logger.error { e }
+            e.printStackTrace()
         }
         return completionResponse
     }

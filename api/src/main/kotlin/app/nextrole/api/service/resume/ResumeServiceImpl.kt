@@ -2,10 +2,14 @@ package app.nextrole.api.service.resume
 
 import app.nextrole.api.*
 import app.nextrole.api.data.postgres.entity.BaseResumeEntity
+import app.nextrole.api.data.postgres.entity.JobPostEntity
 import app.nextrole.api.data.postgres.entity.ResumeEntity
 import app.nextrole.api.data.postgres.repo.BaseResumeRepo
+import app.nextrole.api.data.postgres.repo.JobPostRepo
 import app.nextrole.api.data.postgres.repo.ResumeRepo
 import app.nextrole.api.props.AwsProps
+import app.nextrole.api.service.gpt.GptService
+import app.nextrole.api.service.gpt.completion.GPTFunction
 import app.nextrole.api.service.pdf.PdfService
 import app.nextrole.api.service.s3.S3Service
 import app.nextrole.api.service.utils.getSessionUser
@@ -15,11 +19,14 @@ import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+import java.time.LocalDateTime
 import java.util.*
 
 @Service
 class ResumeServiceImpl(
+    val gptService: GptService,
     val resumeRepo: ResumeRepo,
+    val jobPostRepo: JobPostRepo,
     val baseResumeRepo: BaseResumeRepo,
     val pdfService: PdfService,
     val s3Service: S3Service,
@@ -76,23 +83,34 @@ class ResumeServiceImpl(
         return GenericResponse(status = "ok", value = baseResume != null)
     }
 
-    override fun generateResume(jobDescription: JobDescription): GeneratedResume {
-        val sessionUser = getSessionUser()
-        val baseResume = sessionUser.userId?.let { baseResumeRepo.findByUserId(it) }
-        if (baseResume != null) {
-            val resume = ResumeEntity()
-            resume.baseResumeId = baseResume.uid
-            resume.userId = sessionUser.userId
-            resume.templateId = "1" // default the initial generated resume to template 1
-            resume.jobId = jobDescription.jobId
-            resume.jobTitle = jobDescription.jobTitle
-            resume.companyName = jobDescription.companyName
-            resume.companyInfo = jobDescription.companyInfo
-            resume.location = jobDescription.location
-            resume.salary = jobDescription.salary
-            resume.logoUrl = jobDescription.logoUrl
-            resumeRepo.save(resume)
+    override fun saveJobPost(jpbPostHtml: StringValue): JobPost {
+        TODO("Not yet implemented")
+    }
+
+    override fun generateResume(generateResumeRequest: GenerateResumeRequest): GeneratedResume {
+        if (generateResumeRequest.jobId != null) {
+            val sessionUser = getSessionUser()
+            val baseResume = sessionUser.userId?.let { baseResumeRepo.findByUserId(it) }
+            if (baseResume != null) {
+                val jobPost = jobPostRepo.findByUid(generateResumeRequest.jobId!!)
+                if (jobPost != null) {
+                    var resume = resumeRepo.findByJobPostId(jobPost.id!!)
+                    if (resume == null) {
+                        resume = ResumeEntity()
+                        resume.baseResumeId = baseResume.uid
+                        resume.userId = sessionUser.userId
+                        resume.templateId = "1" // default the initial generated resume to template 1
+                        resume.jobPostId = jobPost.id
+                    }
+
+                    resume.resume = makeGptRequest(baseResume, jobPost, generateResumeRequest.instructions)
+                    resume.updatedAt = LocalDateTime.now()
+                    resumeRepo.save(resume)
+
+                }
+            }
         }
+
         return GeneratedResume()
     }
 
@@ -112,5 +130,26 @@ class ResumeServiceImpl(
         }
         val signedUrl = s3Service.getSignedUrl(awsProps.s3Bucket, key, 7 * 24 * 3600)
         logger.info { "Signed Url: $signedUrl"}
+    }
+
+    private fun makeGptRequest(baseResume: BaseResumeEntity, jobPost: JobPostEntity, instructions: String?): String {
+        var userInstructions = instructions
+        if (instructions == null) {
+            userInstructions =  "Not provided, skip."
+        }
+        val jobDescription = "Title: ${jobPost.jobTitle}\n Description: ${jobPost.jobDescription}"
+        val context = "We operate a website to allow users to customize their resume based on the job description. Users have provided their resume with all the information that's needed. Your taks is this: 1) Based on the information provided, score how well the user's resume matches the job description on a scale of 1-10. 2) Make your best effort to increase the score to 10 by generating a new resume for the user using a professional, industry-specific langauge. To generate, use the user's resume as a source and your own knowledge about what is an acceptable extrapolation to add new information. The dates on the resume should not change but you may expand, modify, or enhance the responsibilities and accomplishements, expand the technical terms, keywords, and skills so it matches the job description better. Ensure the enhancements are not an outright lie but a logical extension of what the applicant may be able to accomplish. The generated resume will need to fit an 8.5x11in letter size paper. It is okay if you add a lot of information. The user can edit and remove extraneous information on the frontend. 3) After you have generated the resume, provide a new score for the generated resume. 4) Make a function call with the results.\n" +
+                "\n" +
+                "Additional information: If the user has provided extra instructions, please prioritize that when generating the resume. \n" +
+                "\n" +
+                "USER_INSTRUCTIONS:$userInstructions\n" +
+                "USER_RESUME:${baseResume.resume}\n" +
+                "JOB_DESCRIPTION:$jobDescription"
+        val function = GPTFunction(
+            name = null,
+            description = null,
+            parameters = null)
+        val response = gptService.gptCompletionRequest(context, function)
+        return "message received..."
     }
 }

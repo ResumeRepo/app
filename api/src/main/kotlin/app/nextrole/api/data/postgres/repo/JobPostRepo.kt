@@ -1,6 +1,6 @@
 package app.nextrole.api.data.postgres.repo
 
-import app.nextrole.api.data.postgres.entity.ResumeEntity
+import app.nextrole.api.data.postgres.entity.JobPostEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 @Transactional
-interface ResumeRepo : JpaRepository<ResumeEntity, Long> {
-
-    fun findByJobPostId(jobPostId: Long): ResumeEntity?
+interface JobPostRepo : JpaRepository<JobPostEntity, Long> {
+    fun findByUid(uid: String): JobPostEntity?
 }
