@@ -929,6 +929,104 @@
             }
           }
         }
+      },
+      "UserCompletionRequest": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GPTMessage"
+            }
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string",
+            "default": "gpt-3.5-turbo-16k-0613"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "format": "int32",
+            "default": 4096
+          },
+          "temperature": {
+            "type": "number",
+            "format": "double",
+            "default": 0.7
+          },
+          "function_call": {
+            "type": "string",
+            "default": "auto"
+          }
+        }
+      },
+      "GPTMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "default": "user"
+          },
+          "content": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "UserCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GPTMessage"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/TokenUsage"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "TokenUsage": {
+        "type": "object",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "function_call_aggregate": {
+            "type": "boolean"
+          }
+        }
       }
     }
   }

@@ -49,6 +49,10 @@ export default function Assistant(props: AssistantProps): JSX.Element {
     }
   }
 
+  useEffect(() => {
+    // TODO: get generated resume by job_id
+  }, []);
+
   return (
     <div className="mb-40">
       <Accordion className="mb-8" alwaysOpen={true}>
