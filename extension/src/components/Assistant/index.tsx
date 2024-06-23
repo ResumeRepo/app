@@ -5,7 +5,7 @@ import {useAuthContext} from "@src/context/AuthContext";
 import {Accordion} from "flowbite-react";
 import CircularLoader from "@src/components/Loader";
 import { BsStars } from "react-icons/bs";
-import {JobPost, ResumeApi} from "@src/codegn";
+import {JobPost, ResumeApi} from "@src/codegen";
 import {headerConfig} from "@src/utils/headerConfig";
 import {DEBUG, ERROR} from "@src/utils/utils";
 

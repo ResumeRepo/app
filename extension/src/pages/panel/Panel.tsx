@@ -4,7 +4,7 @@ import BottomNav from "@src/components/BottomNav";
 import Assistant from "@src/components/Assistant";
 import ResumeListView from "@src/components/ResumeListView";
 import RequireLogin from "@src/components/RequireLogin";
-import {PdfApi, ResumeApi} from "@src/codegn";
+import {PdfApi, ResumeApi} from "@src/codegen";
 import {headerConfig} from "@src/utils/headerConfig";
 import {DEBUG, ERROR} from "@src/utils/utils";
 import {useAuthContext} from "@src/context/AuthContext";

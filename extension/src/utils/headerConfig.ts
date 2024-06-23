@@ -1,4 +1,4 @@
-import {Configuration} from "@src/codegn";
+import {Configuration} from "@src/codegen";
 
 export const headerConfig = (token: string) => {
     const config = new Configuration();

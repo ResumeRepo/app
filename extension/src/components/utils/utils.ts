@@ -1,7 +1,7 @@
 import moment from "moment";
 import axios from "axios";
 import {CSSStyle} from "@src/components/utils/types";
-import {PdfApi} from "@src/codegn";
+import {PdfApi} from "@src/codegen";
 import {headerConfig} from "@src/utils/headerConfig";
 import {DEBUG, ERROR} from "@src/utils/utils";
 

@@ -11,10 +11,11 @@ window.addEventListener("token", (event: Event) => {
 })
 
 
-console.log("NextRole content script - document body: ", document.title, document.location.href, document.body)
+console.log("NextRole content script - document body: ", document.title, document.location.href)
+
 
 const body = document.body.innerHTML
-
+console.log(body)
 console.log("sending body...")
 chrome.runtime.sendMessage({
   type: "test",

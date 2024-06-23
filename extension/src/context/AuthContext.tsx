@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { headerConfig} from "@src/utils/headerConfig";
-import {SessionUser, UserApi} from "@src/codegn";
+import {SessionUser, UserApi} from "@src/codegen";
 import {DEBUG, ERROR} from "@src/utils/utils";
 
 interface AuthContextProps {
