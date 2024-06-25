@@ -118,15 +118,22 @@ tasks.register<GenerateTask>("openApiGenerateTypeScriptClient") {
     outputDir.set(generatedSourcesDirTypeScript)
 }
 
-tasks.register<Copy>("copyTypesScriptFiles") {
+tasks.register<Copy>("copyTypesScriptFilesForExtension") {
     from("$generatedSourcesDirTypeScript/api.ts")
     into("../extension/src/codegen")
 }
 
+tasks.register<Copy>("copyTypesScriptFilesForFrontend") {
+    from("$generatedSourcesDirTypeScript/api.ts")
+    into("../frontend/codegen")
+}
+
 tasks.getByName("compileKotlin").dependsOn("openApiGenerateSpringServer")
 tasks.getByName("compileKotlin").dependsOn("openApiGenerateTypeScriptClient")
-tasks.getByName("copyTypesScriptFiles").dependsOn("openApiGenerateTypeScriptClient")
-tasks.getByName("compileKotlin").dependsOn("copyTypesScriptFiles")
+tasks.getByName("copyTypesScriptFilesForExtension").dependsOn("openApiGenerateTypeScriptClient")
+tasks.getByName("copyTypesScriptFilesForFrontend").dependsOn("openApiGenerateTypeScriptClient")
+tasks.getByName("compileKotlin").dependsOn("copyTypesScriptFilesForExtension")
+tasks.getByName("compileKotlin").dependsOn("copyTypesScriptFilesForFrontend")
 
 tasks.test {
     useTestNG {

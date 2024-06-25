@@ -759,6 +759,31 @@ export interface JobPostJobDescriptionInner {
 /**
  * 
  * @export
+ * @interface ParseJobPostRequest
+ */
+export interface ParseJobPostRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ParseJobPostRequest
+     */
+    'job_board'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParseJobPostRequest
+     */
+    'job_description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParseJobPostRequest
+     */
+    'job_id'?: string;
+}
+/**
+ * 
+ * @export
  * @interface PdfGenerateRequest
  */
 export interface PdfGenerateRequest {
@@ -1445,14 +1470,14 @@ export const ResumeApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
-         * @summary Save a job post
-         * @param {StringValue} stringValue Job post html payload
+         * @summary Parse a job post
+         * @param {ParseJobPostRequest} parseJobPostRequest Job post html payload
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveJobPost: async (stringValue: StringValue, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'stringValue' is not null or undefined
-            assertParamExists('saveJobPost', 'stringValue', stringValue)
+        parsJobPost: async (parseJobPostRequest: ParseJobPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'parseJobPostRequest' is not null or undefined
+            assertParamExists('parsJobPost', 'parseJobPostRequest', parseJobPostRequest)
             const localVarPath = `/job-post`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1472,7 +1497,7 @@ export const ResumeApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(stringValue, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(parseJobPostRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1649,15 +1674,15 @@ export const ResumeApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Save a job post
-         * @param {StringValue} stringValue Job post html payload
+         * @summary Parse a job post
+         * @param {ParseJobPostRequest} parseJobPostRequest Job post html payload
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveJobPost(stringValue: StringValue, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<JobPost>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.saveJobPost(stringValue, options);
+        async parsJobPost(parseJobPostRequest: ParseJobPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<JobPost>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.parsJobPost(parseJobPostRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ResumeApi.saveJobPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ResumeApi.parsJobPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1749,13 +1774,13 @@ export const ResumeApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
-         * @summary Save a job post
-         * @param {StringValue} stringValue Job post html payload
+         * @summary Parse a job post
+         * @param {ParseJobPostRequest} parseJobPostRequest Job post html payload
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveJobPost(stringValue: StringValue, options?: any): AxiosPromise<JobPost> {
-            return localVarFp.saveJobPost(stringValue, options).then((request) => request(axios, basePath));
+        parsJobPost(parseJobPostRequest: ParseJobPostRequest, options?: any): AxiosPromise<JobPost> {
+            return localVarFp.parsJobPost(parseJobPostRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update user resume
@@ -1845,14 +1870,14 @@ export class ResumeApi extends BaseAPI {
 
     /**
      * 
-     * @summary Save a job post
-     * @param {StringValue} stringValue Job post html payload
+     * @summary Parse a job post
+     * @param {ParseJobPostRequest} parseJobPostRequest Job post html payload
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ResumeApi
      */
-    public saveJobPost(stringValue: StringValue, options?: RawAxiosRequestConfig) {
-        return ResumeApiFp(this.configuration).saveJobPost(stringValue, options).then((request) => request(this.axios, this.basePath));
+    public parsJobPost(parseJobPostRequest: ParseJobPostRequest, options?: RawAxiosRequestConfig) {
+        return ResumeApiFp(this.configuration).parsJobPost(parseJobPostRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

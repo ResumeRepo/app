@@ -1,10 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { headerConfig} from "@src/utils/headerConfig";
 import {SessionUser, UserApi} from "@src/codegen";
 import {DEBUG, ERROR} from "@src/utils/utils";
+import {createClient, SupabaseClient} from '@supabase/supabase-js'
+
+const supabase = createClient(import.meta.env.VITE_SUPABASE_PROJECT_URL, import.meta.env.VITE_SUPABASE_API_KEY)
 
 interface AuthContextProps {
-  authUser?: SessionUser
+  authUser?: SessionUser,
+  supabase?: SupabaseClient
 }
 
 export const AuthContext: React.Context<AuthContextProps> = React.createContext({});
@@ -14,6 +18,7 @@ export const useAuthContext = () => React.useContext(AuthContext);
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [authUser, setAuthUser] = React.useState<SessionUser | undefined>(undefined);
   const [loading, setLoading] = React.useState(true);
+  const [supabaseClient, setSupabaseClient] = useState(supabase)
 
   const setSessionUser = (token: String) => {
     DEBUG("Token", token)
@@ -31,6 +36,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     let token
+    console.log("in AuthContext getting nextRoleToken")
     if (import.meta.env.MODE === "production") {
       chrome.storage.sync.get("nextRoleToken").then(cache => {
         setSessionUser(cache.nextRoleToken)
@@ -42,7 +48,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   }, []);
 
   return (
-      <AuthContext.Provider value={{ authUser }}>
+      <AuthContext.Provider value={{ authUser, supabase: supabaseClient }}>
         {loading ? <div className="flex items-center justify-center h-screen">
           <div role="status">
             <svg aria-hidden="true"

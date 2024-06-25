@@ -220,15 +220,15 @@
         "tags": [
           "resume"
         ],
-        "summary": "Save a job post",
-        "operationId": "saveJobPost",
+        "summary": "Parse a job post",
+        "operationId": "parsJobPost",
         "requestBody": {
           "required": true,
           "description": "Job post html payload",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StringValue"
+                "$ref": "#/components/schemas/ParseJobPostRequest"
               }
             }
           }
@@ -861,6 +861,20 @@
         "type": "object",
         "properties": {
           "value": {
+            "type": "string"
+          }
+        }
+      },
+      "ParseJobPostRequest": {
+        "type": "object",
+        "properties": {
+          "job_board": {
+            "type": "string"
+          },
+          "job_description": {
+            "type": "string"
+          },
+          "job_id": {
             "type": "string"
           }
         }

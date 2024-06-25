@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {
   onAuthStateChanged, User,
 } from 'firebase/auth';
-import {SessionUser, UserApi} from "@/codegn";
+import {SessionUser, UserApi} from "@/codegen";
 import {auth} from "@/components/utils/firebaseSetup";
 import {getAuthToken, headerConfig} from "@/components/utils/headerConfig";
 import {ERROR} from "@/components/utils/utils";

@@ -84,6 +84,7 @@ class SecurityFilter(
 
             credentials.authToken = bearerToken
         } catch (e: Exception) {
+            e.printStackTrace()
             httpServletResponse.status = HttpStatus.UNAUTHORIZED.value()
             return
         }

@@ -15,8 +15,8 @@ class ResumeController(
     val resumeService: ResumeService,
 ): ResumeApi {
 
-    override fun saveJobPost(stringValue: StringValue): ResponseEntity<JobPost> {
-        return ResponseEntity.ok(resumeService.saveJobPost(stringValue))
+    override fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): ResponseEntity<JobPost> {
+        return ResponseEntity.ok(resumeService.parsJobPost(parseJobPostRequest))
     }
 
     override fun generateResume(generateResumeRequest: GenerateResumeRequest): ResponseEntity<GeneratedResume> {

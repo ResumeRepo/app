@@ -1,5 +1,5 @@
 import {User} from "firebase/auth";
-import {Configuration} from "@/codegn";
+import {Configuration} from "@/codegen";
 
 
 export const ANONYMOUS_USER_API_KEY = "nr-TOKEN-NOT-SET"

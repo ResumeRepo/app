@@ -52,6 +52,7 @@ class GlobalExceptionHandler(
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleException(ex: Exception, request: WebRequest?): ResponseEntity<String> {
+        ex.printStackTrace()
         return ResponseEntity<String>(ex.message?.let { getMessage(it, HttpStatus.INTERNAL_SERVER_ERROR.value()) },
             HttpStatus.INTERNAL_SERVER_ERROR)
 

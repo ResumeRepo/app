@@ -41,7 +41,8 @@ export type NavProps = {
 }
 
 export type AssistantProps = {
-  onShowResumeGenerate: () => void
+  onShowResumeGenerate: () => void,
+  parsingJobPost: boolean
 }
 export type NrCardProps = {
   children: React.ReactNode,

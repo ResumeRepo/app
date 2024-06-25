@@ -83,7 +83,8 @@ class ResumeServiceImpl(
         return GenericResponse(status = "ok", value = baseResume != null)
     }
 
-    override fun saveJobPost(jpbPostHtml: StringValue): JobPost {
+    override fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): JobPost {
+        val x = 1
         TODO("Not yet implemented")
     }
 

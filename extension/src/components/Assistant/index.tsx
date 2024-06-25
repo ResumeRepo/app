@@ -5,7 +5,7 @@ import {useAuthContext} from "@src/context/AuthContext";
 import {Accordion} from "flowbite-react";
 import CircularLoader from "@src/components/Loader";
 import { BsStars } from "react-icons/bs";
-import {JobPost, ResumeApi} from "@src/codegen";
+import {JobPost, ParseJobPostRequest, ResumeApi} from "@src/codegen";
 import {headerConfig} from "@src/utils/headerConfig";
 import {DEBUG, ERROR} from "@src/utils/utils";
 
@@ -29,9 +29,8 @@ const jd: JobPost = {
 
 export default function Assistant(props: AssistantProps): JSX.Element {
   const [resumeGenerationInProgress, setResumeGenerationInProgress] = useState(false)
-  const [title, setTitle] = useState("")
-  const [url, setUrl] = useState("")
-  const [body, setBody] = useState("")
+  const [parsingJobPost, setParsingJobPost] = useState(true)
+  const [listenersInitialized, setListenersInitialized] = useState(false)
   const {authUser} = useAuthContext()
 
   const onGenerateResume = () => {
@@ -52,9 +51,43 @@ export default function Assistant(props: AssistantProps): JSX.Element {
     }
   }
 
+  const onParseJobPost = (jd: ParseJobPostRequest) => {
+    console.log("calling parsJobPost: ", jd)
+    if (authUser) {
+      console.log("in if condition")
+      new ResumeApi(headerConfig(authUser.token as string)).parsJobPost(jd)
+      .then(response => {
+        DEBUG("Job has has been parsed", response.data)
+        setParsingJobPost(false)
+      })
+      .catch(e => {
+        ERROR('Error calling parsJobPost :', e);
+      })
+    }
+  }
+
   useEffect(() => {
     // TODO: get generated resume by job_id
   }, []);
+
+  useEffect(() => {
+    if (!listenersInitialized) {
+      setListenersInitialized(true)
+      // @ts-ignore
+      if (import.meta.env.MODE === "production") {
+        chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
+          console.log("jd received....")
+          if  (request.type === "jd") {
+            onParseJobPost({
+              job_board: request.jobBoard,
+              job_id: request.jobId,
+              job_description: request.jd
+            })
+          }
+        });
+      }
+    }
+  }, [listenersInitialized])
 
   return (
     <div className="mb-40">
@@ -118,7 +151,7 @@ export default function Assistant(props: AssistantProps): JSX.Element {
                               <svg className="w-3.5 h-3.5 me-2 text-gray-500 dark:text-gray-400 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                               </svg>
-                              <span className="text-lg">{role.text}</span>
+                              <span className="text-lg">{desc.text}</span>
                             </>
                           </li>
                       )}

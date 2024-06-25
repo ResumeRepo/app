@@ -40,6 +40,7 @@ const SignInPage = () => {
   }
 
   if (authUser) {
+    console.log("authUser in signin: ", authUser)
     router.push("/")
     return <></>
   }
