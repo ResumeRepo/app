@@ -1,24 +1,20 @@
-FROM node:18-alpine as base
-FROM base as builder
-WORKDIR /home/node
-COPY package*.json ./
-#COPY .env-prod .env
-COPY . .
-RUN npm install
+FROM node:18-alpine AS builder
+RUN apk update && apk upgrade && apk add bash
+RUN npm install -g pnpm
+COPY ./ ./
+WORKDIR ui
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
-FROM base as runtime
+FROM node:18-alpine AS runner
+WORKDIR ui
 ENV NODE_ENV=production
 RUN npm install -g pm2
-
-WORKDIR /home/node
-COPY . .
-#COPY .env-prod .env
-COPY package*.json  ./
-
-RUN npm install --production
-COPY --from=builder /home/node/dist ./dist
-COPY --from=builder /home/node/build ./build
+COPY --from=builder ui/.next ./.next
+COPY --from=builder ui/public ./public
+COPY --from=builder ui/node_modules ./node_modules
+COPY --from=builder ui/package.json ./
 
 EXPOSE 3000
-CMD [ "pm2-runtime", "start", "npm", "--", "run", "serve" ]
+USER node
+CMD [ "pm2-runtime", "start", "npm", "--", "start" ]
