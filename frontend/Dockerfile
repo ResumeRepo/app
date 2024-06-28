@@ -4,7 +4,7 @@ WORKDIR /home/node
 COPY package*.json ./
 #COPY .env-prod .env
 COPY . .
-RUN npm run install
+RUN npm install
 RUN npm run build
 
 FROM base as runtime
