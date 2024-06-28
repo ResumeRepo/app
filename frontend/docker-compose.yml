@@ -1,0 +1,36 @@
+version: "3.3"
+services:
+  cms:
+    image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/visaportal:cms
+    container_name: cms
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cms.rule=Host(`cms.usvisaportal.com`)"
+      - "traefik.http.routers.cms.service=cms"
+      - "traefik.http.services.cms.loadbalancer.server.port=8000"
+    networks:
+      - internal_net
+    environment:
+      PORT: 8000
+      AWS_KEY: AKIAX2IAEH45BPGE7RU6
+      AWS_SECRET: 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
+      AWS_REGION: us-east-2
+      PAYLOAD_PUBLIC_AWS_BUCKET: usvisaportal
+      PAYLOAD_PUBLIC_CLOUDFRONT: https://dqbpaao7n0zup.cloudfront.net
+      DATABASE_URI: mongodb+srv://monsterbale:yrGfZA9X4UUMr1P@cluster0.japjcg5.mongodb.net/
+      PAYLOAD_SECRET: 2b6e7c26d4dfa695d28c480a2efaaeda
+      PAYLOAD_PUBLIC_APP_URL: https://usvisaportal.com
+      PAYLOAD_PUBLIC_DRAFT_SECRET: 6e372388db9d9cb6d1a8382c6b8d8807
+      REVALIDATION_KEY: 5de835f39d2e9fd3ffc05744a31a18c9
+      COOKIE_DOMAIN: cms.usvisaportal.com
+      SENDGRID_API_KEY:
+      GITHUB_ACCESS_TOKEN:
+      DISCORD_TOKEN: ignore
+      DISCORD_SCRAPE_CHANNEL_ID: ignore
+      PRIVATE_HUBSPOT_PORTAL_KEY: ignore
+networks:
+  internal_net:
+    external: true
+
+
