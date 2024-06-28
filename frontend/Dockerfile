@@ -4,8 +4,8 @@ WORKDIR /home/node
 COPY package*.json ./
 #COPY .env-prod .env
 COPY . .
-RUN yarn install
-RUN yarn build
+RUN npm run install
+RUN npm run build
 
 FROM base as runtime
 ENV NODE_ENV=production
@@ -16,7 +16,7 @@ COPY . .
 #COPY .env-prod .env
 COPY package*.json  ./
 
-RUN yarn install --production
+RUN npm install --production
 COPY --from=builder /home/node/dist ./dist
 COPY --from=builder /home/node/build ./build
 
