@@ -3,7 +3,7 @@ RUN apk update && apk upgrade && apk add bash
 RUN npm install -g pnpm
 COPY ./ ./
 WORKDIR frontend
-RUN npm install --legacy-peer-deps
+RUN npm install
 RUN npm run build
 
 FROM node:18-alpine AS runner
