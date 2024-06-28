@@ -9,7 +9,6 @@ export default function Page() {
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-black">Terms of Use</h2>
             <p className="mb-5 font-light text-black sm:text-xl">Last updated: June 25, 2024 </p>
           </div>
-
           <div className="mb-5 font-light text-black sm:text-xl">
             <h3 className="mb-4 text-2xl tracking-tight font-extrabold text-black pt-6">1. AGREEMENT TO TERMS</h3>
             <p className="text-black">
