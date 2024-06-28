@@ -2,18 +2,18 @@ FROM node:18-alpine AS builder
 RUN apk update && apk upgrade && apk add bash
 RUN npm install -g pnpm
 COPY ./ ./
-WORKDIR ui
+WORKDIR frontend
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
 FROM node:18-alpine AS runner
-WORKDIR ui
+WORKDIR frontend
 ENV NODE_ENV=production
 RUN npm install -g pm2
-COPY --from=builder ui/.next ./.next
-COPY --from=builder ui/public ./public
-COPY --from=builder ui/node_modules ./node_modules
-COPY --from=builder ui/package.json ./
+COPY --from=builder frontend/.next ./.next
+COPY --from=builder frontend/public ./public
+COPY --from=builder frontend/node_modules ./node_modules
+COPY --from=builder frontend/package.json ./
 
 EXPOSE 3000
 USER node
