@@ -7,10 +7,11 @@ import Footer from "../components/Footer";
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <div className='flex max-w-6xl mx-auto flex-col items-center justify-center py-2'>
+      <div className='flex max-w-6xl mx-auto flex-col items-center justify-center'>
       <Header />
+        <div className="p-4">
         <Component {...pageProps} />
-
+        </div>
       </div>
       <div className='flex max-w-6xl mx-auto flex-col items-center justify-center py-2'>
       <Footer />
