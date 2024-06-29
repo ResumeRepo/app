@@ -19,7 +19,7 @@ services:
       - "--entrypoints.websecure.http.tls.domains[0].main=nextrole.app"
       - "--entrypoints.websecure.http.tls.domains[0].sans=*.nextrole.app"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=lightsail"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=route53"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delayBeforeCheck=60"
       - "--certificatesresolvers.letsencrypt.acme.email=bizmelesse@gmail.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
