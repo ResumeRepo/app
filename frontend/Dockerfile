@@ -1,6 +1,5 @@
 FROM node:18-alpine AS builder
 RUN apk update && apk upgrade && apk add bash
-RUN #npm install -g pnpm
 WORKDIR /home/node
 COPY package*.json ./
 COPY ./ ./
