@@ -6,7 +6,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.f.rule=Host(`nextrole.app`)"
+      - "traefik.http.routers.frontend.rule=Host(`nextrole.app`)"
       - "traefik.http.routers.frontend.service=frontend"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     networks:
