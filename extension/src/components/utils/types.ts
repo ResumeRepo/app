@@ -35,13 +35,14 @@ export type CarouselProps = {
 export type NavProps = {
   activeTab: TabType,
   showResumeUpload: boolean,
-  showGenerateResume: boolean,
+
   onChangeTab: (to: TabType) => void
   onResumeUploadSuccess: () => void
 }
 
 export type AssistantProps = {
   onShowResumeGenerate: () => void,
+  showGenerateResume: boolean,
   parsingJobPost: boolean
 }
 export type NrCardProps = {

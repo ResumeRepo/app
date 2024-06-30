@@ -176,12 +176,18 @@ export default function Assistant(props: AssistantProps): JSX.Element {
                     <textarea rows={2} className="block mx-4 p-2.5 w-full py-4 text-md  text-blue-600 font-extrabold leading-none tracking-tight dark:text-white  bg-blue-50 rounded-lg border border-blue-500 focus:ring-blue-500 focus:border-blue-500" placeholder="Optional instructions, e.g. emphasize healthcare industry experience"></textarea>
                   </div>
                   <div className="text-center w-full mb-2 mt-6">
+                    {props.showGenerateResume ?
                     <button type="button" className="px-5 py-2.5 text-sm font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={onGenerateResume}>
                       <div className="mr-2 inline-flex">
                         {resumeGenerationInProgress ? <CircularLoader/> : <BsStars size={24} />}
                       </div>
                       <span className="text-md font-extrabold text-white">Generate</span>
-                    </button>
+                    </button> : <>
+                          <span className="text-md font-extrabold text-red-500">Please upload your resume to customize it for this role</span>
+                        </>
+                    }
+
+
                   </div>
                 </div>
               </div>

@@ -18,7 +18,7 @@ export default function Panel(): JSX.Element {
   const [showResumeUpload, setShowResumeUpload] = useState(false)
   const [showGenerateResume, setShowGenerateResume] = useState(false)
   const [listenersInitialized, setListenersInitialized] = useState(false)
-  const [parsingJobPost, setParsingJobPost] = useState(true)
+  const [parsingJobPost, setParsingJobPost] = useState(false)
   const {authUser} = useAuthContext()
 
   useEffect(() => {
@@ -27,7 +27,10 @@ export default function Panel(): JSX.Element {
       new ResumeApi(headerConfig(authUser.token as string)).hasBaseResume()
       .then(response => {
         DEBUG("Has base resume", response.data.value)
-        setShowResumeUpload(!(response.data.value === true))
+        console.log("!(response.data.value === true): ", !(response.data.value === true))
+        const res = response.data.value === true
+        setShowResumeUpload(!res)
+        setShowGenerateResume(res)
       })
       .catch(e => {
         ERROR('Error calling hasBaseResume :', e);
@@ -76,19 +79,20 @@ export default function Panel(): JSX.Element {
 
   const onResumeUploadSuccess = () => {
     setShowResumeUpload(false)
+    setShowGenerateResume(true)
   }
 
   return (
     <div className="container mx-auto px-4 py-4 max-w-[660px]">
         { activeTab === "Assistant" && <Assistant
             parsingJobPost={parsingJobPost}
+            showGenerateResume={showGenerateResume}
             onShowResumeGenerate={() => setShowGenerateResume(true)}/>
         }
         { activeTab === "Resumes" && <RequireLogin><ResumeListView/></RequireLogin> }
         <BottomNav
             activeTab={activeTab}
             showResumeUpload={showResumeUpload}
-            showGenerateResume={showGenerateResume}
             onChangeTab={onChangeTab}
             onResumeUploadSuccess={onResumeUploadSuccess}
         />
