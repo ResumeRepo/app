@@ -164,6 +164,12 @@ export interface GenericResponse {
      * @memberof GenericResponse
      */
     'value'?: boolean;
+    /**
+     * 
+     * @type {object}
+     * @memberof GenericResponse
+     */
+    'any_value'?: object;
 }
 /**
  * 
@@ -244,6 +250,25 @@ export interface JobPostJobDescriptionInner {
      * @memberof JobPostJobDescriptionInner
      */
     'is_match'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface OtpConfirmation
+ */
+export interface OtpConfirmation {
+    /**
+     * 
+     * @type {string}
+     * @memberof OtpConfirmation
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OtpConfirmation
+     */
+    'otp'?: string;
 }
 /**
  * 
@@ -1122,6 +1147,25 @@ export interface SessionUser {
      * @memberof SessionUser
      */
     'roles'?: { [key: string]: boolean; };
+}
+/**
+ * 
+ * @export
+ * @interface SessionUserResponse
+ */
+export interface SessionUserResponse {
+    /**
+     * 
+     * @type {SessionUser}
+     * @memberof SessionUserResponse
+     */
+    'session_user'?: SessionUser;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionUserResponse
+     */
+    'error'?: string;
 }
 /**
  * 
@@ -2024,6 +2068,42 @@ export class ResumeApi extends BaseAPI {
 export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * 
+         * @summary Otp confirmation
+         * @param {OtpConfirmation} otpConfirmation OTP
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        confirmOtp: async (otpConfirmation: OtpConfirmation, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'otpConfirmation' is not null or undefined
+            assertParamExists('confirmOtp', 'otpConfirmation', otpConfirmation)
+            const localVarPath = `/auth/otp`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(otpConfirmation, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Exchange a short-lived Firebase token for a long-lived, self-signed token
          * @summary Exchange token
          * @param {*} [options] Override http request option.
@@ -2083,6 +2163,42 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Sign in user
+         * @param {StringValue} stringValue Email address
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        signIn: async (stringValue: StringValue, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'stringValue' is not null or undefined
+            assertParamExists('signIn', 'stringValue', stringValue)
+            const localVarPath = `/auth/login`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(stringValue, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2093,6 +2209,19 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 export const UserApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @summary Otp confirmation
+         * @param {OtpConfirmation} otpConfirmation OTP
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async confirmOtp(otpConfirmation: OtpConfirmation, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.confirmOtp(otpConfirmation, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.confirmOtp']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * Exchange a short-lived Firebase token for a long-lived, self-signed token
          * @summary Exchange token
@@ -2117,6 +2246,19 @@ export const UserApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserprofile']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary Sign in user
+         * @param {StringValue} stringValue Email address
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async signIn(stringValue: StringValue, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.signIn(stringValue, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.signIn']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -2127,6 +2269,16 @@ export const UserApiFp = function(configuration?: Configuration) {
 export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserApiFp(configuration)
     return {
+        /**
+         * 
+         * @summary Otp confirmation
+         * @param {OtpConfirmation} otpConfirmation OTP
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        confirmOtp(otpConfirmation: OtpConfirmation, options?: any): AxiosPromise<SessionUserResponse> {
+            return localVarFp.confirmOtp(otpConfirmation, options).then((request) => request(axios, basePath));
+        },
         /**
          * Exchange a short-lived Firebase token for a long-lived, self-signed token
          * @summary Exchange token
@@ -2145,6 +2297,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         getUserprofile(options?: any): AxiosPromise<SessionUser> {
             return localVarFp.getUserprofile(options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Sign in user
+         * @param {StringValue} stringValue Email address
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        signIn(stringValue: StringValue, options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.signIn(stringValue, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -2155,6 +2317,18 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
  * @extends {BaseAPI}
  */
 export class UserApi extends BaseAPI {
+    /**
+     * 
+     * @summary Otp confirmation
+     * @param {OtpConfirmation} otpConfirmation OTP
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public confirmOtp(otpConfirmation: OtpConfirmation, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).confirmOtp(otpConfirmation, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Exchange a short-lived Firebase token for a long-lived, self-signed token
      * @summary Exchange token
@@ -2175,6 +2349,18 @@ export class UserApi extends BaseAPI {
      */
     public getUserprofile(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).getUserprofile(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Sign in user
+     * @param {StringValue} stringValue Email address
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public signIn(stringValue: StringValue, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).signIn(stringValue, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

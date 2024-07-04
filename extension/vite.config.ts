@@ -15,6 +15,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@src': root,
+      // '@src/codegen': root + "/codegen",
       '@assets': assetsDir,
       '@pages': pagesDir,
     },
@@ -27,6 +28,11 @@ export default defineConfig({
     emptyOutDir: false,
     rollupOptions: {
       input: {
+        // util: resolve(root, 'util', 'util.ts'),
+        // api: resolve(root, 'codegen', 'index.ts'),
+        // base: resolve(root, 'codegen', 'base.ts'),
+        // common: resolve(root, 'codegen', 'common.ts'),
+        // index: resolve(root, 'codegen', 'api.ts'),
         devtools: resolve(pagesDir, 'devtools', 'index.html'),
         panel: resolve(pagesDir, 'panel', 'index.html'),
         background: resolve(pagesDir, 'background', 'index.ts'),
@@ -34,6 +40,7 @@ export default defineConfig({
         newtab: resolve(pagesDir, 'newtab', 'index.html'),
         options: resolve(pagesDir, 'options', 'index.html'),
       },
+      // external: './src',
       output: {
         entryFileNames: (chunk) => `src/pages/${chunk.name}/index.js`,
       },

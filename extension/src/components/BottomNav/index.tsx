@@ -4,8 +4,7 @@ import {useState} from "react";
 import CircularLoader from "@src/components/Loader";
 import {useAuthContext} from "@src/context/AuthContext";
 import {ResumeApi} from "@src/codegen";
-import {headerConfig} from "@src/utils/headerConfig";
-import {DEBUG, ERROR} from "@src/utils/utils";
+import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 import {NavProps} from "@src/components/utils/types";
 
 type Tab = {

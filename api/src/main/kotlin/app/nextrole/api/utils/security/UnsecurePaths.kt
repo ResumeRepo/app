@@ -15,6 +15,10 @@ class UnsecurePaths(val corsProps: CorsProps, val sourceProps: SourceProps) {
         val unsecure =  mutableListOf(
             "/actuator/health",
             "/actuator/health/**",
+            "/auth/login",
+            "/auth/otp",
+            "/auth/login/**",
+            "/auth/otp/**",
         )
         if (sourceProps.profile.equals("dev")) {
             unsecure.addAll(listOf(

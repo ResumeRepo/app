@@ -1,6 +1,7 @@
 package app.nextrole.api.utils.security.firebase
 
 import app.nextrole.api.SessionUser
+import app.nextrole. api.props.AuthProps
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseToken
 import app.nextrole.api.utils.security.Credentials
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
+import java.net.InetAddress
 import java.util.*
 import java.util.stream.Stream
 
@@ -33,7 +35,8 @@ import java.util.stream.Stream
 @Component
 class SecurityFilter(
     val unsecurePaths: UnsecurePaths,
-    val jwtService: JwtService
+    val jwtService: JwtService,
+    val authProps: AuthProps
 ) : OncePerRequestFilter() {
 
     @Throws(IOException::class, ServletException::class)
@@ -70,15 +73,19 @@ class SecurityFilter(
         httpServletResponse: HttpServletResponse
     ) {
         val bearerToken = getBearerToken(httpServletRequest)
-        var user: SessionUser
+        var user = SessionUser()
         val credentials = Credentials()
         try {
-            if (bearerToken.startsWith(JwtServiceImpl.jwtPrefix)) {
+            if (bearerToken.startsWith(JwtServiceImpl.jwtPrefix) &&
+                authProps.enabled?.contains("jwt") == true && isLocalHost(httpServletRequest)) {
                 user = userRecordToSessionUser(jwtService.getFirebaseUser(bearerToken))
-            } else {
+            } else if(authProps.enabled?.contains("supabase") == true) {
+                
+            } else if (authProps.enabled?.contains("firebase") == true) {
                 val decodedToken = FirebaseAuth.getInstance().verifyIdToken(bearerToken)
                 user = firebaseTokenToSessionUser(decodedToken)
             }
+            assert(user.userId != null)
             user.anonymous = false
             user.token = bearerToken
 
@@ -97,6 +104,10 @@ class SecurityFilter(
         SecurityContextHolder.getContext().authentication = authentication
     }
 
+    private fun isLocalHost(httpServletRequest: HttpServletRequest): Boolean {
+        val localhost = InetAddress.getLocalHost()
+        return httpServletRequest.remoteAddr == localhost.hostAddress
+    }
 
     private fun firebaseTokenToSessionUser(decodedToken: FirebaseToken?): SessionUser {
         val user = SessionUser()

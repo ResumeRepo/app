@@ -1,17 +1,26 @@
 package app.nextrole.api.service.user
 
-import app.nextrole.api.SessionUser
+import app.nextrole.api.*
 import app.nextrole.api.data.postgres.entity.UserEntity
 import app.nextrole.api.data.postgres.repo.UserRepo
 import app.nextrole.api.service.utils.getSessionUser
 import app.nextrole.api.utils.security.jwt.JwtService
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.gotrue.OtpType
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.providers.builtin.OTP
+import io.github.oshai.kotlinlogging.KotlinLogging
+import okhttp3.internal.wait
 import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImpl(
     val userRepo: UserRepo,
-    val jwtService: JwtService
+    val jwtService: JwtService,
+    val supabase: SupabaseClient
 ) : UserService {
+    private val logger = KotlinLogging.logger {}
+
     override fun getOrCreateUser(): SessionUser {
         val user = getSessionUser()
         kotlinx.coroutines.runBlocking {
@@ -25,6 +34,36 @@ class UserServiceImpl(
         val token = sessionUser.userId?.let { jwtService.generateToken(it) }
         sessionUser.token = token
         return sessionUser
+    }
+
+    override suspend fun signIn(stringValue: StringValue): GenericResponse {
+        val res = try {
+            supabase.auth.signInWith(OTP) {
+                this.email = stringValue.value
+            }
+
+        } catch (e: Exception) {
+            e.message
+        }
+        return GenericResponse(status = res.toString())
+    }
+
+    override suspend fun confirmOtp(otpConfirmation: OtpConfirmation): SessionUserResponse {
+        supabase.auth.verifyEmailOtp(
+            type = OtpType.Email.EMAIL,
+            email = otpConfirmation.email!!,
+            token = otpConfirmation.otp!!)
+        val user = supabase.auth.currentUserOrNull()
+        if (user != null) {
+            return SessionUserResponse(
+                sessionUser = SessionUser(
+                    userId = user.id,
+                    email = user.email,
+                    token = jwtService.generateToken(user.id)
+                )
+            )
+        }
+        return SessionUserResponse(error = "User not found")
     }
 
     suspend fun createUserProfile(user: SessionUser) {

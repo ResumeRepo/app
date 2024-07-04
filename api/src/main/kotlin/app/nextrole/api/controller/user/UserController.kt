@@ -1,7 +1,6 @@
 package app.nextrole.api.controller.user
 
-import app.nextrole.api.SessionUser
-import app.nextrole.api.UserApi
+import app.nextrole.api.*
 import app.nextrole.api.service.user.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -16,11 +15,19 @@ class UserController(
     val userService: UserService,
 ): UserApi {
 
-    override fun getUserprofile(): ResponseEntity<SessionUser> {
+    override suspend fun getUserprofile(): ResponseEntity<SessionUser> {
         return ResponseEntity.ok(userService.getOrCreateUser())
     }
 
-    override fun exchangeToken(): ResponseEntity<SessionUser> {
+    override suspend fun exchangeToken(): ResponseEntity<SessionUser> {
         return ResponseEntity.ok(userService.exchangeToken())
+    }
+
+    override suspend fun signIn(stringValue: StringValue): ResponseEntity<GenericResponse> {
+        return ResponseEntity.ok(userService.signIn(stringValue))
+    }
+
+    override suspend fun confirmOtp(otpConfirmation: OtpConfirmation): ResponseEntity<SessionUserResponse> {
+        return ResponseEntity.ok(userService.confirmOtp(otpConfirmation))
     }
 }

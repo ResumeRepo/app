@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Configuration
     CorsProps::class,
     AwsProps::class,
     OpenAiProps::class,
-    PostgresDataSourceProps::class
+    PostgresDataSourceProps::class,
+    SupabaseProps::class,
+    AuthProps::class
 ])
 class PropsConfiguration

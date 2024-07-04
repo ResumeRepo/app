@@ -1,6 +1,6 @@
 package app.nextrole.api.service.user
 
-import app.nextrole.api.SessionUser
+import app.nextrole.api.*
 
 /**
  * @author Biz Melesse
@@ -9,4 +9,6 @@ import app.nextrole.api.SessionUser
 interface UserService {
     fun getOrCreateUser(): SessionUser
     fun exchangeToken(): SessionUser
+    suspend fun signIn(stringValue: StringValue): GenericResponse
+    suspend fun confirmOtp(otpConfirmation: OtpConfirmation): SessionUserResponse
 }

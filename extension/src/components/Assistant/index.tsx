@@ -6,8 +6,7 @@ import {Accordion} from "flowbite-react";
 import CircularLoader from "@src/components/Loader";
 import { BsStars } from "react-icons/bs";
 import {JobPost, ParseJobPostRequest, ResumeApi} from "@src/codegen";
-import {headerConfig} from "@src/utils/headerConfig";
-import {DEBUG, ERROR} from "@src/utils/utils";
+import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 
 const jd: JobPost = {
   job_id: "123alpha",
@@ -76,7 +75,7 @@ export default function Assistant(props: AssistantProps): JSX.Element {
       // @ts-ignore
       if (import.meta.env.MODE === "production") {
         chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
-          console.log("jd received....")
+          console.log("jd received....: ", request)
           if  (request.type === "jd") {
             onParseJobPost({
               job_board: request.jobBoard,

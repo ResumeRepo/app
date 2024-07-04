@@ -55,6 +55,7 @@ function parseJobId(pageType: string | undefined) {
 function parseLinkedIn() {
   const element: any = document.querySelector("#job-details > div")
   if (element && element.innerText && element.innerText.length > 0) {
+    console.log("parseLinkedIn - jd: ", element.innerText)
     return element.innerText
     // return document.getElementsByTagName("html")[0].innerText
   }

@@ -5,8 +5,7 @@ import Assistant from "@src/components/Assistant";
 import ResumeListView from "@src/components/ResumeListView";
 import RequireLogin from "@src/components/RequireLogin";
 import {ParseJobPostRequest, PdfApi, ResumeApi} from "@src/codegen";
-import {headerConfig} from "@src/utils/headerConfig";
-import {DEBUG, ERROR} from "@src/utils/utils";
+import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 import {useAuthContext} from "@src/context/AuthContext";
 
 
@@ -35,6 +34,8 @@ export default function Panel(): JSX.Element {
       .catch(e => {
         ERROR('Error calling hasBaseResume :', e);
       })
+    } else {
+      console.log("in panel - authUser undefined")
     }
 
   }, [authUser, showResumeUpload]);
@@ -81,6 +82,8 @@ export default function Panel(): JSX.Element {
     setShowResumeUpload(false)
     setShowGenerateResume(true)
   }
+
+  console.log("showResumeUpload: ", showResumeUpload)
 
   return (
     <div className="container mx-auto px-4 py-4 max-w-[660px]">

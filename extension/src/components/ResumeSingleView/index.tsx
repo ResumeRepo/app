@@ -14,8 +14,7 @@ import { Document, Page } from 'react-pdf';
 import { saveAs } from 'file-saver';
 import {useAuthContext} from "@src/context/AuthContext";
 import {PdfApi} from "@src/codegen";
-import {headerConfig} from "@src/utils/headerConfig";
-import {DEBUG, ERROR} from "@src/utils/utils";
+import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 import CircularLoader from "@src/components/Loader";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(

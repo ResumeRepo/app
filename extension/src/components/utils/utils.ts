@@ -1,9 +1,8 @@
 import moment from "moment";
-import axios from "axios";
+// import axios from "axios";
 import {CSSStyle} from "@src/components/utils/types";
 import {PdfApi} from "@src/codegen";
-import {headerConfig} from "@src/utils/headerConfig";
-import {DEBUG, ERROR} from "@src/utils/utils";
+import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 
 export function getFormattedDate(timestamp: number) {
   return moment.unix(timestamp).format('MMMM Do YYYY')

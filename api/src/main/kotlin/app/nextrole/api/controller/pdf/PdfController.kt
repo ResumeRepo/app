@@ -15,11 +15,11 @@ class PdfController(
     val pdfService: PdfService,
 ): PdfApi {
 
-    override fun convertToPdf(pdfGenerateRequest: PdfGenerateRequest): ResponseEntity<ByteArray> {
+    override suspend fun convertToPdf(pdfGenerateRequest: PdfGenerateRequest): ResponseEntity<ByteArray> {
         return ResponseEntity.ok(pdfService.convertToPdf(pdfGenerateRequest))
     }
 
-    override fun saveStyle(saveStyleRequest: SaveStyleRequest): ResponseEntity<GenericResponse> {
+    override suspend fun saveStyle(saveStyleRequest: SaveStyleRequest): ResponseEntity<GenericResponse> {
         return ResponseEntity.ok(pdfService.saveStyle(saveStyleRequest))
     }
 }

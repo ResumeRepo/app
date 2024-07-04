@@ -16,6 +16,70 @@
     }
   ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Sign in user",
+        "operationId": "signIn",
+        "requestBody": {
+          "required": true,
+          "description": "Email address",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StringValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sign in OTP sent confirmation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/otp": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Otp confirmation",
+        "operationId": "confirmOtp",
+        "requestBody": {
+          "required": true,
+          "description": "OTP",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpConfirmation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sign in OTP sent confirmation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user": {
       "get": {
         "tags": [
@@ -1335,6 +1399,28 @@
           }
         }
       },
+      "SessionUserResponse": {
+        "type": "object",
+        "properties": {
+          "session_user": {
+            "$ref": "#/components/schemas/SessionUser"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "OtpConfirmation": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "otp": {
+            "type": "string"
+          }
+        }
+      },
       "GenericResponse":  {
         "type": "object",
         "properties": {
@@ -1343,6 +1429,9 @@
           },
           "value": {
             "type": "boolean"
+          },
+          "any_value": {
+            "type": "object"
           }
         }
       },

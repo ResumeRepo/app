@@ -15,34 +15,34 @@ class ResumeController(
     val resumeService: ResumeService,
 ): ResumeApi {
 
-    override fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): ResponseEntity<JobPost> {
+    override suspend fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): ResponseEntity<JobPost> {
         return ResponseEntity.ok(resumeService.parsJobPost(parseJobPostRequest))
     }
 
-    override fun generateResume(generateResumeRequest: GenerateResumeRequest): ResponseEntity<GeneratedResume> {
+    override suspend fun generateResume(generateResumeRequest: GenerateResumeRequest): ResponseEntity<GeneratedResume> {
         return ResponseEntity.ok(resumeService.generateResume(generateResumeRequest))
     }
 
-    override fun getAllResumes(): ResponseEntity<ResumeList> {
+    override suspend fun getAllResumes(): ResponseEntity<ResumeList> {
         return ResponseEntity.ok(resumeService.getAllResumes())
     }
 
-    override fun updateResume(resumeUpdateRequest: ResumeUpdateRequest): ResponseEntity<GenericResponse> {
+    override suspend fun updateResume(resumeUpdateRequest: ResumeUpdateRequest): ResponseEntity<GenericResponse> {
         return ResponseEntity.ok(resumeService.updateResume(resumeUpdateRequest))
     }
 
-    override fun updateTemplateId(resumeTemplateUpdateRequest: ResumeTemplateUpdateRequest): ResponseEntity<GenericResponse> {
+    override suspend fun updateTemplateId(resumeTemplateUpdateRequest: ResumeTemplateUpdateRequest): ResponseEntity<GenericResponse> {
         return ResponseEntity.ok(resumeService.updateTemplateId(resumeTemplateUpdateRequest))
     }
 
-    override fun getResume(resumeId: String?): ResponseEntity<ResumeData> {
+    override suspend fun getResume(resumeId: String?): ResponseEntity<ResumeData> {
         return ResponseEntity.ok(resumeService.getResume(resumeId))
     }
 
-    override fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResponseEntity<ResumeUploadResponse> {
+    override suspend fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResponseEntity<ResumeUploadResponse> {
         return ResponseEntity.ok(resumeService.uploadResume(resumeUploadRequest))
     }
-    override fun hasBaseResume(): ResponseEntity<GenericResponse> {
+    override suspend fun hasBaseResume(): ResponseEntity<GenericResponse> {
         return ResponseEntity.ok(resumeService.hasBaseResume())
     }
 }

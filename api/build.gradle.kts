@@ -31,6 +31,11 @@ repositories {
 }
 
 dependencies {
+    implementation("io.github.jan-tennert.supabase:gotrue-kt-jvm:2.5.1")
+    implementation("io.github.jan-tennert.supabase:serializer-jackson:2.5.1")
+    implementation("io.ktor:ktor-client-apache5:2.3.12")
+
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -52,6 +57,7 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0-RC")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     implementation("com.microsoft.playwright:playwright:1.44.0")
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
@@ -108,7 +114,8 @@ tasks.register<GenerateTask>("openApiGenerateSpringServer") {
         "useSpringfox" to "false",
         "useSpringBoot3" to "true",
         "documentationProvider" to "none",
-        "modelMutable" to "true"
+        "modelMutable" to "true",
+        "reactive" to "true"
     )
 }
 
