@@ -29,15 +29,8 @@ class UserServiceImpl(
         return user
     }
 
-    override fun exchangeToken(): SessionUser {
-        val sessionUser = getSessionUser()
-        val token = sessionUser.userId?.let { jwtService.generateToken(it) }
-        sessionUser.token = token
-        return sessionUser
-    }
-
     override suspend fun signIn(stringValue: StringValue): GenericResponse {
-        val res = try {
+        try {
             supabase.auth.signInWith(OTP) {
                 this.email = stringValue.value
             }
@@ -45,7 +38,7 @@ class UserServiceImpl(
         } catch (e: Exception) {
             e.message
         }
-        return GenericResponse(status = res.toString())
+        return GenericResponse(status = "ok")
     }
 
     override suspend fun confirmOtp(otpConfirmation: OtpConfirmation): SessionUserResponse {
@@ -67,7 +60,7 @@ class UserServiceImpl(
     }
 
     suspend fun createUserProfile(user: SessionUser) {
-        var userEntity = user.userId?.let { userRepo.findByUid(it) }
+        var userEntity =  user.userId?.let { userRepo.findByUid(it) }
         if (userEntity == null) {
             userEntity = UserEntity()
             userEntity.uid = user.userId
@@ -76,7 +69,7 @@ class UserServiceImpl(
             userEntity.avatarUrl = user.avatar
             userEntity.anonymous = user.anonymous == true
             userEntity.username = user.username
-           userRepo.save(userEntity)
+            userRepo.save(userEntity)
         }
     }
 }

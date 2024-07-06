@@ -7,7 +7,7 @@ import LoginForm from "@src/components/LoginForm";
 
 type AuthContextProps = {
   authUser?: SessionUser
-  setAuthUser?: (user: SessionUser) => void
+  setAuthUser?: (user: SessionUser | undefined) => void
 }
 
 export const AuthContext: React.Context<AuthContextProps> = React.createContext({});
@@ -17,14 +17,15 @@ export const useAuthContext = () => React.useContext(AuthContext);
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [authUser, setAuthUser] = React.useState<SessionUser | undefined>(undefined);
   const [loading, setLoading] = React.useState(true);
+  const [loaded, setLoaded] = useState(false)
 
-  const setSessionUser = (token: String) => {
-    DEBUG("Token", token)
-    if (token) {
-      new UserApi(headerConfig(token as string)).getUserprofile().then(response => {
+  const setSessionUser = (jwt: string) => {
+    DEBUG("JWT", jwt)
+    if (jwt) {
+      new UserApi(headerConfig(jwt)).getUserprofile().then(response => {
         const profileResponse: SessionUser = response.data
-        setAuthUser(profileResponse)
         DEBUG("Setting session user", profileResponse)
+        setAuthUser(profileResponse)
       }).catch(e => ERROR(e))
     } else {
       console.log("token not set - AuthContext")
@@ -34,40 +35,21 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   }
 
   useEffect(() => {
-    // let token
-    // // todo FOR DEBUGGING ONLY
-    // const debugging = false
-    // console.log("env vars: ", import.meta.env)
-    // if (debugging) {
-    //   token = import.meta.env.VITE_DEV_AUTH_TOKEN
-    //   console.log("setting session token: ", token)
-    //   setSessionUser(token)
-    // } else {
-    //   if (import.meta.env.MODE === "production") {
-    //     chrome.storage.sync.get("nextRoleToken").then(cache => {
-    //       setSessionUser(cache.nextRoleToken)
-    //     })
-    //   } else {
-    //     token = import.meta.env.VITE_DEV_AUTH_TOKEN
-    //     setSessionUser(token)
-    //   }
-    // }
+    if (!loaded) {
+      setLoaded(true)
+      if (import.meta.env.MODE === "production") {
+        chrome.storage.sync.get("nextRoleToken").then(cache => {
+          setSessionUser(cache.nextRoleToken)
+        })
+      } else {
+        const item = localStorage.getItem("nextRoleToken")
+        if (item) {
+          console.log("calling setSessionUser...")
+          setSessionUser(JSON.parse(item)["nextRoleToken"])
+        }
+      }
+    }
   }, []);
-
-  // useEffect(() => {
-  //   window.addEventListener("token", (event: Event) => {
-  //     const token = (event as CustomEvent).detail.token
-  //     if (token) {
-  //       chrome.storage.sync.set({nextRoleToken: token});
-  //       chrome.runtime.sendMessage({
-  //         type: "Token",
-  //         token: token
-  //       });
-  //     }
-  //   })
-  // }, []);
-
-  console.log("in auth context.....: ", import.meta.env)
 
   return (
       <AuthContext.Provider value={{ authUser, setAuthUser }}>

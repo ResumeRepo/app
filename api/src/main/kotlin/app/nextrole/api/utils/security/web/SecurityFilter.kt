@@ -1,4 +1,4 @@
-package app.nextrole.api.utils.security.firebase
+package app.nextrole.api.utils.security.web
 
 import app.nextrole.api.SessionUser
 import app.nextrole. api.props.AuthProps
@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.context.SecurityContextHolderStrategy
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
@@ -75,27 +76,18 @@ class SecurityFilter(
         val bearerToken = getBearerToken(httpServletRequest)
         var user = SessionUser()
         val credentials = Credentials()
-        try {
-            if (bearerToken.startsWith(JwtServiceImpl.jwtPrefix) &&
-                authProps.enabled?.contains("jwt") == true && isLocalHost(httpServletRequest)) {
-                user = userRecordToSessionUser(jwtService.getFirebaseUser(bearerToken))
-            } else if(authProps.enabled?.contains("supabase") == true) {
-                
-            } else if (authProps.enabled?.contains("firebase") == true) {
-                val decodedToken = FirebaseAuth.getInstance().verifyIdToken(bearerToken)
-                user = firebaseTokenToSessionUser(decodedToken)
-            }
-            assert(user.userId != null)
-            user.anonymous = false
-            user.token = bearerToken
-
-            credentials.authToken = bearerToken
-        } catch (e: Exception) {
-            e.printStackTrace()
-            httpServletResponse.status = HttpStatus.UNAUTHORIZED.value()
-            return
+        if (bearerToken.startsWith(JwtServiceImpl.jwtPrefix) &&
+            authProps.enabled?.contains("jwt") == true) {
+            user = jwtService.jwtToUser(bearerToken)
+        } else if (authProps.enabled?.contains("firebase") == true) {
+            val decodedToken = FirebaseAuth.getInstance().verifyIdToken(bearerToken)
+            user = firebaseTokenToSessionUser(decodedToken)
         }
+        assert(user.userId != null)
+        user.anonymous = false
+        user.token = bearerToken
 
+        credentials.authToken = bearerToken
         val authentication = UsernamePasswordAuthenticationToken(
             user, credentials,
             user.roles?.let { getAuthorities(it) }

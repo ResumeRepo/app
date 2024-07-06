@@ -1,6 +1,6 @@
 package app.nextrole.api.utils.security
 
-import app.nextrole.api.utils.security.firebase.FirebaseSecurityConfiguration
+import app.nextrole.api.utils.security.web.WebSecurityConfiguration
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Import
 
 @Configuration
 @Import(
-    FirebaseSecurityConfiguration::class,
+    WebSecurityConfiguration::class,
 )
 class SecurityConfiguration

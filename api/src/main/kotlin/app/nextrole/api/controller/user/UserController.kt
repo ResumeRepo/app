@@ -19,10 +19,6 @@ class UserController(
         return ResponseEntity.ok(userService.getOrCreateUser())
     }
 
-    override suspend fun exchangeToken(): ResponseEntity<SessionUser> {
-        return ResponseEntity.ok(userService.exchangeToken())
-    }
-
     override suspend fun signIn(stringValue: StringValue): ResponseEntity<GenericResponse> {
         return ResponseEntity.ok(userService.signIn(stringValue))
     }

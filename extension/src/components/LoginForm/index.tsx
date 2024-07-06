@@ -10,6 +10,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("")
   const [token, setToken] = useState("")
   const [buttonDisabled, setButtonDisabled] = useState(true)
+  const {setAuthUser} = useAuthContext()
 
   const onEmailInputChange = (event: any) => {
     event.preventDefault()
@@ -61,33 +62,19 @@ export default function LoginForm() {
         otp: token
       }).then(response => {
         DEBUG(response.data)
+        if (setAuthUser) {
+          const jwt = response.data.session_user?.token
+          if (jwt) {
+            const item = {nextRoleToken: jwt}
+            if (import.meta.env.MODE === "production") {
+              chrome.storage.sync.set(item);
+            } else {
+              localStorage.setItem("nextRoleToken", JSON.stringify(item))
+            }
+            setAuthUser(response.data.session_user)
+          }
+        }
       }).catch(e => ERROR(e));
-      // setOtpSent(true)
-      // supabase?.auth.verifyOtp({ email: email, token, type: 'email'}).then(res => {
-      //   console.log("confirmed user: ", res)
-      //   if (res.error) {
-      //     console.log("res.error.message: ", res.error.message)
-      //     setOtpError(res.error.message)
-      //
-      //
-      //   } else {
-
-
-      // new UserApi(headerConfig(res.data?.session?.access_token as string)).signIn({
-      //   value: email
-      // }).then(response => {
-      //   const profileResponse: SessionUser = response.data
-      //   if (setAuthUser) {
-      //     setAuthUser(profileResponse)
-      //   }
-      // const tokenEvent = new CustomEvent("token", {detail: {token: profileResponse.token}});
-      // window.dispatchEvent(tokenEvent)
-      //   }).catch(e => ERROR(e));
-      //   console.log("user: ", res.data?.session?.access_token)
-      // }
-      // }).catch(e => {
-      //   setOtpError(e.message)
-      // })
     } else {
       setOtpSent(false)
       setToken("")

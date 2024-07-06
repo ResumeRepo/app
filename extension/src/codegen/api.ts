@@ -2104,36 +2104,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Exchange a short-lived Firebase token for a long-lived, self-signed token
-         * @summary Exchange token
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exchangeToken: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/user/token-exchange`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Get user profile or create one if it doesn\'t exist
          * @summary Get user profile
          * @param {*} [options] Override http request option.
@@ -2223,18 +2193,6 @@ export const UserApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Exchange a short-lived Firebase token for a long-lived, self-signed token
-         * @summary Exchange token
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async exchangeToken(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionUser>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.exchangeToken(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserApi.exchangeToken']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Get user profile or create one if it doesn\'t exist
          * @summary Get user profile
          * @param {*} [options] Override http request option.
@@ -2280,15 +2238,6 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.confirmOtp(otpConfirmation, options).then((request) => request(axios, basePath));
         },
         /**
-         * Exchange a short-lived Firebase token for a long-lived, self-signed token
-         * @summary Exchange token
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exchangeToken(options?: any): AxiosPromise<SessionUser> {
-            return localVarFp.exchangeToken(options).then((request) => request(axios, basePath));
-        },
-        /**
          * Get user profile or create one if it doesn\'t exist
          * @summary Get user profile
          * @param {*} [options] Override http request option.
@@ -2327,17 +2276,6 @@ export class UserApi extends BaseAPI {
      */
     public confirmOtp(otpConfirmation: OtpConfirmation, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).confirmOtp(otpConfirmation, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Exchange a short-lived Firebase token for a long-lived, self-signed token
-     * @summary Exchange token
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public exchangeToken(options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).exchangeToken(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

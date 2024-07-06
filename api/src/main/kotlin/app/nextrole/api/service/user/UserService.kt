@@ -8,7 +8,6 @@ import app.nextrole.api.*
  */
 interface UserService {
     fun getOrCreateUser(): SessionUser
-    fun exchangeToken(): SessionUser
     suspend fun signIn(stringValue: StringValue): GenericResponse
     suspend fun confirmOtp(otpConfirmation: OtpConfirmation): SessionUserResponse
 }

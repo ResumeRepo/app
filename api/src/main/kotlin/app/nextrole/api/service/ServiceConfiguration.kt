@@ -1,6 +1,7 @@
 package app.nextrole.api.service
 
 import app.nextrole.api.props.AwsProps
+import app.nextrole.api.props.SupabaseProps
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
@@ -10,6 +11,10 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.microsoft.playwright.Browser
 import com.microsoft.playwright.BrowserType.LaunchOptions
 import com.microsoft.playwright.Playwright
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.gotrue.Auth
+import io.github.jan.supabase.serializer.JacksonSerializer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -21,7 +26,7 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 @ComponentScan
-class ServiceConfiguration(val awsProps: AwsProps) {
+class ServiceConfiguration(val awsProps: AwsProps,  val supabaseProps: SupabaseProps) {
 
     @Bean
     fun playWright(): Browser {
@@ -51,5 +56,16 @@ class ServiceConfiguration(val awsProps: AwsProps) {
             .standard()
             .withRegion(region)
             .build()
+    }
+
+    @Bean
+    fun initSupabase(): SupabaseClient {
+        return createSupabaseClient(
+            supabaseUrl = supabaseProps.projectUrl!!,
+            supabaseKey = supabaseProps.apiKey!!
+        ) {
+            defaultSerializer = JacksonSerializer()
+            install(Auth)
+        }
     }
 }

@@ -6,6 +6,7 @@ import app.nextrole.api.props.PropsConfiguration
 import app.nextrole.api.props.SupabaseProps
 import app.nextrole.api.service.ServiceConfiguration
 import app.nextrole.api.utils.migration.FlywayPostgresMigration
+import app.nextrole.api.utils.security.SecurityConfiguration
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.Auth
@@ -26,26 +27,15 @@ import org.springframework.context.annotation.Import
     DataConfiguration::class,
     PropsConfiguration::class,
     ServiceConfiguration::class,
-    ControllerConfiguration::class
+    ControllerConfiguration::class,
+    SecurityConfiguration::class
 )
 class RootConfiguration(
-    val flywayPostgresMigration: FlywayPostgresMigration,
-    val supabaseProps: SupabaseProps
+    val flywayPostgresMigration: FlywayPostgresMigration
 ) {
 
     @PostConstruct
     fun onStart() {
         flywayPostgresMigration.migrate(false)
-    }
-
-    @Bean
-    fun initSupabase(): SupabaseClient {
-        return createSupabaseClient(
-            supabaseUrl = supabaseProps.projectUrl!!,
-            supabaseKey = supabaseProps.apiKey!!
-        ) {
-            defaultSerializer = JacksonSerializer()
-            install(Auth)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package app.nextrole.api.utils.security.jwt
 
+import app.nextrole.api.SessionUser
 import app.nextrole.api.props.FirebaseProps
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserRecord
@@ -34,6 +35,10 @@ class JwtServiceImpl(private val firebaseProps: FirebaseProps) : JwtService {
         val user = FirebaseAuth.getInstance().getUser(extractSubject(token.substring(2)))
         assert(user != null)
         return user
+    }
+
+    override fun jwtToUser(jwt: String): SessionUser {
+        return SessionUser(userId = extractSubject(jwt.substring(2)))
     }
 
     private fun getSignInKey(): SecretKey {

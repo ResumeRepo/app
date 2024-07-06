@@ -1,10 +1,13 @@
-package app.nextrole.api.utils.security.firebase
+package app.nextrole.api.utils.security.web
 
+import app.nextrole.api.props.AwsProps
 import com.fasterxml.jackson.databind.ObjectMapper
 import app.nextrole.api.props.CorsProps
+import app.nextrole.api.props.SourceProps
 import app.nextrole.api.service.utils.getCurrentTime
 import app.nextrole.api.utils.security.UnsecurePaths
 import app.nextrole.api.utils.security.firewall.FirewallConfiguration
+import jakarta.servlet.DispatcherType
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -38,7 +41,7 @@ import org.springframework.web.filter.CorsFilter
     FirewallConfiguration::class
 )
 @ComponentScan
-class FirebaseSecurityConfiguration(
+open class WebSecurityConfiguration(
     private val securityFilter: SecurityFilter,
     private val objectMapper: ObjectMapper,
     private val corsProps: CorsProps,
@@ -55,6 +58,7 @@ class FirebaseSecurityConfiguration(
             .exceptionHandling { ex -> ex.authenticationEntryPoint(authenticationEntryPoint) }
             .authorizeHttpRequests { auth ->
                 auth
+                    .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(*unsecurePaths.wildcardPaths()).permitAll()
                     .anyRequest().authenticated()
