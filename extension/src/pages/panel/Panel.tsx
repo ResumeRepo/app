@@ -10,7 +10,7 @@ import {useAuthContext} from "@src/context/AuthContext";
 
 
 export type TabType = "Assistant" | "Resumes" | "Profile"
-
+let initialized = false
 
 export default function Panel(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabType>("Assistant")
@@ -21,12 +21,11 @@ export default function Panel(): JSX.Element {
   const {authUser} = useAuthContext()
 
   useEffect(() => {
-    if (authUser) {
-      console.log("calling base resume...: ")
+    if (authUser && !initialized) {
+      initialized = true // Prevent duplicate api requests
       new ResumeApi(headerConfig(authUser.token as string)).hasBaseResume()
       .then(response => {
         DEBUG("Has base resume", response.data.value)
-        console.log("!(response.data.value === true): ", !(response.data.value === true))
         const res = response.data.value === true
         setShowResumeUpload(!res)
         setShowGenerateResume(res)
@@ -38,7 +37,7 @@ export default function Panel(): JSX.Element {
       console.log("in panel - authUser undefined")
     }
 
-  }, [authUser, showResumeUpload]);
+  }, [authUser]);
 
   // useEffect(() => {
   //   if (!listenersInitialized) {

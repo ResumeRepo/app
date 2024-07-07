@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useAuthContext} from "@src/context/AuthContext";
 import logo from '@assets/img/logo.png';
 import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
-import {SessionUser, UserApi} from "@src/codegen";
+import {UserApi} from "@src/codegen";
 
 export default function LoginForm() {
   const [otpSent, setOtpSent] = useState(false)
