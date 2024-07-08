@@ -1576,6 +1576,44 @@
             "type": "boolean"
           }
         }
+      },
+      "GptJobPostFunction": {
+        "type": "object",
+        "properties": {
+          "job_post_function": {
+            "type": "object",
+            "description": "Post-process a job post from job boards",
+            "properties": {
+              "job_title": {
+                "type": "string",
+                "description": "The exact job description used in the job posting"
+              },
+              "company_name": {
+                "type": "string"
+              },
+              "about_company": {
+                "type": "string",
+                "description": "Information that provides additional context to the applicant about this company as a whole."
+              },
+              "location": {
+                "type": "string"
+              },
+              "salary": {
+                "type": "string"
+              },
+              "full_time_or_part_time": {
+                "type": "string"
+              },
+              "job_description_bullet_points": {
+                "description": "Job requirements and qualifications",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

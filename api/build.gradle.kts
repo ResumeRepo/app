@@ -34,8 +34,7 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:gotrue-kt-jvm:2.5.1")
     implementation("io.github.jan-tennert.supabase:serializer-jackson:2.5.1")
     implementation("io.ktor:ktor-client-apache5:2.3.12")
-
-
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")

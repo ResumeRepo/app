@@ -1,11 +1,5 @@
 package app.nextrole.api.service.gpt.completion
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.oshai.kotlinlogging.KotlinLogging
-import org.springframework.util.ObjectUtils
-
 /**
  * @author Biz Melesse
  * created on 6/23/24

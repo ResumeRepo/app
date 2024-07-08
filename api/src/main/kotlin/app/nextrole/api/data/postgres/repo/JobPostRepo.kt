@@ -14,4 +14,5 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 interface JobPostRepo : JpaRepository<JobPostEntity, Long> {
     fun findByUid(uid: String): JobPostEntity?
+    fun findByJobIdAndJobBoard(jobId: String, jobBoard: String): JobPostEntity?
 }

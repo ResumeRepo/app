@@ -1,6 +1,8 @@
 package app.nextrole.api.service.utils
 
 import app.nextrole.api.SessionUser
+import com.google.gson.Gson
+import kotlinx.serialization.json.JsonElement
 import org.springframework.core.io.ClassPathResource
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.util.FileCopyUtils
@@ -76,4 +78,12 @@ fun getSessionUser(): SessionUser {
 
 fun decodeBase64(encoded: String?): String {
     return String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8)
+}
+
+fun jsonElementToMap(element: JsonElement): MutableMap<String, Any>? {
+    val map: MutableMap<String, Any> = mutableMapOf()
+    // Use Gson or Moshi specific methods to convert element to a Map
+    val tempMap = Gson().fromJson(element.toString(), Map::class.java) as MutableMap<String, Any>
+    map.putAll(tempMap)
+    return map
 }

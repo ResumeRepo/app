@@ -1,3 +1,5 @@
+import {DEBUG} from "@src/utils/utils";
+
 window.addEventListener("token", (event: Event) => {
   const token = (event as CustomEvent).detail.token
   if (token) {
@@ -52,21 +54,49 @@ function parseJobId(pageType: string | undefined) {
   return null
 }
 
-function parseLinkedIn() {
-  const element: any = document.querySelector("#job-details > div")
-  if (element && element.innerText && element.innerText.length > 0) {
-    console.log("parseLinkedIn - jd: ", element.innerText)
-    return element.innerText
-    // return document.getElementsByTagName("html")[0].innerText
+function parseLinkedIn(topCardSelector: string, topCardTextSelector: string, primaryDescSelector: string, jobDetailsDescSelector: string) {
+  let topCardParsed = false, primaryDescParsed = false, jdParsed = false
+  const texts = []
+  const topCard: any = document.querySelector(topCardSelector)
+  if (topCard) {
+    const topCardText = topCard.querySelector(topCardTextSelector)
+    if (topCardText && topCardText.innerText.length > 0) {
+      texts.push(topCardText.innerText)
+      topCardParsed = true
+    }
   }
+  const primaryDescription: any = document.querySelector(primaryDescSelector)
+  if (primaryDescription && primaryDescription.innerText.length > 0) {
+    texts.push(`Primary description: ${primaryDescription.innerText}`)
+    primaryDescParsed = true
+  }
+  const element: any = document.querySelector(jobDetailsDescSelector)
+  if (element && element.innerText && element.innerText.length > 0) {
+    texts.push(element.innerText)
+    jdParsed = true
+  }
+  if (topCardParsed && primaryDescParsed && jdParsed) {
+    return texts.join(" ").replace("\n", "")
+  }
+  DEBUG("not everything parsed: ", topCardParsed, primaryDescParsed, jdParsed)
+  DEBUG("texts: ", texts)
   return undefined
 }
 
 function parsePage(pageType: string) {
   switch (pageType) {
     case LINKED_DETAIL_PAGE:
+      return parseLinkedIn("div.job-view-layout > div > div > div",
+          "div.mt2.mb2",
+          "div.job-details-jobs-unified-top-card__primary-description-container",
+          "#job-details > div"
+          )
     case LINKED_LIST_PAGE:
-      return parseLinkedIn()
+      return parseLinkedIn(
+          "div.relative.job-details-jobs-unified-top-card__container--two-pane",
+          "div.mt2.mb2",
+          "div.job-details-jobs-unified-top-card__primary-description-container",
+          "#job-details > div")
     default:
       return undefined
   }

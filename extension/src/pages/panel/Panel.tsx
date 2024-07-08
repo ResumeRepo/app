@@ -82,8 +82,6 @@ export default function Panel(): JSX.Element {
     setShowGenerateResume(true)
   }
 
-  console.log("showResumeUpload: ", showResumeUpload)
-
   return (
     <div className="container mx-auto px-4 py-4 max-w-[660px]">
         { activeTab === "Assistant" && <Assistant

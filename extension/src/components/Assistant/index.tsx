@@ -51,9 +51,7 @@ export default function Assistant(props: AssistantProps): JSX.Element {
   }
 
   const onParseJobPost = (jd: ParseJobPostRequest) => {
-    console.log("calling parsJobPost: ", jd)
     if (authUser) {
-      console.log("in if condition")
       new ResumeApi(headerConfig(authUser.token as string)).parsJobPost(jd)
       .then(response => {
         DEBUG("Job has has been parsed", response.data)
@@ -75,7 +73,6 @@ export default function Assistant(props: AssistantProps): JSX.Element {
       // @ts-ignore
       if (import.meta.env.MODE === "production") {
         chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
-          console.log("jd received....: ", request)
           if  (request.type === "jd") {
             onParseJobPost({
               job_board: request.jobBoard,

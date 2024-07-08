@@ -174,6 +174,68 @@ export interface GenericResponse {
 /**
  * 
  * @export
+ * @interface GptJobPostFunction
+ */
+export interface GptJobPostFunction {
+    /**
+     * 
+     * @type {GptJobPostFunctionJobPostFunction}
+     * @memberof GptJobPostFunction
+     */
+    'job_post_function'?: GptJobPostFunctionJobPostFunction;
+}
+/**
+ * Post-process a job post from job boards
+ * @export
+ * @interface GptJobPostFunctionJobPostFunction
+ */
+export interface GptJobPostFunctionJobPostFunction {
+    /**
+     * The exact job description used in the job posting
+     * @type {string}
+     * @memberof GptJobPostFunctionJobPostFunction
+     */
+    'job_title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GptJobPostFunctionJobPostFunction
+     */
+    'company_name'?: string;
+    /**
+     * Information that provides additional context to the applicant about this company as a whole.
+     * @type {string}
+     * @memberof GptJobPostFunctionJobPostFunction
+     */
+    'about_company'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GptJobPostFunctionJobPostFunction
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GptJobPostFunctionJobPostFunction
+     */
+    'salary'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GptJobPostFunctionJobPostFunction
+     */
+    'full_time_or_part_time'?: string;
+    /**
+     * Job requirements and qualifications
+     * @type {Array<string>}
+     * @memberof GptJobPostFunctionJobPostFunction
+     */
+    'job_description_bullet_points'?: Array<string>;
+}
+/**
+ * 
+ * @export
  * @interface JobPost
  */
 export interface JobPost {

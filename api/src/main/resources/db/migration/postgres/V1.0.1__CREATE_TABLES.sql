@@ -32,18 +32,18 @@ ALTER TABLE public.base_resume OWNER TO root;
 CREATE TABLE IF NOT EXISTS public.job_post (
     id bigserial PRIMARY KEY NOT NULL,
     uid VARCHAR(255) NOT NULL,
-    job_id VARCHAR(255),
+    job_id VARCHAR(255) NOT NULL,
+    job_board VARCHAR(255) NOT NULL,
     job_title VARCHAR(1024),
     company_name VARCHAR(1024),
     company_info VARCHAR(1024),
     location VARCHAR(1024),
     salary VARCHAR(255),
     logo_url VARCHAR(255),
-    job_board VARCHAR(255),
     job_description text,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(uid, job_id, job_board)
+    UNIQUE(job_id, job_board)
 );
 ALTER TABLE public.job_post OWNER TO root;
 

@@ -69,17 +69,23 @@ class GptServiceImpl(
             try {
                 val resultStr: String = httpRequest(json)
                 try {
+                    logger.info { "GPT Response: ${objectMapper.writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(completionRequest)}" }
                     completionResult = objectMapper.readValue(resultStr, CompletionResult::class.java)
                     if (ObjectUtils.isEmpty(completionResult.choices) && !ObjectUtils.isEmpty(resultStr)) {
                         logger.error { resultStr }
                         return completionResponse
                     } else {
                         if (hasCompletionChoices(completionResult)) {
-                            val responseMessage: CompletionResponseMessage =
-                                completionResult.choices[0].message
-                            val functionCall: GPTFunctionCallPayload = responseMessage.functionCall
-                            val content: String = responseMessage.content
-                            completionResponse.messages = mutableListOf(GPTMessage(content = content))
+                            val responseMessage: CompletionResponseMessage? =
+                                completionResult.choices?.get(0)?.message
+                            val functionCall: GPTFunctionCallPayload? = responseMessage?.functionCall
+                            val content: String? = responseMessage?.content
+                            if (functionCall != null) {
+                                completionResponse.messages = mutableListOf(GPTMessage(content = functionCall.arguments))
+                            } else if (content != null) {
+                                completionResponse.messages = mutableListOf(GPTMessage(content = content))
+                            }
                         }
                     }
                 } catch (e: JsonProcessingException) {

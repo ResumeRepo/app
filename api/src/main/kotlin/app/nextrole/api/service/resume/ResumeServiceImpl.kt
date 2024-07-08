@@ -9,13 +9,20 @@ import app.nextrole.api.data.postgres.repo.JobPostRepo
 import app.nextrole.api.data.postgres.repo.ResumeRepo
 import app.nextrole.api.props.AwsProps
 import app.nextrole.api.service.gpt.GptService
+import app.nextrole.api.service.gpt.completion.CompletionResult
 import app.nextrole.api.service.gpt.completion.GPTFunction
 import app.nextrole.api.service.pdf.PdfService
 import app.nextrole.api.service.s3.S3Service
 import app.nextrole.api.service.utils.getSessionUser
+import app.nextrole.api.service.utils.jsonElementToMap
+import app.nextrole.api.service.utils.loadFile
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -30,7 +37,8 @@ class ResumeServiceImpl(
     val baseResumeRepo: BaseResumeRepo,
     val pdfService: PdfService,
     val s3Service: S3Service,
-    val awsProps: AwsProps
+    val awsProps: AwsProps,
+    val objectMapper: ObjectMapper
 ) : ResumeService {
     private val logger = KotlinLogging.logger {}
 
@@ -84,8 +92,63 @@ class ResumeServiceImpl(
     }
 
     override fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): JobPost {
-        val x = 1
-        TODO("Not yet implemented")
+        val jobId = parseJobPostRequest.jobId
+        val jobBoard = parseJobPostRequest.jobBoard
+        var jobPostEntity: JobPostEntity? = null
+        if (jobId != null && jobBoard != null) {
+            jobPostEntity = jobPostRepo.findByJobIdAndJobBoard(jobId, jobBoard)
+            if (jobPostEntity == null) {
+                val jd = parseJobPostRequest.jobDescription!!.replace("\n", "")
+                val context =
+                    "I operate a website that allows users to customize their resume based on the job description. Before they are allowed to start customizing, we need to show them the job description in a succinct manner. Provided below is the job description scraped from a job board. Your task is to parse out all the relevant information about the job and call a function that will handle the result. The salary field must specify a dollar value or range either as an hourly, weekly, monthly, or yearly rate. Please follow the descriptions of the individual fields, where applicable. JOB DESCRIPTION:\n$jd"
+                val function = GPTFunction(
+                    name = "job_post_function",
+                    description = "Post-process a job post from job boards",
+                    parameters = jsonElementToMap(
+                        Json.parseToJsonElement(loadFile("openapi/openapi.json"))
+                            .jsonObject["components"]!!
+                            .jsonObject["schemas"]!!
+                            .jsonObject["GptJobPostFunction"]!!
+                    )
+                )
+
+                val response = gptService.gptCompletionRequest(context, function)
+                if (!response.messages.isNullOrEmpty() && response.messages?.get(0)?.content != null) {
+                    val jobPost = objectMapper.readValue(
+                        response.messages!![0].content,
+                        GptJobPostFunction::class.java
+                    )
+                    jobPostEntity = JobPostEntity()
+                    jobPostEntity.jobDescription = jobPost.jobPostFunction?.jobDescriptionBulletPoints?.joinToString("\n" )
+                    jobPostEntity.jobTitle = jobPost.jobPostFunction?.jobTitle
+                    jobPostEntity.jobId = parseJobPostRequest.jobId
+                    jobPostEntity.jobBoard = parseJobPostRequest.jobBoard
+                    jobPostEntity.location = jobPost.jobPostFunction?.location
+                    jobPostEntity.companyInfo = jobPost.jobPostFunction?.aboutCompany
+                    jobPostEntity.companyName = jobPost.jobPostFunction?.companyName
+                    jobPostEntity.salary = jobPost.jobPostFunction?.salary
+                    jobPostEntity.logoUrl = ""
+                    jobPostRepo.save(jobPostEntity)
+                }
+            }
+        }
+        if (jobPostEntity?.jobDescription != null) {
+            val bullets = jobPostEntity?.jobDescription?.split("\n")
+            val jd = mutableListOf<JobPostJobDescriptionInner>()
+             bullets?.forEach { jd.add(JobPostJobDescriptionInner(isMatch = false, text = it)) }
+            return JobPost(
+                jobId = jobId,
+                jobBoard = jobBoard,
+                jobTitle = jobPostEntity?.jobTitle,
+                companyName = jobPostEntity?.companyName,
+                companyInfo = jobPostEntity?.companyInfo,
+                salary = jobPostEntity?.salary,
+                location = jobPostEntity?.location,
+                logoUrl = jobPostEntity?.logoUrl,
+                jobDescription = jd
+            )
+        }
+        return JobPost()
     }
 
     override fun generateResume(generateResumeRequest: GenerateResumeRequest): GeneratedResume {

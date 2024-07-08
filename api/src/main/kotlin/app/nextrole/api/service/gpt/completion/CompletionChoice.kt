@@ -10,8 +10,8 @@ data class CompletionChoice(
     /**
      * The generated text. Will include the prompt if {@link CompletionRequestzz#echo } is true
      */
-    var text: String,
-    var message: CompletionResponseMessage,
-    var index: Int,
-    @JsonProperty("finish_reason") var finishReason: String
+    var text: String? = null,
+    var message: CompletionResponseMessage? = null,
+    var index: Int? = null,
+    @JsonProperty("finish_reason") var finishReason: String? = null
 )
