@@ -355,6 +355,12 @@ export interface ParseJobPostRequest {
      * @type {string}
      * @memberof ParseJobPostRequest
      */
+    'logo'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParseJobPostRequest
+     */
     'job_id'?: string;
 }
 /**

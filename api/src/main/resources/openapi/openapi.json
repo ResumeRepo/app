@@ -1329,6 +1329,9 @@
           "job_description": {
             "type": "string"
           },
+          "logo": {
+            "type": "string"
+          },
           "job_id": {
             "type": "string"
           }

@@ -1,4 +1,7 @@
-import {DEBUG} from "@src/utils/utils";
+type ParsedContent = {
+  body?: string,
+  logo?: string
+}
 
 window.addEventListener("token", (event: Event) => {
   const token = (event as CustomEvent).detail.token
@@ -54,9 +57,15 @@ function parseJobId(pageType: string | undefined) {
   return null
 }
 
-function parseLinkedIn(topCardSelector: string, topCardTextSelector: string, primaryDescSelector: string, jobDetailsDescSelector: string) {
-  let topCardParsed = false, primaryDescParsed = false, jdParsed = false
+function parseLinkedIn(
+    topCardSelector: string,
+    topCardTextSelector: string,
+    primaryDescSelector: string,
+    jobDetailsDescSelector: string,
+    imgClasses: string[]): ParsedContent {
+  let topCardParsed = false, primaryDescParsed = false, jdParsed = false, logoParsed = false
   const texts = []
+  const parsedContent: ParsedContent = {}
   const topCard: any = document.querySelector(topCardSelector)
   if (topCard) {
     const topCardText = topCard.querySelector(topCardTextSelector)
@@ -75,12 +84,36 @@ function parseLinkedIn(topCardSelector: string, topCardTextSelector: string, pri
     texts.push(element.innerText)
     jdParsed = true
   }
-  if (topCardParsed && primaryDescParsed && jdParsed) {
-    return texts.join(" ").replace("\n", "")
+  // document.getElementsByClassName("jobs-details")[0].getElementsByClassName("ivm-image-view-model")[0].getElementsByTagName("img")[0].src
+  const imageElement: any = document.getElementsByClassName(imgClasses[0])
+  console.log("debug 1")
+  // debugger
+  if (imageElement && imageElement.length > 0) {
+    console.log("debug 2")
+    const imgContainer = imageElement[0].getElementsByClassName(imgClasses[1])
+    console.log("debug 3")
+    if (imgContainer && imgContainer.length > 0) {
+      console.log("debug 4")
+      console.log(imgContainer)
+      const imgTag = imgContainer[0].getElementsByTagName("img")
+      console.log("debug 5")
+      if (imgTag && imgTag.length > 0) {
+        console.log("debug 6")
+        const href = imgTag[0].src
+        console.log("debug 7: ", href)
+        if (href && href.length > 0) {
+          console.log("debug 8")
+          parsedContent.logo = href
+          logoParsed = true
+        }
+      }
+    }
   }
-  DEBUG("not everything parsed: ", topCardParsed, primaryDescParsed, jdParsed)
-  DEBUG("texts: ", texts)
-  return undefined
+
+  if (topCardParsed && primaryDescParsed && jdParsed && logoParsed) {
+    parsedContent.body = texts.join(" ").replace("\n", "")
+  }
+  return parsedContent
 }
 
 function parsePage(pageType: string) {
@@ -89,14 +122,16 @@ function parsePage(pageType: string) {
       return parseLinkedIn("div.job-view-layout > div > div > div",
           "div.mt2.mb2",
           "div.job-details-jobs-unified-top-card__primary-description-container",
-          "#job-details > div"
+          "#job-details > div",
+          ["job-view-layout jobs-details", "ivm-image-view-model"]
           )
     case LINKED_LIST_PAGE:
       return parseLinkedIn(
           "div.relative.job-details-jobs-unified-top-card__container--two-pane",
           "div.mt2.mb2",
           "div.job-details-jobs-unified-top-card__primary-description-container",
-          "#job-details > div")
+          "#job-details > div",
+      ["job-view-layout jobs-details", "ivm-image-view-model"])
     default:
       return undefined
   }
@@ -112,13 +147,13 @@ function getJobBoardName(pageType: string) {
   }
 }
 
-function sendMessage(jd: string, pageType: string) {
-  console.log("jd: ", jd)
+function sendMessage(parsedContent: ParsedContent, pageType: string) {
   chrome.runtime.sendMessage({
     type: "jd",
-    jobBoard: getJobBoardName(pageType),
-    jd: jd,
-    jobId: currentJobId
+    job_board: getJobBoardName(pageType),
+    job_description: parsedContent.body,
+    logo: parsedContent.logo,
+    job_id: currentJobId
   });
   pollForPageLoad()
 }
@@ -131,22 +166,26 @@ function sendMessage(jd: string, pageType: string) {
  * @param callback
  */
 function pollForPageLoad() {
+  console.log("page polling started....")
   intervalId = setInterval(() => {
     const pageType = allowedPageType()
     const newCurrentJobId = parseJobId(pageType)
     if (pageType) {
       if (newCurrentJobId && newCurrentJobId != currentJobId) {
-        const jd = parsePage(pageType)
-        if (jd) {
+        const parsedContent = parsePage(pageType)
+        if (parsedContent && parsedContent.body && parsedContent.logo) {
           currentJobId = newCurrentJobId
           clearInterval(intervalId)
-          sendMessage(jd, pageType)
+          console.log("Parsed: ", parsedContent)
+          sendMessage(parsedContent, pageType)
+        } else {
+          console.log("Retrying...")
         }
       }
     }
   }, 100);
 }
-
+console.log("polling page....")
 pollForPageLoad()
 
 

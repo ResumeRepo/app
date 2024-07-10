@@ -50,8 +50,10 @@ export default function Assistant(props: AssistantProps): JSX.Element {
     }
   }
 
+  let apiCalled = false
   const onParseJobPost = (jd: ParseJobPostRequest) => {
-    if (authUser) {
+    if (authUser && !apiCalled) {
+      apiCalled = true
       new ResumeApi(headerConfig(authUser.token as string)).parsJobPost(jd)
       .then(response => {
         DEBUG("Job has has been parsed", response.data)
@@ -74,11 +76,8 @@ export default function Assistant(props: AssistantProps): JSX.Element {
       if (import.meta.env.MODE === "production") {
         chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
           if  (request.type === "jd") {
-            onParseJobPost({
-              job_board: request.jobBoard,
-              job_id: request.jobId,
-              job_description: request.jd
-            })
+            DEBUG("JD received: ", request as ParseJobPostRequest)
+            onParseJobPost(request as ParseJobPostRequest)
           }
         });
       }
