@@ -1330,7 +1330,8 @@
             "type": "string"
           },
           "logo": {
-            "type": "string"
+            "type": "string",
+            "format": "base64"
           },
           "job_id": {
             "type": "string"

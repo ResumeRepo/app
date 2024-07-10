@@ -1,6 +1,6 @@
 type ParsedContent = {
   body?: string,
-  logo?: string
+  logo?: any
 }
 
 window.addEventListener("token", (event: Event) => {
@@ -175,9 +175,21 @@ function pollForPageLoad() {
         const parsedContent = parsePage(pageType)
         if (parsedContent && parsedContent.body && parsedContent.logo) {
           currentJobId = newCurrentJobId
-          clearInterval(intervalId)
           console.log("Parsed: ", parsedContent)
-          sendMessage(parsedContent, pageType)
+          fetch(parsedContent.logo)
+          .then(response => response.blob())
+          .then(blob => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              parsedContent.logo = reader.result
+              clearInterval(intervalId)
+              sendMessage(parsedContent, pageType)
+            };
+            reader.readAsDataURL(blob);
+          })
+          .catch(error => {
+            console.error("Retrying: ", error);
+          });
         } else {
           console.log("Retrying...")
         }

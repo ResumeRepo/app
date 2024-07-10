@@ -84,6 +84,11 @@ export default function Assistant(props: AssistantProps): JSX.Element {
     }
   }, [listenersInitialized])
 
+  // useEffect(() => {
+  //   DEBUG("debugging....")
+  //
+  // }, []);
+
   return (
     <div className="mb-40">
       <Accordion className="mb-8" alwaysOpen={true}>
