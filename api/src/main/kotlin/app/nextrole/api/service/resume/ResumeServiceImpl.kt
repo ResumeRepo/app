@@ -9,15 +9,14 @@ import app.nextrole.api.data.postgres.repo.JobPostRepo
 import app.nextrole.api.data.postgres.repo.ResumeRepo
 import app.nextrole.api.props.AwsProps
 import app.nextrole.api.service.gpt.GptService
-import app.nextrole.api.service.gpt.completion.CompletionResult
 import app.nextrole.api.service.gpt.completion.GPTFunction
 import app.nextrole.api.service.pdf.PdfService
 import app.nextrole.api.service.s3.S3Service
+import app.nextrole.api.service.utils.generateUid
 import app.nextrole.api.service.utils.getSessionUser
 import app.nextrole.api.service.utils.jsonElementToMap
 import app.nextrole.api.service.utils.loadFile
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.Gson
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -59,15 +58,13 @@ class ResumeServiceImpl(
         TODO("Not yet implemented")
     }
 
+
+
     override fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResumeUploadResponse {
         val sessionUser = getSessionUser()
+        val binaryData = getBinaryData(resumeUploadRequest.file)
 
-        val parts = resumeUploadRequest.file?.split(",", limit = 2)
-        val base64Payload = parts?.get(1)
-        val decoder = Base64.getDecoder()
-        val file = decoder.decode(base64Payload)
-
-        val text = pdfService.parsePdf(file)
+        val text = pdfService.parsePdf(binaryData)
         val prevBaseResume = getSessionUser().userId?.let { baseResumeRepo.findByUserId(it) }
         var version = 0L
         if (prevBaseResume?.version != null) {
@@ -79,9 +76,8 @@ class ResumeServiceImpl(
         baseResume.version = version
         baseResumeRepo.save(baseResume)
 
-
         kotlinx.coroutines.runBlocking {
-            sessionUser.userId?.let { uploadToS3(it, file, baseResume.uid, version) }
+            sessionUser.userId?.let { uploadResumeToS3(it, binaryData, baseResume.uid, version) }
         }
         return ResumeUploadResponse(resumeId = baseResume.uid)
     }
@@ -91,11 +87,12 @@ class ResumeServiceImpl(
         return GenericResponse(status = "ok", value = baseResume != null)
     }
 
-    override fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): JobPost {
+    override suspend fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): JobPost {
         val jobId = parseJobPostRequest.jobId
         val jobBoard = parseJobPostRequest.jobBoard
         var jobPostEntity: JobPostEntity? = null
         if (jobId != null && jobBoard != null) {
+            val logoKey = uploadLogoToS3(getBinaryData(parseJobPostRequest.logo), generateUid())
             jobPostEntity = jobPostRepo.findByJobIdAndJobBoard(jobId, jobBoard)
             if (jobPostEntity == null) {
                 val jd = parseJobPostRequest.jobDescription!!.replace("\n", "")
@@ -127,7 +124,7 @@ class ResumeServiceImpl(
                     jobPostEntity.companyInfo = jobPost.jobPostFunction?.aboutCompany
                     jobPostEntity.companyName = jobPost.jobPostFunction?.companyName
                     jobPostEntity.salary = jobPost.jobPostFunction?.salary
-                    jobPostEntity.logoUrl = ""
+                    jobPostEntity.logoUrl = uploadLogoToS3(getBinaryData(parseJobPostRequest.logo), jobBoard, generateUid())
                     jobPostRepo.save(jobPostEntity)
                 }
             }
@@ -178,7 +175,7 @@ class ResumeServiceImpl(
         return GeneratedResume()
     }
 
-    suspend fun uploadToS3(userId: String, file: ByteArray, resumeId: String?, version: Long) {
+    suspend fun uploadResumeToS3(userId: String, file: ByteArray, resumeId: String?, version: Long) {
         val inputStream: InputStream = ByteArrayInputStream(file)
         val key = "${awsProps.s3UserContentFolder}/${userId}/v${version}${resumeId}.pdf"
         s3Service.putObject(awsProps.s3Bucket, key, inputStream, "application/pdf")
@@ -194,6 +191,15 @@ class ResumeServiceImpl(
         }
         val signedUrl = s3Service.getSignedUrl(awsProps.s3Bucket, key, 7 * 24 * 3600)
         logger.info { "Signed Url: $signedUrl"}
+    }
+
+    suspend fun uploadLogoToS3(file: ByteArray, id: String): String {
+        val inputStream: InputStream = ByteArrayInputStream(file)
+        val key = "${awsProps.s3UserContentFolder}/logo/$id"
+        s3Service.putObject(awsProps.s3Bucket, key, inputStream, "image/jpeg")
+        val signedUrl = s3Service.getSignedUrl(awsProps.s3Bucket, key, 7 * 24 * 3600)
+        logger.info { "Signed Url: $signedUrl"}
+        return key
     }
 
     private fun makeGptRequest(baseResume: BaseResumeEntity, jobPost: JobPostEntity, instructions: String?): String {
@@ -215,5 +221,12 @@ class ResumeServiceImpl(
             parameters = null)
         val response = gptService.gptCompletionRequest(context, function)
         return "message received..."
+    }
+
+    private fun getBinaryData(file: String?): ByteArray {
+        val parts = file?.split(",", limit = 2)
+        val base64Payload = parts?.get(1)
+        val decoder = Base64.getDecoder()
+        return decoder.decode(base64Payload)
     }
 }

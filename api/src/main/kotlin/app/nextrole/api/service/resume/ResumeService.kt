@@ -14,5 +14,5 @@ interface ResumeService {
     fun uploadResume(resumeUploadRequest: ResumeUploadRequest): ResumeUploadResponse
     fun hasBaseResume(): GenericResponse
     fun generateResume(generateResumeRequest: GenerateResumeRequest): GeneratedResume
-    fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): JobPost
+    suspend fun parsJobPost(parseJobPostRequest: ParseJobPostRequest): JobPost
 }

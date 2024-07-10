@@ -29,7 +29,7 @@ fun getRandomCharacter(): Char? {
     return uidAlphabet[index]
 }
 
-fun generateUid(length: Int): String? {
+fun generateUid(length: Int = SHORT_UID_LENGTH): String {
     val builder = StringBuilder()
     // An ID length of N gives 62^N unique IDs
     for (i in 0 until length) {
