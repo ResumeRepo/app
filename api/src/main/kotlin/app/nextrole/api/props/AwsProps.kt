@@ -16,7 +16,8 @@ class AwsProps {
      var accessKey: String? = null
      var secretKey: String? = null
      var s3Bucket: String? = "nextrole"
-     var s3Region: String? = "us-east-1"
-     var s3UserContentFolder = "content"
-     var s3AppContentFolder = "app"
+     var s3CdnBucket: String? = "nextrole-cdn-source"
+     var s3Region: String? = "us-east-1" // non-cdn content
+     var s3RegionCdn: String? = "us-east-2"
+     var cdn : String? = "https://d2xsoo5uzcm3hb.cloudfront.net"
 }

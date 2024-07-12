@@ -39,6 +39,11 @@ class ServiceConfiguration(val awsProps: AwsProps,  val supabaseProps: SupabaseP
         return amazonS3ByRegion(Regions.US_EAST_1)
     }
 
+    @Bean("s3-us-east-2")
+    fun amazonS3USEast2(): AmazonS3 {
+        return amazonS3ByRegion(Regions.US_EAST_2)
+    }
+
     fun amazonS3ByRegion(region: Regions?): AmazonS3 {
         if (awsProps.accessKey != null && awsProps.secretKey != null) {
             val credentials: AWSCredentials = BasicAWSCredentials(

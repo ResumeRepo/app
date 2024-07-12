@@ -1,5 +1,6 @@
 package app.nextrole.api.service.s3
 
+import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.*
 import com.amazonaws.util.IOUtils
@@ -13,24 +14,29 @@ import java.time.Instant
 import java.util.*
 
 @Service
-class S3ServiceImpl(@Qualifier("s3-us-east-1") val amazonS3: AmazonS3) : S3Service {
+class S3ServiceImpl(
+    @Qualifier("s3-us-east-1") val amazonS3ue1: AmazonS3,
+    @Qualifier("s3-us-east-2") val amazonS3ue2: AmazonS3
+) : S3Service {
     private val logger = KotlinLogging.logger {}
+    val clients = mapOf(Regions.US_EAST_1 to amazonS3ue1, Regions.US_EAST_2 to amazonS3ue2 )
 
-    override fun putObject(bucket: String?, key: String?, content: String?): PutObjectResult {
-        return amazonS3.putObject(bucket, key, content)
+    override fun putObject(bucket: String?, key: String?, content: String?, region: Regions): PutObjectResult {
+        return clients[region]!!.putObject(bucket, key, content)
     }
 
     override fun putObject(
         bucket: String?,
         key: String?,
         stream: InputStream?,
-        contentType: String?
+        contentType: String?,
+        region: Regions
     ) {
         try {
             val meta = ObjectMetadata()
             meta.contentLength = stream!!.available().toLong()
             meta.contentType = contentType
-            amazonS3.putObject(
+            clients[region]!!.putObject(
                 PutObjectRequest(
                     bucket, key, stream, meta
                 )
@@ -45,8 +51,8 @@ class S3ServiceImpl(@Qualifier("s3-us-east-1") val amazonS3: AmazonS3) : S3Servi
         }
     }
 
-    override fun getObject(bucket: String?, key: String?): String? {
-        val o: S3Object = amazonS3.getObject(bucket, key)
+    override fun getObject(bucket: String?, key: String?, region: Regions): String? {
+        val o: S3Object = clients[region]!!.getObject(bucket, key)
         val s3is = o.objectContent
         try {
             return String(s3is.readAllBytes())
@@ -56,18 +62,18 @@ class S3ServiceImpl(@Qualifier("s3-us-east-1") val amazonS3: AmazonS3) : S3Servi
         return null
     }
 
-    override fun objectExists(bucket: String?, key: String?): Boolean {
+    override fun objectExists(bucket: String?, key: String?, region: Regions): Boolean {
         return try {
-            amazonS3.getObjectMetadata(bucket, key)
+            clients[region]!!.getObjectMetadata(bucket, key)
             true
         } catch (e: AmazonS3Exception) {
             e.statusCode != HttpStatus.SC_NOT_FOUND
         }
     }
 
-    override fun getObjectByteContent(bucket: String?, key: String?): ByteArray? {
+    override fun getObjectByteContent(bucket: String?, key: String?, region: Regions): ByteArray? {
         try {
-            amazonS3.getObject(bucket, key).use { s3Object ->
+            clients[region]!!.getObject(bucket, key).use { s3Object ->
                 return IOUtils.toByteArray(
                     s3Object.objectContent
                 )
@@ -80,7 +86,7 @@ class S3ServiceImpl(@Qualifier("s3-us-east-1") val amazonS3: AmazonS3) : S3Servi
         }
     }
 
-    override fun getSignedUrl(bucket: String?, key: String?, ttl: Long?): String? {
+    override fun getSignedUrl(bucket: String?, key: String?, ttl: Long?, region: Regions): String? {
         val presignedUrlRequest = GeneratePresignedUrlRequest(
             bucket,
             key
@@ -92,7 +98,7 @@ class S3ServiceImpl(@Qualifier("s3-us-east-1") val amazonS3: AmazonS3) : S3Servi
                 )
             )
         try {
-            return amazonS3.generatePresignedUrl(presignedUrlRequest).toString()
+            return clients[region]!!.generatePresignedUrl(presignedUrlRequest).toString()
         } catch (e: Exception) {
            logger.error {
                "Error in S3ServiceImpl.getSignedUrl bucket=${bucket} key=${key} ttl=${ttl}: $e.localizedMessage{}"
@@ -100,13 +106,4 @@ class S3ServiceImpl(@Qualifier("s3-us-east-1") val amazonS3: AmazonS3) : S3Servi
         }
         return ""
     }
-
-//    override fun getSignedUrls(
-//        unsignedUrls: List<String?>?,
-//        bucket: String?,
-//        rootDir: String?,
-//        ttl: Long?
-//    ): List<String?>? {
-//        TODO("Not yet implemented")
-//    }
 }

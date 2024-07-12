@@ -1,6 +1,8 @@
 package app.nextrole.api.service.s3
 
+import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.model.PutObjectResult
+import com.amazonaws.services.s3.model.Region
 import java.io.InputStream
 
 /**
@@ -17,7 +19,7 @@ interface S3Service {
      * @param content data
      * @return
      */
-    fun putObject(bucket: String?, key: String?, content: String?): PutObjectResult
+    fun putObject(bucket: String?, key: String?, content: String?, region: Regions): PutObjectResult
 
     /**
      * Upload an object to S3
@@ -28,7 +30,7 @@ interface S3Service {
      * @param contentType
      * @return
      */
-    fun putObject(bucket: String?, key: String?, stream: InputStream?, contentType: String?)
+    fun putObject(bucket: String?, key: String?, stream: InputStream?, contentType: String?, region: Regions)
 
     /**
      * Get any object specified by the bucket and key
@@ -37,7 +39,7 @@ interface S3Service {
      * @param key
      * @return
      */
-    fun getObject(bucket: String?, key: String?): String?
+    fun getObject(bucket: String?, key: String?, region: Regions): String?
 
     /**
      * Returns true if the object exists
@@ -46,7 +48,7 @@ interface S3Service {
      * @param key
      * @return
      */
-    fun objectExists(bucket: String?, key: String?): Boolean
+    fun objectExists(bucket: String?, key: String?, region: Regions): Boolean
 
     /**
      * Get the byte array from the object specified by the bucket and key
@@ -55,7 +57,7 @@ interface S3Service {
      * @param key
      * @return
      */
-    fun getObjectByteContent(bucket: String?, key: String?): ByteArray?
+    fun getObjectByteContent(bucket: String?, key: String?, region: Regions): ByteArray?
 
 
     /**
@@ -68,19 +70,6 @@ interface S3Service {
      * re-signed
      * @return
      */
-    fun getSignedUrl(bucket: String?, key: String?, ttl: Long?): String?
-
-//    /**
-//     * Sign file urls on S3 so that they are temporarily publicly
-//     * accessible
-//     * @param unsignedUrls
-//     * @return
-//     */
-//    fun getSignedUrls(
-//        unsignedUrls: List<String?>?,
-//        bucket: String?,
-//        rootDir: String?,
-//        ttl: Long?
-//    ): List<String?>?
+    fun getSignedUrl(bucket: String?, key: String?, ttl: Long?, region: Regions): String?
 }
 

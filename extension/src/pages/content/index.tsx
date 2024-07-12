@@ -183,6 +183,7 @@ function pollForPageLoad() {
             reader.onload = () => {
               parsedContent.logo = reader.result
               clearInterval(intervalId)
+              console.log("clearing interval....")
               sendMessage(parsedContent, pageType)
             };
             reader.readAsDataURL(blob);
