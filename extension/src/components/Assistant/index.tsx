@@ -7,6 +7,7 @@ import CircularLoader from "@src/components/Loader";
 import { BsStars } from "react-icons/bs";
 import {JobPost, ParseJobPostRequest, ResumeApi} from "@src/codegen";
 import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
+import {handlePage} from "@pages/content/pageHandler";
 
 const jd: JobPost = {
   job_id: "123alpha",
@@ -80,14 +81,26 @@ export default function Assistant(props: AssistantProps): JSX.Element {
             onParseJobPost(request as ParseJobPostRequest)
           }
         });
+      } else {
+        console.log("in else....")
+        window.addEventListener("message", message => {
+          // console.log("message: ", message)
+          if  (message.data.type === "jd") {
+            DEBUG("JD received: ", message as ParseJobPostRequest)
+            onParseJobPost(message as ParseJobPostRequest)
+          }
+        })
       }
     }
   }, [listenersInitialized])
 
-  // useEffect(() => {
-  //   DEBUG("debugging....")
-  //
-  // }, []);
+  useEffect(() => {
+   if (import.meta.env.MODE === "development") {
+     const url = "https://www.linkedin.com/jobs/view/3907954401/?alternateChannel=search&refId=VAvegUj%2BXaNu9X%2F5EEW0Sg%3D%3D&trackingId=weP2LJ6jxpo3oKouycly7w%3D%3D&trk=d_flagship3_search_srp_jobs"
+     handlePage(url)
+   }
+
+  }, []);
 
   return (
     <div className="mb-40">

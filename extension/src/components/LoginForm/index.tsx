@@ -11,7 +11,6 @@ export default function LoginForm() {
   const [email, setEmail] = useState("")
   const [token, setToken] = useState("")
   const [buttonDisabled, setButtonDisabled] = useState(true)
-  const [loading, setLoading] = useState(true)
   const {setAuthUser, authUser} = useAuthContext()
 
   const onEmailInputChange = (event: any) => {
@@ -93,13 +92,9 @@ export default function LoginForm() {
     }
   }
 
-  useEffect(() => {
-    if (authUser) setLoading(false)
-  }, [authUser]);
-
   return (
         <div className="relative flex min-h-screen flex-col justify-center overflow-hidden py-12">
-          {loading ? <div className="text-center"><CircularLoader/></div> :
+          {authUser ?
           <>
           <div className="relative overflow-auto mb-8">
             <div className="flex justify-center">
@@ -171,7 +166,8 @@ export default function LoginForm() {
               </div>
             </div>
           </div>
-          </>
+          </> :
+              <div className="text-center"><CircularLoader/></div>
           }
         </div>
   )
