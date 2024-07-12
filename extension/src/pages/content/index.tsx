@@ -1,2 +1,5 @@
 import run from "./pageHandler";
-run()
+if (import.meta.env.MODE === "production") {
+  run()
+}
+

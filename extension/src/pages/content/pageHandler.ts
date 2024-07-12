@@ -139,6 +139,7 @@ function getJobBoardName(pageType: string) {
   }
 }
 
+let messagePosted = false
 function sendMessage(parsedContent?: ParsedContent, pageType?: string) {
   if (import.meta.env.MODE === "production") {
     chrome.runtime.sendMessage({
@@ -148,17 +149,18 @@ function sendMessage(parsedContent?: ParsedContent, pageType?: string) {
       logo: parsedContent!!.logo,
       job_id: currentJobId
     });
-  } else {
+    run()
+  } else if (!messagePosted) {
+    messagePosted = true
     window.postMessage({type: "jd", ...testData})
   }
-  run()
 }
 
 export function handlePage(docUrl?: string) {
-  doc = document
   if (docUrl) {
-    sendMessage(undefined, undefined, )
+    sendMessage()
   } else {
+    doc = document
     const pageType = allowedPageType()
     const newCurrentJobId = parseJobId(pageType)
     if (pageType) {

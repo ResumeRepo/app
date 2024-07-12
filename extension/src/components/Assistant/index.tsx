@@ -9,28 +9,13 @@ import {JobPost, ParseJobPostRequest, ResumeApi} from "@src/codegen";
 import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 import {handlePage} from "@pages/content/pageHandler";
 
-const jd: JobPost = {
-  job_id: "123alpha",
-  job_title: "Product Configuration Software Developer",
-  company_name: "ASI Group",
-  company_info: "The ASI Group, founded over 50 years ago, operates in various countries, serving the financial sector, manufacturing, construction, and others. It provides technological solutions and underwater inspection, repair, and maintenance services. Employees highlight the company's good team and helpful HR department.",
-  location: "Yonkers, NY, Eastanollee, GA, Burr Ridge, IL",
-  salary: "$95,000 - $115,000",
-  logo_url: "",
-  job_description: [
-  { text: "Assist with development of online CPQ system", is_match: true },
-  { text: "Configure, quote, and place orders with ASI Group companies", is_match: true },
-  { text: "Understand products and how they are configured", is_match: true },
-  { text: "Model logic and algorithms using Microsoft Excel", is_match: false },
-  { text: "Document logic, procedures, and algorithms", is_match: true },
-  { text: "Write rules within Infor Design Studio environment", is_match: false }
-]
-}
+let jobId = ""
 
 export default function Assistant(props: AssistantProps): JSX.Element {
   const [resumeGenerationInProgress, setResumeGenerationInProgress] = useState(false)
   const [parsingJobPost, setParsingJobPost] = useState(true)
   const [listenersInitialized, setListenersInitialized] = useState(false)
+  const [jobPost, setJobPost] = useState<JobPost | undefined>(undefined)
   const {authUser} = useAuthContext()
 
   const onGenerateResume = () => {
@@ -58,6 +43,7 @@ export default function Assistant(props: AssistantProps): JSX.Element {
       new ResumeApi(headerConfig(authUser.token as string)).parsJobPost(jd)
       .then(response => {
         DEBUG("Job has has been parsed", response.data)
+        setJobPost(response.data)
         setParsingJobPost(false)
       })
       .catch(e => {
@@ -76,14 +62,16 @@ export default function Assistant(props: AssistantProps): JSX.Element {
       // @ts-ignore
       if (import.meta.env.MODE === "production") {
         chrome?.runtime?.onMessage?.addListener(function (request, sender, sendResponse) {
-          if  (request.type === "jd") {
+          if  (request.type === "jd" && request.job_id !== jobId) {
+            jobId = request.job_id
             DEBUG("JD received: ", request as ParseJobPostRequest)
             onParseJobPost(request as ParseJobPostRequest)
           }
         });
       } else {
         window.addEventListener("message", message => {
-          if  (message.data.type === "jd") {
+          if  (message.data.type === "jd" && message.data.job_id !== jobId) {
+            jobId = message.data.job_id
             DEBUG("JD received: ", message.data as ParseJobPostRequest)
             onParseJobPost(message.data as ParseJobPostRequest)
           }
@@ -109,15 +97,15 @@ export default function Assistant(props: AssistantProps): JSX.Element {
           </Accordion.Title>
           <Accordion.Content>
             <>
-              <h1 className="mb-2 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white">{jd.job_title} <span
-                  className="text-blue-600 dark:text-blue-500">at {jd.company_name}</span></h1>
-              <h2 className="text-xl text-orange-400 font-extrabold dark:text-white">{jd.salary}</h2>
+              <h1 className="mb-2 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white">{jobPost?.job_title} <span
+                  className="text-blue-600 dark:text-blue-500">at {jobPost?.company_name}</span></h1>
+              <h2 className="text-xl text-orange-400 font-extrabold dark:text-white">{jobPost?.salary}</h2>
               <h3 className="text-sm text-gray-400 flex flex-row align-middle mt-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" color="grey" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="size-5 align-middle">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                 </svg>
-                <span className="align-middle pl-1">{jd.location}</span>
+                <span className="align-middle pl-1">{jobPost?.location}</span>
               </h3>
             </>
           </Accordion.Content>
@@ -129,7 +117,7 @@ export default function Assistant(props: AssistantProps): JSX.Element {
           <Accordion.Content>
             <>
               <div className="px-1 py-2">
-                <span className="align-middle text-gray-500">{jd.company_info}</span>
+                <span className="align-middle text-gray-500">{jobPost?.company_info}</span>
               </div>
             </>
           </Accordion.Content>
@@ -143,7 +131,7 @@ export default function Assistant(props: AssistantProps): JSX.Element {
             <>
               <div className="px-1 py-2">
                 <ul className="max-w-md space-y-1 text-gray-500 list-inside">
-                  {jd.job_description?.map((desc, index) => {
+                  {jobPost?.job_description?.map((desc, index) => {
                     if (desc.is_match) {
                       return (
                           <li className="flex items-center text-left"  key={`role-${index}`}>
