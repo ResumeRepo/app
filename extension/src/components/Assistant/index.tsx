@@ -82,12 +82,10 @@ export default function Assistant(props: AssistantProps): JSX.Element {
           }
         });
       } else {
-        console.log("in else....")
         window.addEventListener("message", message => {
-          // console.log("message: ", message)
           if  (message.data.type === "jd") {
-            DEBUG("JD received: ", message as ParseJobPostRequest)
-            onParseJobPost(message as ParseJobPostRequest)
+            DEBUG("JD received: ", message.data as ParseJobPostRequest)
+            onParseJobPost(message.data as ParseJobPostRequest)
           }
         })
       }

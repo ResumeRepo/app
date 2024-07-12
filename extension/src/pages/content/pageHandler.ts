@@ -1,3 +1,5 @@
+import testData from "./dev.json"
+
 type ParsedContent = {
   body?: string,
   logo?: any
@@ -137,58 +139,52 @@ function getJobBoardName(pageType: string) {
   }
 }
 
-function sendMessage(parsedContent: ParsedContent, pageType: string) {
-  const data = {
-    type: "jd",
-    job_board: getJobBoardName(pageType),
-    job_description: parsedContent.body,
-    logo: parsedContent.logo,
-    job_id: currentJobId
-  }
+function sendMessage(parsedContent?: ParsedContent, pageType?: string) {
   if (import.meta.env.MODE === "production") {
-    chrome.runtime.sendMessage(data);
+    chrome.runtime.sendMessage({
+      type: "jd",
+      job_board: getJobBoardName(pageType!!),
+      job_description: parsedContent!!.body,
+      logo: parsedContent!!.logo,
+      job_id: currentJobId
+    });
   } else {
-    console.log("posting message: ", data)
-    window.postMessage(data)
+    window.postMessage({type: "jd", ...testData})
   }
   run()
 }
 
-function loadDocument(docUrl?: string) {
-  if (docUrl) {
-    console.log("handling page.......: ", docUrl)
-    // return "hello world!!"
-  }
-  return document
-}
-
 export function handlePage(docUrl?: string) {
-  doc = loadDocument(docUrl)
-  const pageType = allowedPageType()
-  const newCurrentJobId = parseJobId(pageType)
-  if (pageType) {
-    if (newCurrentJobId && newCurrentJobId != currentJobId) {
-      const parsedContent = parsePage(pageType)
-      if (parsedContent && parsedContent.body && parsedContent.logo) {
-        currentJobId = newCurrentJobId
-        console.log("Parsed: ", parsedContent)
-        fetch(parsedContent.logo)
-        .then(response => response.blob())
-        .then(blob => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            parsedContent.logo = reader.result
-            clearInterval(intervalId)
-            console.log("clearing interval....")
-            sendMessage(parsedContent, pageType)
-          };
-          reader.readAsDataURL(blob);
-        })
-        .catch(error => {
-          console.error("Retrying: ", error);
-        });
-      } else {
-        console.log("Retrying...")
+  doc = document
+  if (docUrl) {
+    sendMessage(undefined, undefined, )
+  } else {
+    const pageType = allowedPageType()
+    const newCurrentJobId = parseJobId(pageType)
+    if (pageType) {
+      if (newCurrentJobId && newCurrentJobId != currentJobId) {
+        const parsedContent = parsePage(pageType)
+        if (parsedContent && parsedContent.body && parsedContent.logo) {
+          currentJobId = newCurrentJobId
+          console.log("Parsed: ", parsedContent)
+          fetch(parsedContent.logo)
+          .then(response => response.blob())
+          .then(blob => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              parsedContent.logo = reader.result
+              clearInterval(intervalId)
+              console.log("clearing interval....")
+              sendMessage(parsedContent, pageType)
+            };
+            reader.readAsDataURL(blob);
+          })
+          .catch(error => {
+            console.error("Retrying: ", error);
+          });
+        } else {
+          console.log("Retrying...")
+        }
       }
     }
   }
