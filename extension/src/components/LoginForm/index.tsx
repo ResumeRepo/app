@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useAuthContext} from "@src/context/AuthContext";
 import logo from '@assets/img/logo.png';
 import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 import {UserApi} from "@src/codegen";
+import CircularLoader from "@src/components/Loader";
 
 export default function LoginForm() {
   const [otpSent, setOtpSent] = useState(false)
@@ -10,7 +11,8 @@ export default function LoginForm() {
   const [email, setEmail] = useState("")
   const [token, setToken] = useState("")
   const [buttonDisabled, setButtonDisabled] = useState(true)
-  const {setAuthUser} = useAuthContext()
+  const [loading, setLoading] = useState(true)
+  const {setAuthUser, authUser} = useAuthContext()
 
   const onEmailInputChange = (event: any) => {
     event.preventDefault()
@@ -91,10 +93,14 @@ export default function LoginForm() {
     }
   }
 
+  useEffect(() => {
+    if (authUser) setLoading(false)
+  }, [authUser]);
 
   return (
-      <div>
         <div className="relative flex min-h-screen flex-col justify-center overflow-hidden py-12">
+          {loading ? <div className="text-center"><CircularLoader/></div> :
+          <>
           <div className="relative overflow-auto mb-8">
             <div className="flex justify-center">
               <div className="flex items-center text-xl font-semibold text-black">
@@ -165,7 +171,8 @@ export default function LoginForm() {
               </div>
             </div>
           </div>
+          </>
+          }
         </div>
-      </div>
   )
 }
