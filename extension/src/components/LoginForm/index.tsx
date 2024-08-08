@@ -24,7 +24,6 @@ export default function LoginForm() {
     }
   }
 
-
   const getOtpSentMessage = (): string => {
     if (validateEmail(email)) {
       const parts = email.split("@")
@@ -56,7 +55,7 @@ export default function LoginForm() {
 
   const onSubmit = async () => {
     setOtpError("")
-    console.log("token: ", token, otpSent)
+   DEBUG( token, otpSent)
     if (otpSent && token) {
       new UserApi(headerConfig("ignore")).confirmOtp({
         email: email,
@@ -94,7 +93,6 @@ export default function LoginForm() {
 
   return (
         <div className="relative flex min-h-screen flex-col justify-center overflow-hidden py-12">
-          {authUser ?
           <>
           <div className="relative overflow-auto mb-8">
             <div className="flex justify-center">
@@ -166,9 +164,7 @@ export default function LoginForm() {
               </div>
             </div>
           </div>
-          </> :
-              <div className="text-center"><CircularLoader/></div>
-          }
+          </>
         </div>
   )
 }
