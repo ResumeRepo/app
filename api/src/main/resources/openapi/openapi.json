@@ -16,6 +16,38 @@
     }
   ],
   "paths": {
+    "/auth/login/guest": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Sign in anonymous user",
+        "operationId": "guestSignIn",
+        "requestBody": {
+          "required": true,
+          "description": "Anonymous user info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed JWT the user can use to access the rest of the api",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/login": {
       "post": {
         "tags": [
@@ -257,7 +289,7 @@
         }
       }
     },
-    "/job-post": {
+    "/parse-job-post": {
       "post": {
         "tags": [
           "resume"

@@ -1,10 +1,10 @@
 package app.nextrole.api.utils.security.web
 
-import app.nextrole.api.props.AwsProps
 import com.fasterxml.jackson.databind.ObjectMapper
 import app.nextrole.api.props.CorsProps
 import app.nextrole.api.props.SourceProps
 import app.nextrole.api.service.utils.getCurrentTime
+import app.nextrole.api.utils.filters.ExceptionHandlerFilter
 import app.nextrole.api.utils.security.UnsecurePaths
 import app.nextrole.api.utils.security.firewall.FirewallConfiguration
 import jakarta.servlet.DispatcherType
@@ -45,7 +45,9 @@ open class WebSecurityConfiguration(
     private val securityFilter: SecurityFilter,
     private val objectMapper: ObjectMapper,
     private val corsProps: CorsProps,
-    private val unsecurePaths: UnsecurePaths
+    private val sourceProps: SourceProps,
+    private val unsecurePaths: UnsecurePaths,
+    private val exceptionHandlerFilter: ExceptionHandlerFilter
 ) {
 
     @Bean
@@ -89,11 +91,22 @@ open class WebSecurityConfiguration(
     }
 
     @Bean
+    fun exceptionHandlingFilter(): FilterRegistrationBean<ExceptionHandlerFilter> {
+        val filter = FilterRegistrationBean(exceptionHandlerFilter)
+        filter.setFilter(exceptionHandlerFilter)
+        filter.order = Ordered.LOWEST_PRECEDENCE
+        return filter
+    }
+
+    @Bean
     fun restAuthenticationEntryPoint(): AuthenticationEntryPoint {
-        return AuthenticationEntryPoint { _: HttpServletRequest, httpServletResponse: HttpServletResponse, _: AuthenticationException ->
+        return AuthenticationEntryPoint { _: HttpServletRequest, httpServletResponse: HttpServletResponse, ex: AuthenticationException ->
             val errorObject: MutableMap<String, Any> =
                 HashMap()
             val errorCode = 401
+            if (!sourceProps.profile.equals("prod")) {
+                ex.printStackTrace()
+            }
             errorObject["error"] = "Unauthorized"
             errorObject["code"] = errorCode
             errorObject["timestamp"] = getCurrentTime()

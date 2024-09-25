@@ -26,4 +26,8 @@ class UserController(
     override suspend fun confirmOtp(otpConfirmation: OtpConfirmation): ResponseEntity<SessionUserResponse> {
         return ResponseEntity.ok(userService.confirmOtp(otpConfirmation))
     }
+
+    override suspend fun guestSignIn(requestBody: Map<String, Any>): ResponseEntity<SessionUserResponse> {
+        return ResponseEntity.ok(userService.guestSignIn(requestBody))
+    }
 }

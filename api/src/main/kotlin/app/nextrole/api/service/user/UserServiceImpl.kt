@@ -3,14 +3,13 @@ package app.nextrole.api.service.user
 import app.nextrole.api.*
 import app.nextrole.api.data.postgres.entity.UserEntity
 import app.nextrole.api.data.postgres.repo.UserRepo
+import app.nextrole.api.service.utils.generateUid
 import app.nextrole.api.service.utils.getSessionUser
 import app.nextrole.api.utils.security.jwt.JwtService
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.OtpType
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.OTP
-import io.github.oshai.kotlinlogging.KotlinLogging
-import okhttp3.internal.wait
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,7 +18,6 @@ class UserServiceImpl(
     val jwtService: JwtService,
     val supabase: SupabaseClient
 ) : UserService {
-    private val logger = KotlinLogging.logger {}
 
     override fun getOrCreateUser(): SessionUser {
         val user = getSessionUser()
@@ -39,6 +37,17 @@ class UserServiceImpl(
             e.message
         }
         return GenericResponse(status = "ok")
+    }
+
+    override suspend fun guestSignIn(userInfo: Map<String, Any>): SessionUserResponse {
+        val user = SessionUser(userId = "u_${generateUid()}", anonymous = true)
+        createUserProfile(user)
+        return SessionUserResponse(
+            sessionUser = SessionUser(
+                userId = user.userId,
+                token = jwtService.generateToken(user.userId!!)
+            )
+        )
     }
 
     override suspend fun confirmOtp(otpConfirmation: OtpConfirmation): SessionUserResponse {
