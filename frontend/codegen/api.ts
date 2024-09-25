@@ -1688,7 +1688,7 @@ export const ResumeApiAxiosParamCreator = function (configuration?: Configuratio
         parsJobPost: async (parseJobPostRequest: ParseJobPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'parseJobPostRequest' is not null or undefined
             assertParamExists('parsJobPost', 'parseJobPostRequest', parseJobPostRequest)
-            const localVarPath = `/job-post`;
+            const localVarPath = `/parse-job-post`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2203,6 +2203,42 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Sign in anonymous user
+         * @param {{ [key: string]: any; }} requestBody Anonymous user info
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        guestSignIn: async (requestBody: { [key: string]: any; }, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('guestSignIn', 'requestBody', requestBody)
+            const localVarPath = `/auth/login/guest`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Sign in user
          * @param {StringValue} stringValue Email address
          * @param {*} [options] Override http request option.
@@ -2274,6 +2310,19 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Sign in anonymous user
+         * @param {{ [key: string]: any; }} requestBody Anonymous user info
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async guestSignIn(requestBody: { [key: string]: any; }, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.guestSignIn(requestBody, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.guestSignIn']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Sign in user
          * @param {StringValue} stringValue Email address
          * @param {*} [options] Override http request option.
@@ -2316,6 +2365,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @summary Sign in anonymous user
+         * @param {{ [key: string]: any; }} requestBody Anonymous user info
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        guestSignIn(requestBody: { [key: string]: any; }, options?: any): AxiosPromise<SessionUserResponse> {
+            return localVarFp.guestSignIn(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Sign in user
          * @param {StringValue} stringValue Email address
          * @param {*} [options] Override http request option.
@@ -2355,6 +2414,18 @@ export class UserApi extends BaseAPI {
      */
     public getUserprofile(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).getUserprofile(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Sign in anonymous user
+     * @param {{ [key: string]: any; }} requestBody Anonymous user info
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public guestSignIn(requestBody: { [key: string]: any; }, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).guestSignIn(requestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

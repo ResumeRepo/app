@@ -2,13 +2,13 @@ import {Configuration} from "@src/codegen";
 
 export const DEBUG = (...args: any[]) => {
   if (import.meta.env.MODE === "development") {
-    console.debug(args)
+    console.debug("DEBUG: ", JSON.stringify(args))
   }
 }
 
 export const ERROR = (...args: any[]) => {
   if (import.meta.env.MODE === "development") {
-    console.error(args)
+    console.error("ERROR: ", JSON.stringify(args))
   }
 }
 

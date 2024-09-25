@@ -51,7 +51,7 @@ export default function Panel(): JSX.Element {
             showGenerateResume={showGenerateResume}
             onShowResumeGenerate={() => setShowGenerateResume(true)}/>
         }
-        { activeTab === "Resumes" && <RequireLogin><ResumeListView/></RequireLogin> }
+        { activeTab === "Resumes" && <ResumeListView/> }
         <BottomNav
             activeTab={activeTab}
             showResumeUpload={showResumeUpload}

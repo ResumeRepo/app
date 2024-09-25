@@ -19,7 +19,6 @@ let initialized = false
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [authUser, setAuthUser] = React.useState<SessionUser | undefined>(undefined);
-  const [loading, setLoading] = useState(true)
 
   const setSessionUser = (jwt: string) => {
     DEBUG("JWT", jwt)
@@ -28,31 +27,43 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         const profileResponse: SessionUser = response.data
         DEBUG("Setting session user", profileResponse)
         setAuthUser(profileResponse)
-        setLoading(false)
       }).catch(e => {
         ERROR(e)
-        setLoading(false)
       })
     } else {
-      setAuthUser(undefined)
-      setLoading(false)
+      new UserApi(headerConfig("ignore")).guestSignIn({})
+      .then(response => {
+        const newJwt = response.data.session_user?.token
+        if (newJwt) {
+          const item = {aiResumeAssistantJwt: newJwt}
+          if (import.meta.env.MODE === "production") {
+            chrome.storage.sync.set(item);
+          } else {
+            sessionStorage.setItem("aiResumeAssistantJwt", JSON.stringify(item))
+          }
+          setAuthUser(response.data.session_user)
+          DEBUG("JWT generated: ", newJwt)
+        }
+      }).catch(e => {
+        ERROR(e)
+        setAuthUser(undefined)
+      })
     }
   }
-
 
   useEffect(() => {
     if (!initialized) {
       if (import.meta.env.MODE === "production") {
-        chrome.storage.sync.get("nextRoleToken").then(cache => {
-          setSessionUser(cache.nextRoleToken)
+        chrome.storage.sync.get("aiResumeAssistantJwt").then(cache => {
+          setSessionUser(cache.aiResumeAssistantJwt)
         })
       } else {
-        const item = localStorage.getItem("nextRoleToken")
+        const item = sessionStorage.getItem("aiResumeAssistantJwt")
+        let jwt = undefined
         if (item) {
-          setSessionUser(JSON.parse(item)["nextRoleToken"])
-        } else {
-          setLoading(false)
+          jwt = JSON.parse(item)["aiResumeAssistantJwt"]
         }
+        setSessionUser(jwt)
       }
       initialized = true
     }
@@ -62,11 +73,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     if (authUser) {
       return children
     } else {
-      if (loading) {
-        return <div className="flex items-center justify-center h-screen"><CircularLoader/></div>
-      } else {
-        return <LoginForm/>
-      }
+      return <div className="flex items-center justify-center h-screen"><CircularLoader/></div>
     }
   }
 

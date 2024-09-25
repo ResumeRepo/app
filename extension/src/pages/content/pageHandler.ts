@@ -157,6 +157,7 @@ function sendMessage(parsedContent?: ParsedContent, pageType?: string) {
 }
 
 export function handlePage(docUrl?: string) {
+  console.log("in page handler....")
   if (docUrl) {
     sendMessage()
   } else {
