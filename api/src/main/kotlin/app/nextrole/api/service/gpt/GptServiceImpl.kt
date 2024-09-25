@@ -1,10 +1,10 @@
 package app.nextrole.api.service.gpt
 
 import app.nextrole.api.GPTMessage
+import app.nextrole.api.SessionUser
 import app.nextrole.api.UserCompletionResponse
 import app.nextrole.api.props.OpenAiProps
 import app.nextrole.api.service.gpt.completion.*
-import app.nextrole.api.service.utils.getSessionUser
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -27,7 +27,7 @@ class GptServiceImpl(
 ) : GptService {
     private val logger = KotlinLogging.logger {}
 
-    override fun buildCompletionRequest(context: String, function: GPTFunction): CompletionRequest {
+    override fun buildCompletionRequest(context: String, responseFormat: Any, user: SessionUser): CompletionRequest {
         val messages: MutableList<CompletionRequestMessage> = ArrayList()
 
         val systemMessage =  CompletionRequestMessage(
@@ -42,20 +42,17 @@ class GptServiceImpl(
         )
 
         messages.add(userMessage)
-
-        val sessionUser = getSessionUser()
         return CompletionRequest(
-            user = sessionUser.userId!!,
+            user = user.userId!!,
             model = openAiProps.completionModel!!,
             maxTokens = openAiProps.maxTokens!!,
             temperature = openAiProps.temp,
-            functionCall = "auto",
-            functions = mutableListOf(function),
+            responseFormat = responseFormat,
             messages = messages)
     }
 
-    override fun gptCompletionRequest(context: String, function: GPTFunction): UserCompletionResponse {
-        return makeCompletionRequest(buildCompletionRequest(context, function))
+    override fun gptCompletionRequest(context: String, responseFormat: Any, user: SessionUser): UserCompletionResponse {
+        return makeCompletionRequest(buildCompletionRequest(context, responseFormat, user))
     }
 
     private fun makeCompletionRequest(completionRequest: CompletionRequest): UserCompletionResponse {
@@ -79,12 +76,8 @@ class GptServiceImpl(
                         if (hasCompletionChoices(completionResult)) {
                             val responseMessage: CompletionResponseMessage? =
                                 completionResult.choices?.get(0)?.message
-                            val functionCall: GPTFunctionCallPayload? = responseMessage?.functionCall
-                            val content: String? = responseMessage?.content
-                            if (functionCall != null) {
-                                completionResponse.messages = mutableListOf(GPTMessage(content = functionCall.arguments))
-                            } else if (content != null) {
-                                completionResponse.messages = mutableListOf(GPTMessage(content = content))
+                            if (responseMessage?.content != null) {
+                                completionResponse.messages = mutableListOf(GPTMessage(content = responseMessage?.content))
                             }
                         }
                     }

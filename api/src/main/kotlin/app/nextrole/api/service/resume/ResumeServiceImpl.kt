@@ -3,30 +3,23 @@ package app.nextrole.api.service.resume
 import app.nextrole.api.*
 import app.nextrole.api.data.postgres.entity.BaseResumeEntity
 import app.nextrole.api.data.postgres.entity.JobPostEntity
-import app.nextrole.api.data.postgres.entity.ResumeEntity
 import app.nextrole.api.data.postgres.repo.BaseResumeRepo
 import app.nextrole.api.data.postgres.repo.JobPostRepo
 import app.nextrole.api.data.postgres.repo.ResumeRepo
 import app.nextrole.api.props.AwsProps
 import app.nextrole.api.service.gpt.GptService
-import app.nextrole.api.service.gpt.completion.GPTFunction
 import app.nextrole.api.service.pdf.PdfService
 import app.nextrole.api.service.s3.S3Service
-import app.nextrole.api.service.utils.generateUid
-import app.nextrole.api.service.utils.getSessionUser
-import app.nextrole.api.service.utils.jsonElementToMap
-import app.nextrole.api.service.utils.loadFile
+import app.nextrole.api.service.utils.*
 import com.amazonaws.regions.Regions
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.time.LocalDateTime
 import java.util.*
 
 @Service
@@ -98,30 +91,21 @@ class ResumeServiceImpl(
         val jobId = parseJobPostRequest.jobId
         val jobBoard = parseJobPostRequest.jobBoard
         var jobPostEntity: JobPostEntity? = null
+        val user = getSessionUser()
         if (jobId != null && jobBoard != null) {
             jobPostEntity = withContext(Dispatchers.IO) {
                 jobPostRepo.findByJobIdAndJobBoard(jobId, jobBoard)
             }
-            if (jobPostEntity == null) {
+            if (jobPostEntity == null) { // TODO: add the option to regenerate
                 val jd = parseJobPostRequest.jobDescription!!.replace("\n", "")
                 val context =
-                    "I operate a website that allows users to customize their resume based on the job description. Before they are allowed to start customizing, we need to show them the job description in a succinct manner. Provided below is the job description scraped from a job board. Your task is to parse out all the relevant information about the job and call a function that will handle the result. The salary field must specify a dollar value or range either as an hourly, weekly, monthly, or yearly rate. Please follow the descriptions of the individual fields, where applicable. JOB DESCRIPTION:\n$jd"
-                val function = GPTFunction(
-                    name = "job_post_function",
-                    description = "Post-process a job post from job boards",
-                    parameters = jsonElementToMap(
-                        Json.parseToJsonElement(loadFile("openapi/openapi.json"))
-                            .jsonObject["components"]!!
-                            .jsonObject["schemas"]!!
-                            .jsonObject["GptJobPostFunction"]!!
-                    )
-                )
-
-                val response = gptService.gptCompletionRequest(context, function)
+                    "I operate a website that allows users to customize their resume based on the job description. Before they are allowed to start customizing, we need to show them the job description in a succinct manner. Provided below is the job description scraped from a job board. Your task is to parse out all the relevant information about the job. The salary field must specify a dollar value or range either as an hourly, weekly, monthly, or yearly rate. Please follow the descriptions of the individual fields, where applicable. JOB DESCRIPTION:\n$jd"
+                val responseFormat = loadJson("gpt/jobPostResponseFormat.json")
+                val response = gptService.gptCompletionRequest(context, responseFormat, user)
                 if (!response.messages.isNullOrEmpty() && response.messages?.get(0)?.content != null) {
                     val jobPost = objectMapper.readValue(
                         response.messages!![0].content,
-                        GptJobPostFunction::class.java
+                        GptJobPost::class.java
                     )
                     val key = "logo/${generateUid()}"
                     uploadToS3(
@@ -132,14 +116,14 @@ class ResumeServiceImpl(
                         Regions.US_EAST_2)
                     val logoUrl = "${awsProps.cdn}/$key"
                     jobPostEntity = JobPostEntity()
-                    jobPostEntity.jobDescription = jobPost.jobPostFunction?.jobDescriptionBulletPoints?.joinToString("\n" )
-                    jobPostEntity.jobTitle = jobPost.jobPostFunction?.jobTitle
+                    jobPostEntity.jobDescription = jobPost.jobDescriptionBulletPoints?.joinToString("\n" )
+                    jobPostEntity.jobTitle = jobPost.jobTitle
                     jobPostEntity.jobId = parseJobPostRequest.jobId
                     jobPostEntity.jobBoard = parseJobPostRequest.jobBoard
-                    jobPostEntity.location = jobPost.jobPostFunction?.location
-                    jobPostEntity.companyInfo = jobPost.jobPostFunction?.aboutCompany
-                    jobPostEntity.companyName = jobPost.jobPostFunction?.companyName
-                    jobPostEntity.salary = jobPost.jobPostFunction?.salary
+                    jobPostEntity.location = jobPost.location
+                    jobPostEntity.companyInfo = jobPost.aboutCompany
+                    jobPostEntity.companyName = jobPost.companyName
+                    jobPostEntity.salary = jobPost.salary
                     jobPostEntity.logoUrl = logoUrl
                     jobPostRepo.save(jobPostEntity)
                 }
@@ -165,27 +149,28 @@ class ResumeServiceImpl(
     }
 
     override fun generateResume(generateResumeRequest: GenerateResumeRequest): GeneratedResume {
-        if (generateResumeRequest.jobId != null) {
-            val sessionUser = getSessionUser()
-            val baseResume = sessionUser.userId?.let { baseResumeRepo.findByUserId(it) }
-            if (baseResume != null) {
-                val jobPost = jobPostRepo.findByUid(generateResumeRequest.jobId!!)
-                if (jobPost != null) {
-                    var resume = resumeRepo.findByJobPostId(jobPost.id!!)
-                    if (resume == null) {
-                        resume = ResumeEntity()
-                        resume.baseResumeId = baseResume.uid
-                        resume.userId = sessionUser.userId
-                        resume.templateId = "1" // default the initial generated resume to template 1
-                        resume.jobPostId = jobPost.id
-                    }
-                    resume.resume = makeGptRequest(baseResume, jobPost, generateResumeRequest.instructions)
-                    resume.updatedAt = LocalDateTime.now()
-                    resumeRepo.save(resume)
-                }
-            }
-        }
+//        if (generateResumeRequest.jobId != null) {
+//            val sessionUser = getSessionUser()
+//            val baseResume = sessionUser.userId?.let { baseResumeRepo.findByUserId(it) }
+//            if (baseResume != null) {
+//                val jobPost = jobPostRepo.findByUid(generateResumeRequest.jobId!!)
+//                if (jobPost != null) {
+//                    var resume = resumeRepo.findByJobPostId(jobPost.id!!)
+//                    if (resume == null) {
+//                        resume = ResumeEntity()
+//                        resume.baseResumeId = baseResume.uid
+//                        resume.userId = sessionUser.userId
+//                        resume.templateId = "1" // default the initial generated resume to template 1
+//                        resume.jobPostId = jobPost.id
+//                    }
+//                    resume.resume = makeGptRequest(baseResume, jobPost, generateResumeRequest.instructions)
+//                    resume.updatedAt = LocalDateTime.now()
+//                    resumeRepo.save(resume)
+//                }
+//            }
+//        }
 
+        // TODO: NOT YET IMPLEMENTED
         return GeneratedResume()
     }
 
@@ -209,11 +194,8 @@ class ResumeServiceImpl(
                 "USER_INSTRUCTIONS:$userInstructions\n" +
                 "USER_RESUME:${baseResume.resume}\n" +
                 "JOB_DESCRIPTION:$jobDescription"
-        val function = GPTFunction(
-            name = null,
-            description = null,
-            parameters = null)
-        val response = gptService.gptCompletionRequest(context, function)
+        val responseFormat = Json.parseToJsonElement(loadFile("gpt/resumeResponseFormat.json"))
+        val response = gptService.gptCompletionRequest(context, responseFormat, getSessionUser())
         return "message received..."
     }
 

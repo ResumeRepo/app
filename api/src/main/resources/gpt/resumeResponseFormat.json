@@ -1,0 +1,18 @@
+{
+  "type": "json_schema",
+  "json_schema": {
+    "name": "resume",
+    "strict": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the generated resume"
+        }
+      },
+      "required": ["title"],
+      "additionalProperties": false
+    }
+  }
+}

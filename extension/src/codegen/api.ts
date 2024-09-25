@@ -174,62 +174,49 @@ export interface GenericResponse {
 /**
  * 
  * @export
- * @interface GptJobPostFunction
+ * @interface GptJobPost
  */
-export interface GptJobPostFunction {
-    /**
-     * 
-     * @type {GptJobPostFunctionJobPostFunction}
-     * @memberof GptJobPostFunction
-     */
-    'job_post_function'?: GptJobPostFunctionJobPostFunction;
-}
-/**
- * Post-process a job post from job boards
- * @export
- * @interface GptJobPostFunctionJobPostFunction
- */
-export interface GptJobPostFunctionJobPostFunction {
+export interface GptJobPost {
     /**
      * The exact job description used in the job posting
      * @type {string}
-     * @memberof GptJobPostFunctionJobPostFunction
+     * @memberof GptJobPost
      */
     'job_title'?: string;
     /**
      * 
      * @type {string}
-     * @memberof GptJobPostFunctionJobPostFunction
+     * @memberof GptJobPost
      */
     'company_name'?: string;
     /**
      * Information that provides additional context to the applicant about this company as a whole.
      * @type {string}
-     * @memberof GptJobPostFunctionJobPostFunction
+     * @memberof GptJobPost
      */
     'about_company'?: string;
     /**
      * 
      * @type {string}
-     * @memberof GptJobPostFunctionJobPostFunction
+     * @memberof GptJobPost
      */
     'location'?: string;
     /**
      * 
      * @type {string}
-     * @memberof GptJobPostFunctionJobPostFunction
+     * @memberof GptJobPost
      */
     'salary'?: string;
     /**
      * 
      * @type {string}
-     * @memberof GptJobPostFunctionJobPostFunction
+     * @memberof GptJobPost
      */
     'full_time_or_part_time'?: string;
     /**
      * Job requirements and qualifications
      * @type {Array<string>}
-     * @memberof GptJobPostFunctionJobPostFunction
+     * @memberof GptJobPost
      */
     'job_description_bullet_points'?: Array<string>;
 }

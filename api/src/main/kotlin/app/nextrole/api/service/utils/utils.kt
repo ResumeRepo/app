@@ -1,6 +1,7 @@
 package app.nextrole.api.service.utils
 
 import app.nextrole.api.SessionUser
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import kotlinx.serialization.json.JsonElement
 import org.springframework.core.io.ClassPathResource
@@ -57,6 +58,11 @@ fun loadFile(path: String?): String {
     } catch (e: IOException) {
         throw RuntimeException(e)
     }
+}
+
+fun loadJson(path: String): Any {
+    val mapper = ObjectMapper()
+    return mapper.readTree(loadFile(path))
 }
 
 fun safeFile(path: String, data: String) {
