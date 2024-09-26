@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function Header({ photo }: { photo?: string | undefined }) {
   return (
     <header className='w-full sm:px-4 px-2 top-0 sticky bg-white z-50 h-14'>
-      <div className="pt-5 pb-3 flex justify-between items-center border-b-2 bg-white">
+      <div className="pt-5 pb-3 flex justify-between items-center bg-white">
       <Link href='/' className='flex space-x-2'>
         <Image
           alt='NextRole Logo'
