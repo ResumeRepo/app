@@ -7,8 +7,6 @@ import {AuthContextProvider} from "@src/context/AuthContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
-console.log("React injected from index.tsx");
-
 root.render(
   <React.StrictMode>
     <AuthContextProvider>

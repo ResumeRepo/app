@@ -2,9 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {SessionUser, UserApi} from "@src/codegen";
 import {DEBUG, ERROR, headerConfig} from "@src/utils/utils";
 
-import LoginForm from "@src/components/LoginForm";
 import CircularLoader from "@src/components/Loader";
-
 
 type AuthContextProps = {
   authUser?: SessionUser
